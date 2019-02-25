@@ -18,9 +18,9 @@ const TopNav = Loadable({
 
 export default (
     <Router>
-        <div>
+        <div className='page'>
             <TopNav/>
-            <div className='sideBar'>
+            <div className='main'>
                 <Route exact path="/" component={Shuju}/>
                 <Route path="/jiezhen" component={Jiezhen}/>
                 <Route path="/huizhen" component={Huizhen}/>

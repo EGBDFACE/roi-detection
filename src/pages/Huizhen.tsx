@@ -1,7 +1,5 @@
 import * as React from 'react';
 import {Link} from 'react-router-dom';
-import TopNav from '../components/TopNav';
-
 interface Props{
 
 }
@@ -14,10 +12,21 @@ export default class Huizhen extends React.Component<Props,States>{
     }
     render(){
         return(
-            <div>
-                <p>Huizhen</p>
-                <div><Link to='/jiezhen'>jiezhen</Link></div>
-                <div><Link to='/'>shuju</Link></div>
+            <div className='leftNav'>
+                <ul>
+                    <li><Link to='/jiezhen'>
+                        <i className='jiezhen'></i>
+                        <p>接诊</p>
+                    </Link></li>
+                    <li><Link to='/huizhen'>
+                        <i className='huizhenPage'></i>
+                        <p>会诊</p>
+                    </Link></li>
+                    <li><Link to='/'>
+                        <i className='mydata'></i>
+                        <p>我的数据</p>
+                    </Link></li>
+                </ul>
             </div>
         )
     }

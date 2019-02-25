@@ -44,6 +44,10 @@ module.exports = merge(commonConfig,{
                     }
                 }]
             }
+            // {
+            //     test: /\.svg/,
+            //     use:['raw-loader']
+            // }
         ]
     },
     plugins: [

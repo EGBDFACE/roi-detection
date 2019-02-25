@@ -11,13 +11,20 @@ const Huizhen = Loadable({
     loader: () => import('../pages/Huizhen'),
     loading: () => <div>loading...</div>
 });
+const TopNav = Loadable({
+    loader: () => import('../components/TopNav'),
+    loading: () => <div>loading...</div>
+});
 
 export default (
     <Router>
         <div>
-            <Route exact path="/" component={Shuju}/>
-            <Route path="/jiezhen" component={Jiezhen}/>
-            <Route path="/huizhen" component={Huizhen}/>
+            <TopNav/>
+            <div className='sideBar'>
+                <Route exact path="/" component={Shuju}/>
+                <Route path="/jiezhen" component={Jiezhen}/>
+                <Route path="/huizhen" component={Huizhen}/>
+            </div>
         </div>
     </Router>
 );

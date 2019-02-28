@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {Link} from 'react-router-dom';
+import {firstRouterLabelPic} from './Shuju';
+
 interface Props{
 
 }
@@ -14,7 +16,9 @@ export default class Jiezhen extends React.Component<Props,States>{
         return(
             <div className='leftNav'>
                 <ul>
-                    <li><Link to='/jiezhen'>
+                    <li>
+                        <img className='firstRouterLabel' src={firstRouterLabelPic} />
+                        <Link to='/jiezhen'>
                         <i className='jiezhenPage'></i>
                         <p>接诊</p>
                     </Link></li>

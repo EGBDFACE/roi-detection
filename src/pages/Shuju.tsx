@@ -7,6 +7,8 @@ interface Props{
 interface States{
 
 }
+
+export const firstRouterLabelPic = require('../images/界面切换符.png');
 export default class Shuju extends React.Component<Props,States>{
     constructor(props:Props){
         super(props);
@@ -23,7 +25,9 @@ export default class Shuju extends React.Component<Props,States>{
                         <i className='huizhen'></i>
                         <p>会诊</p>
                     </Link></li>
-                    <li><Link to='/'>
+                    <li>
+                        <img className='firstRouterLabel' src={firstRouterLabelPic}/>
+                        <Link to='/'>
                         <i className='mydataPage'></i>
                         <p>我的数据</p>
                     </Link></li>

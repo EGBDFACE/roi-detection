@@ -163,3 +163,32 @@ li:hover a{
     position: absolute;
     margin-left: -60px;
 }
+.content{
+    background-color: #f9f9f9;
+    opacity: 0.8;
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 160px;
+    width: 100%;
+    overflow: scroll;
+}
+.mianContent{
+    margin: 60px auto;
+    width: 100%;
+    height: 100%;
+    order: 2;
+    display: flex;
+    justify-content: space-around;
+    background-color: #f9f9f9;
+}
+.variables{
+    order: 1;
+    margin-left: 60px;
+}
+.choosedVariables{
+    order: 2;
+}
+.rightSideBar{
+    order: 3;
+    width: 135px;
+}

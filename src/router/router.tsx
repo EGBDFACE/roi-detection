@@ -20,7 +20,7 @@ export default (
     <Router>
         <div className='page'>
             <TopNav/>
-            <div className='main'>
+            <div>
                 <Route exact path="/" component={Shuju}/>
                 <Route path="/jiezhen" component={Jiezhen}/>
                 <Route path="/huizhen" component={Huizhen}/>

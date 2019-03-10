@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {Link} from 'react-router-dom';
+import InputSearchTime from '../components/Shuju/InputSearchTime';
+import '../index.scss';
 
 interface Props{
 
@@ -15,7 +17,8 @@ export default class Shuju extends React.Component<Props,States>{
     }
     render(){
         return(
-            <div className='leftNav'>
+            <div className='main'>
+                <div className='leftNav'>
                 <ul>
                     <li><Link to='/jiezhen'>
                         <i className='jiezhen'></i>
@@ -32,6 +35,21 @@ export default class Shuju extends React.Component<Props,States>{
                         <p>我的数据</p>
                     </Link></li>
                 </ul>
+                </div>
+                <div className='content'>
+                    <InputSearchTime/>
+                </div>
+                <div className='mainContent'>
+                    <div className='variables'>
+                        
+                    </div>
+                    <div className='choosedVariables'>
+                    
+                    </div>
+                    <div className='rightSideBar'>
+                    
+                    </div>
+                </div>
             </div>
         )
     }

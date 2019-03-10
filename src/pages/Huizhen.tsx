@@ -14,7 +14,8 @@ export default class Huizhen extends React.Component<Props,States>{
     }
     render(){
         return(
-            <div className='leftNav'>
+            <div className='main'>
+                <div className='leftNav'>
                 <ul>
                     <li><Link to='/jiezhen'>
                         <i className='jiezhen'></i>
@@ -30,6 +31,7 @@ export default class Huizhen extends React.Component<Props,States>{
                         <p>我的数据</p>
                     </Link></li>
                 </ul>
+            </div>
             </div>
         )
     }

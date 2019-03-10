@@ -1,0 +1,70 @@
+.inputTime{
+    margin: 60px auto;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    order: 1;
+}
+.inputTime > p{
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: red;
+    width: 154px;
+}
+.inputTime input{
+    width: 30px;
+    outline: none;
+    border: none;
+    background-color: #f9f9f9;
+    text-align: center;
+    padding: 4px 0;
+}
+.inputYear{
+    width: 62px;
+    border-radius: 12px;
+    border: 1px solid pink;
+    overflow: hidden;
+    text-align: center;
+}
+.inputDayMon{
+    display:table-cell;
+    width:30px;
+    border-radius: 12px;
+    border: 1px solid pink;
+    overflow: hidden;
+    text-align: center;
+}
+.inputYear + p,.inputDayMon+ p{
+    width: 30px;
+    text-align: center;
+}
+.startTime{
+    display: flex;
+    align-items: center;
+    color: black;
+}
+.startTime + p{
+    width: 62px;
+    font-size: 20px;
+    text-align: center;
+    color: black;
+}
+.endTime{
+    display: flex;
+    align-items: center;
+}
+.endTime + p{
+    width: 124px;
+    text-align: right;
+    font-weight: bold;
+    color: black;
+    font-size: 16px;
+}
+.inputRange{
+    width: 155px;
+    text-align: center;
+    border-radius: 12px;
+    border: 1px solid pink;
+    text-align: right;
+    height: 26px;
+}

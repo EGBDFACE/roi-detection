@@ -6,72 +6,66 @@ export interface enthusiasm{
     enthusiasmLevel: number
 }
 export interface variable_status{
+    name: string,
     state:boolean,
-    display: boolean
+    display: boolean,
+    category: string
 }
-export interface variables{
-    gender:variable_status,
-    medicalHistory:variable_status,
-    tumourId:variable_status,
-    selfInspectCharacter: variable_status,
-    chujian_character: variable_status,
-    tumour_property: variable_status,
-    whetherTransfer: variable_status,
-    initialType: variable_status,
-    chemotherapy_medicine: variable_status,
-    adverse_reaction: variable_status,
-    age: variable_status,
-    selfinspect_time: variable_status,
-    tumour_radius: variable_status,
-    tumour_texture: variable_status,
-    tumour_evenness: variable_status,
-    tumour_girth: variable_status,
-    tumour_area: variable_status,
-    tumour_density: variable_status,
-    tumour_sunken: variable_status,
-    sunkenpoint: variable_status,
-    symmetry: variable_status,
-    chemotherapy_duration: variable_status,
-    epoch: variable_status
+export interface shuju_vari{
+    variables: variable_status[]
 }
 export interface StoreState{
     enthusiasm:enthusiasm,
-    variables:variables
+    // variables:variables
+    // variables: variable_status[]
+    shuju_variables: shuju_vari
 }
 const initVariables = {
     state: true,
     display: false
+}
+const initDimensions = {
+    ...initVariables,
+    category: 'dimensions'
+}
+const initMagnitude = {
+    ...initVariables,
+    category: 'magnitude'
 }
 export const initialState:StoreState = {
     enthusiasm: {
         languageName: 'TypeScript',
         enthusiasmLevel: 1
     },
-    variables: {
-        gender: initVariables,
-        medicalHistory: initVariables,
-        tumourId: initVariables,
-        selfInspectCharacter: initVariables,
-        chujian_character: initVariables,
-        tumour_property: initVariables,
-        whetherTransfer: initVariables,
-        initialType:  initVariables,
-        chemotherapy_medicine: initVariables,
-        adverse_reaction: initVariables,
-        age: initVariables,
-        selfinspect_time: initVariables,
-        tumour_radius: initVariables,
-        tumour_texture: initVariables,
-        tumour_evenness: initVariables,
-        tumour_girth: initVariables,
-        tumour_area: initVariables,
-        tumour_density: initVariables,
-        tumour_sunken: initVariables,
-        sunkenpoint: initVariables,
-        symmetry: initVariables,
-        chemotherapy_duration: initVariables,
-        epoch: initVariables
+    shuju_variables:{
+        variables:
+        [
+            {name:'性别',...initDimensions},
+            {name:'病史',...initDimensions},
+            {name:'ID编号',...initDimensions},
+            {name:'自检表征',...initDimensions},
+            {name:'触检表征',...initDimensions},
+            {name:'肿瘤性质',...initDimensions},
+            {name:'是否转移',...initDimensions},
+            {name:'初检分型',...initDimensions},
+            {name:'化疗用药',...initDimensions},
+            {name:'不良反应',...initDimensions},
+            {name:'年龄',...initMagnitude},
+            {name:'自检时间',...initMagnitude},
+            {name:'肿瘤半径',...initMagnitude},
+            {name:'肿瘤质地',...initMagnitude},
+            {name:'肿瘤平滑度',...initMagnitude},
+            {name:'肿瘤周长',...initMagnitude},
+            {name:'肿瘤面积',...initMagnitude},
+            {name:'肿瘤致密度',...initMagnitude},
+            {name:'肿瘤凹陷度',...initMagnitude},
+            {name:'凹陷点数',...initMagnitude},
+            {name:'对称性',...initMagnitude},
+            {name:'化疗时长',...initMagnitude},
+            {name:'不良反应的出现时间',...initMagnitude}
+        ]
     }
+    
 };
 
 let store = createStore(Reducer,initialState);

@@ -2,6 +2,11 @@ import * as React from 'react';
 import {Link} from 'react-router-dom';
 import InputSearchTime from '../components/Shuju/InputSearchTime';
 import '../index.scss';
+// import Variables from '../components/Shuju/Variables';
+import Variables from '../containers/Shuju/Variables';
+import '../components/Shuju/css_Variables.scss';
+import SelectedVariables from '../containers/Shuju/SelectedVariables';
+import ChartArea from '../components/Shuju/ChartArea';
 
 interface Props{
 
@@ -38,17 +43,17 @@ export default class Shuju extends React.Component<Props,States>{
                 </div>
                 <div className='content'>
                     <InputSearchTime/>
-                </div>
-                <div className='mainContent'>
-                    <div className='variables'>
-                        
-                    </div>
+                    <div className='mainContent'>
+                    <Variables/>
                     <div className='choosedVariables'>
-                    
+                        <i className='choosedPhoto'><h3>已添加变量</h3></i>
+                        <SelectedVariables/>
+                        <ChartArea/>
                     </div>
                     <div className='rightSideBar'>
                     
                     </div>
+                </div>
                 </div>
             </div>
         )

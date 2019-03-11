@@ -6,8 +6,7 @@ interface DecrementEnthusiasm {
 }
 interface Variable_State{
     type: string,
-    name: string,
-    category: string
+    key: number
 }
 
 const INCREMENT_ENTHUSIASM = 'INCREMENT_ENTHUSIASM';
@@ -26,10 +25,9 @@ export function decrementEnthusiasm():DecrementEnthusiasm{
         type: DECREMENT_ENTHUSIASM
     }
 }
-export function stateChange(name:string,category:string):Variable_State{
+export function stateChange(key:number):Variable_State{
     return{
         type: VARIABLE_STATE_CHANGE,
-        name,
-        category
+        key
     }
 }

@@ -5,7 +5,7 @@ import { Dispatch } from 'react';
 
 function mapStateToProps(state:StoreState){
     return{
-        totalVariablesState: state.variables
+       stateArray: state.shuju_variables.variables
     }
 }
 export default connect(mapStateToProps)(Variables);

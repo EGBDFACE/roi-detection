@@ -9,7 +9,8 @@ export interface variable_status{
     name: string,
     state:boolean,
     display: boolean,
-    category: string
+    category: string,
+    display_hover: boolean
 }
 export interface shuju_vari{
     variables: variable_status[]
@@ -22,7 +23,8 @@ export interface StoreState{
 }
 const initVariables = {
     state: true,
-    display: false
+    display: false,
+    display_hover: false
 }
 const initDimensions = {
     ...initVariables,

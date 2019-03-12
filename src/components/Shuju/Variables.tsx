@@ -1,10 +1,13 @@
 import * as React from 'react';
-import VariablesUnit from '../../containers/Shuju/VariablesUnit';
+// import VariablesUnit from '../../containers/Shuju/VariablesUnit';
+import VariablesUnit from '../../components/Shuju/VariablesUnit';
 import './css_Variables.scss';
 import { variable_status } from '../../store/store';
+import { State } from 'pixi.js';
 
 interface Props{
-    stateArray: variable_status[]
+    stateArray: variable_status[],
+    stateChange?: (id:number) => void
 }
 interface States {}
 
@@ -14,17 +17,34 @@ export default class Variables extends React.Component<Props,States>{
         this.renderUnit = this.renderUnit.bind(this);
     }
     renderUnit(value:number){
+        // console.log(this.props);
         const stateArray = this.props.stateArray;
+        const stateChange = this.props.stateChange;
         const name = stateArray[value].name;
         const state = stateArray[value].state;
-        const category = stateArray[value].category;
+        // const category = stateArray[value].category;
         return(
-            <VariablesUnit key={value} id={value} name={name} state={state} category={category} />
+            // <VariablesUnit key={value} id={value} name={name} state={state} category={category} />
+            <VariablesUnit key={value} id={value} name={name} state={state} stateChange={stateChange}/>
         )
     }
+    // shouldComponentUpdate(nextProps:Props,nextState:States):boolean{
+    //     // for(let i = 0;)
+    //     console.log(this.props);
+    //     console.log('shouldComponentUpdate');
+    //     return true;
+    // }
+    // componentWillReceiveProps(nextProps:Props){
+    //     console.log('componentWillReceiveProps');
+    //     console.log(nextProps.stateArray.length);
+    //     // return nextProps;
+    //     this.render();
+    // }
     render(){
-        const dimensions = 'dimensions';
-        const magnitude = 'magnitude';
+        // const dimensions = 'dimensions';
+        // const magnitude = 'magnitude';
+        // console.log(this.props.stateArray);
+        // console.log(this.props.stateArray);
         return(
             <div className='variables'>
                 <div className='dimensions'>

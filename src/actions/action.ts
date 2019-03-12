@@ -12,6 +12,8 @@ interface Variable_State{
 const INCREMENT_ENTHUSIASM = 'INCREMENT_ENTHUSIASM';
 const DECREMENT_ENTHUSIASM = 'DECREMENT_ENTHUSIASM';
 const VARIABLE_STATE_CHANGE = 'VARIABLE_STATE_CHANGE';
+const VARIABLE_DISPLAY_MOUSE_HOVER = 'VARIABLE_DISPLAY_MOUSE_HOVER';
+const VARIABLE_DISPLAY_DELETE = 'VARIABLE_DISPLAY_DELETE';
 
 export type VariableState = Variable_State;
 export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
@@ -28,6 +30,18 @@ export function decrementEnthusiasm():DecrementEnthusiasm{
 export function stateChange(key:number):Variable_State{
     return{
         type: VARIABLE_STATE_CHANGE,
+        key
+    }
+}
+export function selectedVarialeHover(key:number):Variable_State{
+    return{
+        type: VARIABLE_DISPLAY_MOUSE_HOVER,
+        key
+    }
+}
+export function selectedVariableDelete(key:number):Variable_State{
+    return{
+        type: VARIABLE_DISPLAY_DELETE,
         key
     }
 }

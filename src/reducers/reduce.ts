@@ -30,27 +30,58 @@ function variables(state:shuju_vari,action:VariableState):shuju_vari{
         case 'VARIABLE_STATE_CHANGE':
             return{
                 ...state,
-                variables: stateChange(state.variables,action.key)
-                // variables: state.map((value,index)=>{
-                //     if(index == action.key){
-                //         return {
-                //             name: value.name,
-                //             state: !value.state,
-                //             display: !value.display
-                //         }
-                //     }else{return value}
-                // })
+                // variables: stateChange(state.variables,action.key)
+                variables: state.variables.map((value,index)=>{
+                    if(index == action.key){
+                        return {
+                            ...value,
+                            // name: value.name,
+                            state: !value.state,
+                            display: !value.display,
+                            // category: value.category,
+                            // display_hover: value.display_hover
+                        }
+                    }else{return value}
+                })
+            }
+        case 'VARIABLE_DISPLAY_MOUSE_HOVER':
+            return{
+                ...state,
+                variables: state.variables.map((value,index)=>{
+                    if(index == action.key){
+                        return{
+                            ...value,
+                            display_hover: !value.display_hover
+                        }
+                    }else{return value}
+                })
+            }
+        case 'VARIABLE_DISPLAY_DELETE':
+            console.log(action.key);
+            return{
+                ...state,
+                variables: state.variables.map((value,index)=>{
+                    if(index == action.key){
+                        return{
+                            ...value,
+                            display: !value.display,
+                            state: !value.state,
+                            display_hover: false
+                        }
+                    }else{return value}
+                })
             }
         default: return state
     }
 }
-function stateChange(state:variable_status[],index:number):variable_status[]{
-    for(let i = 0;i<state.length;i++){
-        if(i == index){
-            state[i].display = !state[i].display;
-            state[i].state = !state[i].state;
-        }
-    }
-    return state;
-}
+// function stateChange(state:variable_status[],index:number):variable_status[]{
+
+//     for(let i = 0;i<state.length;i++){
+//         if(i == index){
+//             state[i].display = !state[i].display;
+//             state[i].state = !state[i].state;
+//         }
+//     }
+//     return state;
+// }
 export default Reducer;

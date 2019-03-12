@@ -5,10 +5,15 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'react';
 
 function mapStateToProps(state:StoreState){
-    console.log(state);
+    // console.log(state);
     return{
         stateArray: state.shuju_variables.variables
     }
 }
-
-export default connect(mapStateToProps)(SelectedVariables);
+function mapDispatchToProps(dispatch:Dispatch<actions.VariableState>){
+    return{
+        mouseHover: (index:number) => dispatch(actions.selectedVarialeHover(index)),
+        selectedDelete: (index:number) => dispatch(actions.selectedVariableDelete(index))
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(SelectedVariables);

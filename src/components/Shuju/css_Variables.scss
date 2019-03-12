@@ -73,7 +73,27 @@ h6{
         }
     }
 }
-@mixin selectedVariable{
+// @mixin selectedVariable{
+//     display: inline-block;
+//     border-radius: 10px;
+//     position: relative;
+//     padding: 1px 10px;
+//     font-size: 14px;
+//     margin: 8px 5px;
+//     color: white;
+//     &:hover{
+//         cursor: pointer;
+//     }
+// }
+// .selectedDimensions{
+//     @include selectedVariable();
+//     background-color: #ff4982;
+// }
+// .selectedMagnitude{
+//     @include selectedVariable();
+//     background-color:#a3dfee;
+// }
+.selectedVariable{
     display: inline-block;
     border-radius: 10px;
     position: relative;
@@ -81,17 +101,26 @@ h6{
     font-size: 14px;
     margin: 8px 5px;
     color: white;
-}
-.selectedDimensions{
-    @include selectedVariable();
-    background-color: #ff4982;
-}
-.selectedMagnitude{
-    @include selectedVariable();
-    background-color:#a3dfee;
+    height: 24px;
+    &:hover{
+        cursor: pointer;
+    }
+    i{
+        position: absolute;
+        height: 15px;
+        width: 15px;
+        right: -12px;
+        top: -5px;
+        background-size: cover;
+        display: inline-block;
+        background-image: url(../../images/delete.png);
+        &:hover{
+            background-image: url(../../images/deleteHover.png);
+        }
+    }
 }
 .selectedVariables{
-    height: 200px;
+    height: 300px;
     width: 330px;
     position: relative;
     margin-left: 20px;

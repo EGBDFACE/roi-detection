@@ -8,15 +8,23 @@ interface Variable_State{
     type: string,
     key: number
 }
+interface Chart_Display{
+    type: string,
+    key:number
+}
 
 const INCREMENT_ENTHUSIASM = 'INCREMENT_ENTHUSIASM';
 const DECREMENT_ENTHUSIASM = 'DECREMENT_ENTHUSIASM';
 const VARIABLE_STATE_CHANGE = 'VARIABLE_STATE_CHANGE';
 const VARIABLE_DISPLAY_MOUSE_HOVER = 'VARIABLE_DISPLAY_MOUSE_HOVER';
 const VARIABLE_DISPLAY_DELETE = 'VARIABLE_DISPLAY_DELETE';
+const CHART_DISPLAY = 'CHART_DISPLAY';
 
 export type VariableState = Variable_State;
+export type ChartDisplay = Chart_Display;
+export type Shuju = Variable_State|Chart_Display;
 export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
+
 export function incrementEnthusiasm():IncrementEnthusiasm{
     return {
         type: INCREMENT_ENTHUSIASM
@@ -42,6 +50,12 @@ export function selectedVarialeHover(key:number):Variable_State{
 export function selectedVariableDelete(key:number):Variable_State{
     return{
         type: VARIABLE_DISPLAY_DELETE,
+        key
+    }
+}
+export function drawChart(key:number):Chart_Display{
+    return{
+        type: CHART_DISPLAY,
         key
     }
 }

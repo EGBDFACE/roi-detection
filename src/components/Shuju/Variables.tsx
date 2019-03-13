@@ -1,9 +1,9 @@
 import * as React from 'react';
 // import VariablesUnit from '../../containers/Shuju/VariablesUnit';
-import VariablesUnit from '../../components/Shuju/VariablesUnit';
+// import VariablesUnit from '../../components/Shuju/VariablesUnit';
 import './css_Variables.scss';
 import { variable_status } from '../../store/store';
-import { State } from 'pixi.js';
+// import { State } from 'pixi.js';
 
 interface Props{
     stateArray: variable_status[],
@@ -22,10 +22,16 @@ export default class Variables extends React.Component<Props,States>{
         const stateChange = this.props.stateChange;
         const name = stateArray[value].name;
         const state = stateArray[value].state;
+        const disableStyle = {
+            opacity: 0.3,
+            cursor: 'not-allowed',
+            color: 'black'
+        };
         // const category = stateArray[value].category;
         return(
+            <p key={value} style={state?null:disableStyle} onClick={state?()=>stateChange(value):null}>{name}</p>
             // <VariablesUnit key={value} id={value} name={name} state={state} category={category} />
-            <VariablesUnit key={value} id={value} name={name} state={state} stateChange={stateChange}/>
+            // <VariablesUnit key={value} id={value} name={name} state={state} stateChange={stateChange}/>
         )
     }
     // shouldComponentUpdate(nextProps:Props,nextState:States):boolean{
@@ -41,6 +47,7 @@ export default class Variables extends React.Component<Props,States>{
     //     this.render();
     // }
     render(){
+        // console.log(this.props.stateArray);
         // const dimensions = 'dimensions';
         // const magnitude = 'magnitude';
         // console.log(this.props.stateArray);

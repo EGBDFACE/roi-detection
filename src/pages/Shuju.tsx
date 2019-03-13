@@ -7,6 +7,7 @@ import Variables from '../containers/Shuju/Variables';
 import '../components/Shuju/css_Variables.scss';
 import SelectedVariables from '../containers/Shuju/SelectedVariables';
 import ChartArea from '../components/Shuju/ChartArea';
+import Subtype from '../containers/Shuju/Subtype';
 
 interface Props{
 
@@ -51,7 +52,10 @@ export default class Shuju extends React.Component<Props,States>{
                         <ChartArea/>
                     </div>
                     <div className='rightSideBar'>
-                    
+                        <div className='subType'>
+                            <i className='subTypeHeader'><h3>图表类型</h3></i>
+                            <Subtype/>
+                        </div>
                     </div>
                 </div>
                 </div>

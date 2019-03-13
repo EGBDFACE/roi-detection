@@ -1,5 +1,5 @@
-import { EnthusiasmAction,VariableState } from '../actions/action';
-import { StoreState, enthusiasm,variable_status, shuju_vari } from '../store/store';
+import { Shuju,EnthusiasmAction,VariableState, selectedVariableDelete } from '../actions/action';
+import { StoreState, enthusiasm,variable_status, shuju_variable, chartToDisplay } from '../store/store';
 
 const Reducer = (state:StoreState,action:any) => {
     return{
@@ -25,28 +25,32 @@ function enthusiasm (state:enthusiasm,action:EnthusiasmAction){
         default: return state;
     }
 }
-function variables(state:shuju_vari,action:VariableState):shuju_vari{
+function variables(state:shuju_variable,action:Shuju):shuju_variable{
+    // console.log(state);
     switch(action.type){
         case 'VARIABLE_STATE_CHANGE':
             return{
                 ...state,
-                // variables: stateChange(state.variables,action.key)
-                variables: state.variables.map((value,index)=>{
-                    if(index == action.key){
-                        return {
-                            ...value,
-                            // name: value.name,
-                            state: !value.state,
-                            display: !value.display,
-                            // category: value.category,
-                            // display_hover: value.display_hover
-                        }
-                    }else{return value}
-                })
+                variables: stateChange(state.variables,action.key),
+                selectedVariablesNumber: state.selectedVariablesNumber+1,
+                chartList: chartStateAdd(state,action.key)
+                // variables: state.variables.map((value,index)=>{
+                //     if(index == action.key){
+                //         return {
+                //             ...value,
+                //             // name: value.name,
+                //             state: !value.state,
+                //             display: !value.display,
+                //             // category: value.category,
+                //             // display_hover: value.display_hover
+                //         }
+                //     }else{return value}
+                // })
             }
         case 'VARIABLE_DISPLAY_MOUSE_HOVER':
             return{
                 ...state,
+                // variables: displayHover(state,action.key)
                 variables: state.variables.map((value,index)=>{
                     if(index == action.key){
                         return{
@@ -57,31 +61,169 @@ function variables(state:shuju_vari,action:VariableState):shuju_vari{
                 })
             }
         case 'VARIABLE_DISPLAY_DELETE':
-            console.log(action.key);
             return{
                 ...state,
-                variables: state.variables.map((value,index)=>{
-                    if(index == action.key){
-                        return{
-                            ...value,
-                            display: !value.display,
-                            state: !value.state,
-                            display_hover: false
-                        }
-                    }else{return value}
-                })
+                // variables: state.variables.map((value,index)=>{
+                //     if(index == action.key){
+                //         return{
+                //             ...value,
+                //             display: !value.display,
+                //             state: !value.state,
+                //             display_hover: false
+                //         }
+                //     }else{return value}
+                // }),
+                variables: displayDelete(state,action.key),
+                selectedVariablesNumber: state.selectedVariablesNumber-1,
+                chartList: chartStateDelete(state,action.key)
             }
         default: return state
     }
 }
-// function stateChange(state:variable_status[],index:number):variable_status[]{
-
-//     for(let i = 0;i<state.length;i++){
-//         if(i == index){
-//             state[i].display = !state[i].display;
-//             state[i].state = !state[i].state;
-//         }
+function stateChange(state:variable_status[],index:number):variable_status[]{
+    // console.log(defaultState.shuju_variables.variables);
+    let newState: variable_status[] = [];
+    if((index<2)||((index>2)&&(index<10))){
+        for(let i=0;i<10;i++){
+            newState[i] = state[i];
+        }
+        newState[2].state = false;
+        newState[index].state = false;
+        newState[index].display = true;
+        for(let i=10;i<state.length;i++){
+            newState[i] = {...state[i],state:false};
+        }
+    }else if((index == 2)||(index == 10)||((index>11)&&(index<22))){
+        for(let i=0;i<state.length;i++){
+            if((i<10)&&(i!=2)){
+                newState[i] = {...state[i],state: false}
+            }else{
+                newState[i] = state[i];
+            }
+        }
+        newState[index].state = false;
+        newState[index].display = true;
+    }
+    return newState;
+}
+function displayDelete(state:shuju_variable,key:number):variable_status[]{
+    let newState : variable_status[] = [];
+    if(state.selectedVariablesNumber == 1){
+        for(let i=0;i<state.variables.length;i++){
+            newState[i] = {...state.variables[i],state:true,display:false,display_hover:false};
+        }
+        newState[11].state = false;
+        newState[22].state = false;
+        return newState;
+    }else{
+        return state.variables.map((value,index)=>{
+            if(index == key){
+                return {
+                    ...value,
+                    display: false,
+                    state: true,
+                    display_hover: false
+                }
+            }else{return value}
+        })
+    }
+}
+function chartStateAdd(state:shuju_variable,key:number):chartToDisplay[]{
+    let newChartList: chartToDisplay[] = [];
+    console.log(state.selectedVariablesNumber);
+    for(let i=0;i<state.chartList.length;i++){
+        newChartList[i] = {...state.chartList[i],state:false};
+    }
+    if(state.selectedVariablesNumber == 0){
+        console.log(newChartList);
+        if((key<2)||((key>2)&&(key<11))||(key == 21)){
+            newChartList[1] = {...state.chartList[1],state:true};
+        }
+    }else if(state.selectedVariablesNumber > 0){
+        if((key<2)||((key>2)&&(key<10))){
+            newChartList[1].state = false;
+            newChartList[6].state = true;
+            newChartList[8].state = true;
+            newChartList[9].state = true;
+        }else{
+            if(state.selectedVariablesNumber == 1){
+                if((key==2)||(state.variables[2].display)){
+                    newChartList[0].state = true;
+                    newChartList[2].state = true;
+                    newChartList[3].state = true;
+                }else{
+                    newChartList[4].state = true;
+                    newChartList[5].state = true;
+                }
+            }
+            newChartList[7].state = true;
+        }
+    }
+    return newChartList;
+}
+function chartStateDelete(state:shuju_variable,key:number):chartToDisplay[]{
+    let newChartList: chartToDisplay[] = [];
+    for(let i = 0;i<state.chartList.length;i++){
+        newChartList[i] = {...state.chartList[i],state:false};
+    }
+    // if((key<2)||((key>2)&&(key<10))){
+    //     if(state.selectedVariablesNumber == 2){
+    //         newChartList[1].state = true;
+    //     }else if(state.selectedVariablesNumber > 2){
+    //         newChartList[6].state = true;
+    //         newChartList[8].state = true;
+    //         newChartList[9].state = true;
+    //     }
+    // }else if((state.selectedVariablesNumber == 2)&&(((state.variables[10].display)&&(key != 10))||(state.variables[21].display)&&(key != 21))){
+    //     newChartList[1].state = true;
+    // }else{
+    //     if()
+    // }
+    if(state.selectedVariablesNumber == 2){
+        if((key<2)||((key>2)&&(key<10))||((state.variables[10].display)&&(key != 10))||((state.variables[21].display)&&(key != 21))){
+            newChartList[1].state = true;
+        }
+    }else if(state.selectedVariablesNumber == 3){
+        if((key<2)||((key>2)&&(key<10))){
+            newChartList[6].state = true;
+            newChartList[8].state = true;
+            newChartList[9].state = true;
+        }else{
+            if((state.variables[2].display)&&(key != 2)){
+                newChartList[0].state = true;
+                newChartList[2].state = true;
+                newChartList[3].state = true;
+            }else{
+                newChartList[4].state = true;
+                newChartList[5].state = true;
+            }
+            newChartList[7].state = true;
+        }
+    }else if(state.selectedVariablesNumber > 3){
+        if((key<2)||((key>2)&&(key<10))){
+            newChartList[6].state = true;
+            newChartList[8].state = true;
+            newChartList[9].state = true;
+        }else{
+            newChartList[7].state = true;
+        }
+    }
+    return newChartList;
+}
+// function displayHover(state:shuju_variable,key:number):variable_status[]{
+//     if(state.selectedVariablesNumber == 0){
+//         console.log('return init in hover');
+//         return defaultState.shuju_variables.variables;
+//     }else{
+//         return state.variables.map((value,index)=>{
+//             console.log('hover');
+//             if(index == key){
+//                 return{
+//                     ...value,
+//                     display_hover: !value.display_hover
+//                 }
+//             }else{return value}
+//         })
 //     }
-//     return state;
 // }
 export default Reducer;

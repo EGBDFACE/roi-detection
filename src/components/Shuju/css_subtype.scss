@@ -1,0 +1,171 @@
+table{
+    margin-left: 5px;
+    margin-top: 10px;
+    border-collapse: separate;
+    border-spacing: 15px 0px;
+    th{
+        padding: 1px;
+        color: gray;
+        i{
+            pointer-events: none;
+            display: inline-block;
+            height: 20px;
+            width: 20px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        p{
+            pointer-events: none;
+            font-size: 10px;
+            margin-bottom: 8px;
+            margin-top: 0px;
+            font-weight: normal;
+        }
+    }
+}
+@mixin commonHover{
+    cursor: pointer;
+    p{
+        color:#fb3165;
+    }
+}
+.barChart{
+    i{
+        background-image: url('../../images/条形.png');
+    }
+}
+.barChartEnable{
+    @extend .barChart;
+    &:hover{
+        @include commonHover();
+        i{
+            background-image: url('../../images/条形2.png');
+        }
+    }
+}
+.pie{
+    i{
+        background-image: url('../../images/饼图.png');
+    }
+}
+.pieEnable{
+    @extend .pie;
+    &:hover{
+        @include commonHover();
+        i{
+            background-image:url('../../images/饼图2.png');
+        }
+    }
+}
+.areaChart{
+    i{
+        background-image: url('../../images/areaChart.png');
+    }
+}
+.areaChartEnable{
+    @extend .areaChart;
+    &:hover{
+        @include commonHover();
+        i{
+            background-image: url('../../images/areaChart2.png');
+        }
+    }
+}
+.lineChart{
+    i{
+        background-image: url('../../images/折线.png');
+    }
+}
+.lineChartEnable{
+    @extend .lineChart;
+    &:hover{
+        @include commonHover();
+        i{
+            background-image: url('../../images/折线2.png');
+        }
+    }
+}
+.scatterSolid{
+    i{
+        background-image: url('../../images/实点.png');
+    }
+}
+.scatterSolidEnable{
+    @extend .scatterSolid;
+    &:hover{
+        @include commonHover();
+        i{
+            background-image: url('../../images/实点2.png');
+        }
+    }
+}
+.scatterHollow{
+    i{
+        background-image:url('../../images/空点.png');
+    }
+}
+.scatterHollowEnable{
+    @extend .scatterHollow;
+    &:hover{
+        @include commonHover();
+        i{
+            background-image: url('../../images/空点2.png');
+        }
+    }
+}
+.tidyTree{
+    i{
+        background-image: url('../../images/比重.png');
+    }
+}
+.tidyTreeEnable{
+    @extend .tidyTree;
+    &:hover{
+        @include commonHover();
+        i{
+            background-image: url('../../images/比重2.png');
+        }
+    }
+}
+.chordDiagram{
+    i{
+        background-image: url('../../images/甘特.png');
+    }
+}
+.chordDiagramEnable{
+    @extend .chordDiagram;
+    &:hover{
+        @include commonHover();
+        i{
+            background-image:url('../../images/甘特2.png');
+        }
+    }
+}
+.icicle{
+    i{
+        background-image: url('../../images/中位.png');
+    }
+}
+.icicleEnable{
+    @extend .icicle;
+    &:hover{
+        @include commonHover();
+        i{
+            background-image: url('../../images/中位2.png');
+        }
+    }
+}
+.sunburst{
+    i{
+        background-image: url('../../images/定点.png');
+    }
+}
+.sunburstEnable{
+    @extend .sunburst;
+    &:hover{
+        @include commonHover();
+        i{
+            background-image: url('../../images/定点2.png');
+        }
+    }
+}

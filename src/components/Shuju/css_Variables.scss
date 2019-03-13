@@ -19,7 +19,7 @@
     @include variablesPhoto();
     background-image: url('../../images/界面切换符.png');
 }
-.magnitudePhoto,.choosedPhoto{
+.magnitudePhoto,.choosedPhoto,.subTypeHeader{
     @include variablesPhoto();
     background-image: url('../../images/界面切换符3.png');
 }
@@ -129,4 +129,8 @@ h6{
     height: 600px;
     position: relative;
     min-width: 500px;
+}
+.subType{
+    width: 135px;
+    height: 400px;
 }

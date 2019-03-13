@@ -19,7 +19,7 @@
     @include variablesPhoto();
     background-image: url('../../images/界面切换符.png');
 }
-.magnitudePhoto,.choosedPhoto,.subTypeHeader{
+.magnitudePhoto,.choosedPhoto,.subTypeHeader,.variablesTabBG{
     @include variablesPhoto();
     background-image: url('../../images/界面切换符3.png');
 }
@@ -133,4 +133,9 @@ h6{
 .subType{
     width: 135px;
     height: 400px;
+}
+.variablesTab{
+    width: 135px;
+    height: 230px;
+    margin-top: 20px;
 }

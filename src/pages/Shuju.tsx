@@ -56,6 +56,10 @@ export default class Shuju extends React.Component<Props,States>{
                             <i className='subTypeHeader'><h3>图表类型</h3></i>
                             <Subtype/>
                         </div>
+                        <div className='variablesTab'>
+                            <i className='variablesTabBG'><h3>变量标记</h3></i>
+                            
+                        </div>
                     </div>
                 </div>
                 </div>

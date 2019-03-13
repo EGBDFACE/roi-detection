@@ -29,8 +29,9 @@ export interface chartToDisplay{
 }
 export interface shuju_variable{
     variables: variable_status[],
-    selectedVariablesNumber: number
-    chartList:chartToDisplay[]
+    selectedVariablesNumber: number,
+    chartList:chartToDisplay[],
+    chartShowingType: string
 }
 export interface StoreState{
     enthusiasm:enthusiasm,
@@ -107,7 +108,8 @@ export const initialState:StoreState = {
             {label:'chordDiagram',state:false,name:'弦图'},
             {label:'icicle',state:false,name:'结构'},
             {label:'sunburst',state:false,name:'放射圆'}
-        ]
+        ],
+        chartShowingType: ''
     }
 };
 

@@ -4,6 +4,7 @@ import './css_subtype.scss';
 
 interface Props{
     chartList: chartToDisplay[],
+    chartShowingType: string,
     chartClick: (index:number) => void
 }
 interface States{}
@@ -20,9 +21,10 @@ export default class Subtype extends React.Component<Props,States>{
             color: 'black'
         };
         const chartObject = this.props.chartList[index];
+        const chartShowingType = this.props.chartShowingType;
         const chartClick = this.props.chartClick;
         return(
-            <th key={index} onClick={chartObject.state?()=>chartClick(index):null} style={chartObject.state?null:disableStyle} className={chartObject.state?`${chartObject.label}Enable`:chartObject.label}>
+            <th key={index} onClick={chartObject.state?()=>chartClick(index):null} style={chartObject.state?null:disableStyle} className={chartObject.state?((chartShowingType===chartObject.label)?`${chartObject.label}Display`:`${chartObject.label}Enable`):`${chartObject.label}Normal`}>
                 <i></i>
                 <p>{chartObject.name}</p>
             </th>

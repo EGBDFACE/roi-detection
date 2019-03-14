@@ -6,7 +6,8 @@ import * as actions from '../../actions/action';
 
 function mapStateToProps(state:StoreState){
     return{
-        chartList: state.shuju_variables.chartList
+        chartList: state.shuju_variables.chartList,
+        chartShowingType : state.shuju_variables.chartShowingType
     }
 }
 

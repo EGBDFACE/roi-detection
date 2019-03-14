@@ -8,6 +8,7 @@ import '../components/Shuju/css_Variables.scss';
 import SelectedVariables from '../containers/Shuju/SelectedVariables';
 import ChartArea from '../components/Shuju/ChartArea';
 import Subtype from '../containers/Shuju/Subtype';
+import VariablesTab from '../containers/Shuju/VariablesTab';
 
 interface Props{
 
@@ -58,7 +59,7 @@ export default class Shuju extends React.Component<Props,States>{
                         </div>
                         <div className='variablesTab'>
                             <i className='variablesTabBG'><h3>变量标记</h3></i>
-                            
+                            <VariablesTab/>
                         </div>
                     </div>
                 </div>

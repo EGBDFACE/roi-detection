@@ -29,143 +29,208 @@ table{
         color:#fb3165;
     }
 }
-.barChart{
-    i{
-        background-image: url('../../images/条形.png');
+@mixin commonDisplay{
+    p{
+        color: #1296db;
     }
 }
+.barChartNormal{
+    i{
+        background-image: url('../../images/bar-chart-normal.png');
+    }
+}
+.barChartDisplay{
+    i{
+        background-image: url('../../images/bar-chart-display.png');
+    }
+    @include commonDisplay();
+}
 .barChartEnable{
-    @extend .barChart;
+    @extend .barChartNormal;
     &:hover{
         @include commonHover();
         i{
-            background-image: url('../../images/条形2.png');
+            background-image: url('../../images/bar-chart-hover.png');
         }
     }
 }
-.pie{
+.pieNormal{
     i{
-        background-image: url('../../images/饼图.png');
+        background-image: url('../../images/pie-chart-normal.png');
     }
 }
 .pieEnable{
-    @extend .pie;
+    @extend .pieNormal;
     &:hover{
         @include commonHover();
         i{
-            background-image:url('../../images/饼图2.png');
+            background-image:url('../../images/pie-chart-hover.png');
         }
     }
 }
-.areaChart{
+.pieDisplay{
     i{
-        background-image: url('../../images/areaChart.png');
+        background-image: url('../../images/pie-chart-display.png');
+    }
+    @include commonDisplay();
+}
+.areaChartNormal{
+    i{
+        background-image: url('../../images/area-chart-normal.png');
     }
 }
 .areaChartEnable{
-    @extend .areaChart;
+    @extend .areaChartNormal;
     &:hover{
         @include commonHover();
         i{
-            background-image: url('../../images/areaChart2.png');
+            background-image: url('../../images/area-chart-hover.png');
         }
     }
 }
-.lineChart{
+.areaChartDisplay{
     i{
-        background-image: url('../../images/折线.png');
+        background-image: url('../../images/area-chart-display.png');
+    }
+    @include commonDisplay();
+}
+.lineChartNormal{
+    i{
+        background-image: url('../../images/line-chart-normal.png');
     }
 }
 .lineChartEnable{
-    @extend .lineChart;
+    @extend .lineChartNormal;
     &:hover{
         @include commonHover();
         i{
-            background-image: url('../../images/折线2.png');
+            background-image: url('../../images/line-chart-hover.png');
         }
     }
 }
-.scatterSolid{
+.lineChartDisplay{
     i{
-        background-image: url('../../images/实点.png');
+        background-image: url('../../images/line-chart-display.png');
+    }
+    @include commonDisplay();
+}
+.scatterSolidNormal{
+    i{
+        background-image: url('../../images/scatter-solid-normal.png');
     }
 }
 .scatterSolidEnable{
-    @extend .scatterSolid;
+    @extend .scatterSolidNormal;
     &:hover{
         @include commonHover();
         i{
-            background-image: url('../../images/实点2.png');
+            background-image: url('../../images/scatter-solid-hover.png');
         }
     }
 }
-.scatterHollow{
+.scatterSolidDisplay{
     i{
-        background-image:url('../../images/空点.png');
+        background-image: url('../../images/scatter-solid-display.png');
+    }
+    @include commonDisplay();
+}
+.scatterHollowNormal{
+    i{
+        background-image:url('../../images/scatter-hollow-normal.png');
     }
 }
 .scatterHollowEnable{
-    @extend .scatterHollow;
+    @extend .scatterHollowNormal;
     &:hover{
         @include commonHover();
         i{
-            background-image: url('../../images/空点2.png');
+            background-image: url('../../images/scatter-hollow-hover.png');
         }
     }
 }
-.tidyTree{
+.scatterHollowDisplay{
     i{
-        background-image: url('../../images/比重.png');
+        background-image: url('../../images/scatter-hollow-display.png');
+    }
+    @include commonDisplay();
+}
+.tidyTreeNormal{
+    i{
+        background-image: url('../../images/tree-chart-normal.png');
     }
 }
 .tidyTreeEnable{
-    @extend .tidyTree;
+    @extend .tidyTreeNormal;
     &:hover{
         @include commonHover();
         i{
-            background-image: url('../../images/比重2.png');
+            background-image: url('../../images/tree-chart-hover.png');
         }
     }
 }
-.chordDiagram{
+.tidyTreeDisplay{
     i{
-        background-image: url('../../images/甘特.png');
+        background-image: url('../../images/tree-chart-display.png');
+    }
+    @include commonDisplay();
+}
+.chordDiagramNormal{
+    i{
+        background-image: url('../../images/chord-chart-normal.png');
     }
 }
 .chordDiagramEnable{
-    @extend .chordDiagram;
+    @extend .chordDiagramNormal;
     &:hover{
         @include commonHover();
         i{
-            background-image:url('../../images/甘特2.png');
+            background-image:url('../../images/chord-chart-hover.png');
         }
     }
 }
-.icicle{
+.chordDiagramDisplay{
     i{
-        background-image: url('../../images/中位.png');
+        background-image: url('../../images/chord-chart-display.png');
+    }
+    @include commonDisplay();
+}
+.icicleNormal{
+    i{
+        background-image: url('../../images/icicle-chart-normal.png');
     }
 }
 .icicleEnable{
-    @extend .icicle;
+    @extend .icicleNormal;
     &:hover{
         @include commonHover();
         i{
-            background-image: url('../../images/中位2.png');
+            background-image: url('../../images/icicle-chart-hover.png');
         }
     }
 }
-.sunburst{
+.icicleDisplay{
     i{
-        background-image: url('../../images/定点.png');
+        background-image: url('../../images/icicle-chart-display.png');
+    }
+    @include commonDisplay();
+}
+.sunburstNormal{
+    i{
+        background-image: url('../../images/sunburst-chart-normal.png');
     }
 }
 .sunburstEnable{
-    @extend .sunburst;
+    @extend .sunburstNormal;
     &:hover{
         @include commonHover();
         i{
-            background-image: url('../../images/定点2.png');
+            background-image: url('../../images/sunburst-chart-hover.png');
         }
     }
+}
+.sunburstDisplay{
+    i{
+        background-image: url('../../images/sunburst-chart-display.png');
+    }
+    @include commonDisplay();
 }

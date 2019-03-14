@@ -12,6 +12,18 @@ interface Chart_Display{
     type: string,
     key:number
 }
+interface ChartColorChange{
+    type: string,
+    color: string
+}
+interface ChartShapeChange{
+    type: string,
+    shape: string
+}
+interface ChartSizeChange{
+    type: string,
+    size: number
+}
 
 const INCREMENT_ENTHUSIASM = 'INCREMENT_ENTHUSIASM';
 const DECREMENT_ENTHUSIASM = 'DECREMENT_ENTHUSIASM';
@@ -19,11 +31,15 @@ const VARIABLE_STATE_CHANGE = 'VARIABLE_STATE_CHANGE';
 const VARIABLE_DISPLAY_MOUSE_HOVER = 'VARIABLE_DISPLAY_MOUSE_HOVER';
 const VARIABLE_DISPLAY_DELETE = 'VARIABLE_DISPLAY_DELETE';
 const CHART_DISPLAY = 'CHART_DISPLAY';
+const CHART_COLOR_CHANGE = 'CHART_COLOR_CHANGE';
+const CHART_SHAPE_CHANGE = 'CHART_SHAPE_CHANGE';
+const CHART_SIZE_CHANGE = 'CHART_SIZE_CHANGE';
 
 export type VariableState = Variable_State;
 export type ChartDisplay = Chart_Display;
 export type Shuju = Variable_State|Chart_Display;
 export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
+export type VariablesTab = ChartColorChange | ChartShapeChange | ChartSizeChange;
 
 export function incrementEnthusiasm():IncrementEnthusiasm{
     return {
@@ -57,5 +73,23 @@ export function drawChart(key:number):Chart_Display{
     return{
         type: CHART_DISPLAY,
         key
+    }
+}
+export function chart_color_change(color:string):ChartColorChange{
+    return{
+        type: CHART_COLOR_CHANGE,
+        color
+    }
+}
+export function chart_shape_change(shape:string):ChartShapeChange{
+    return{
+        type: CHART_SHAPE_CHANGE,
+        shape
+    }
+}
+export function chart_size_change(size:number):ChartSizeChange{
+    return{
+        type: CHART_SIZE_CHANGE,
+        size
     }
 }

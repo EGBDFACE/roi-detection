@@ -23,7 +23,7 @@ export default class Variables extends React.Component<Props,States>{
         const name = stateArray[value].name;
         const state = stateArray[value].state;
         const disableStyle = {
-            opacity: 0.3,
+            opacity: 0.15,
             cursor: 'not-allowed',
             color: 'black'
         };

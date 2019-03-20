@@ -16,7 +16,7 @@ export default class Subtype extends React.Component<Props,States>{
     }
     renderChartLabel(index:number){
         const disableStyle = {
-            opacity: 0.3,
+            opacity: 0.15,
             cursor: 'not-allowed',
             color: 'black'
         };

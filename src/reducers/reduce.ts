@@ -1,5 +1,8 @@
 import { Shuju,EnthusiasmAction,VariableState, selectedVariableDelete } from '../actions/action';
 import { StoreState, enthusiasm,variable_status, shuju_variable, chartToDisplay } from '../store/store';
+import drawPieChart from '../assets/Shuju_DrawFunc/pieChart.js';
+// import drawBarChart from '../assets/Shuju_DrawFunc/drawBarChart.js';
+
 
 const Reducer = (state:StoreState,action:any) => {
     return{
@@ -75,7 +78,24 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
                 // }),
                 variables: displayDelete(state,action.key),
                 selectedVariablesNumber: state.selectedVariablesNumber-1,
-                chartList: chartStateDelete(state,action.key)
+                chartList: chartStateDelete(state,action.key),
+                chartShowingType: ''
+            }
+        case 'CHART_DISPLAY':
+            switch(action.key){
+                case 0:
+                    // drawBarChart();
+                    return{
+                        ...state,
+                        chartShowingType: 'barChart'
+                    }
+                case 1:
+                    console.log('click');
+                    drawPieChart(state.variables.map(d=>{if(d.display){ return d.name;}}));
+                    return{
+                        ...state,
+                        chartShowingType: 'pie'
+                    }
             }
         default: return state
     }
@@ -162,6 +182,9 @@ function chartStateAdd(state:shuju_variable,key:number):chartToDisplay[]{
     return newChartList;
 }
 function chartStateDelete(state:shuju_variable,key:number):chartToDisplay[]{
+    if(document.getElementsByTagName('svg').length != 0){
+        document.getElementById('chart').removeChild(document.getElementsByTagName('svg')[0]);
+    }
     let newChartList: chartToDisplay[] = [];
     for(let i = 0;i<state.chartList.length;i++){
         newChartList[i] = {...state.chartList[i],state:false};

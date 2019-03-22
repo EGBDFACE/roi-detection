@@ -2,12 +2,12 @@ import * as d3 from 'd3';
 import { dataChartGet } from '../Shuju_data/dataFunc';
 
 export default function drawBarChart(selectedVariables){
-    let yVariablesLabel = '';
-    for(let i = 0;i<selectedVariables.length;i++){
-        if((selectedVariables[i])&&(selectedVariables[i] != 'ID编号')){
-            yVariablesLabel = selectedVariables[i];
-        }
-    }
+    let yVariablesLabel = selectedVariables[1];
+    // for(let i = 0;i<selectedVariables.length;i++){
+    //     if((selectedVariables[i])&&(selectedVariables[i] != 'ID编号')){
+    //         yVariablesLabel = selectedVariables[i];
+    //     }
+    // }
     var dataArray = dataChartGet('ID',yVariablesLabel);
     // console.log(dataArray);
     var width = 700,height= 500,padding = 20;

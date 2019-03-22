@@ -10,7 +10,8 @@ export default function drawPieChart(selectedVariable){
     //     }
     // });
     // var pieData = dataChartGet(variant);
-    var pieData = dataChartGet(selectedVariable.filter(d=>d)[0])
+    // var pieData = dataChartGet(selectedVariable.filter(d=>d)[0])
+    var pieData = dataChartGet(selectedVariable);
     console.log(pieData);
     var pie = d3.pie();
     const width = 300,height = 300,

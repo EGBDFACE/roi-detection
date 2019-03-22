@@ -2,6 +2,7 @@ import { Shuju,EnthusiasmAction,VariableState, selectedVariableDelete } from '..
 import { StoreState, enthusiasm,variable_status, shuju_variable, chartToDisplay } from '../store/store';
 import drawPieChart from '../assets/Shuju_DrawFunc/pieChart.js';
 import drawBarChart from '../assets/Shuju_DrawFunc/drawBarChart.js';
+import drawAreaChart from '../assets/Shuju_DrawFunc/drawAreaChart';
 
 
 const Reducer = (state:StoreState,action:any) => {
@@ -84,16 +85,23 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
         case 'CHART_DISPLAY':
             switch(action.key){
                 case 0:
-                    drawBarChart(state.variables.map(d=>{if(d.display){ return d.name;}}));
+                    // drawBarChart(state.variables.map(d=>{if(d.display){ return d.name;}}));
+                    drawBarChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name));
                     return{
                         ...state,
                         chartShowingType: 'barChart'
                     }
                 case 1:
-                    drawPieChart(state.variables.map(d=>{if(d.display){ return d.name;}}));
+                    drawPieChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name));
                     return{
                         ...state,
                         chartShowingType: 'pie'
+                    }
+                case 2: 
+                    drawAreaChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name));
+                    return{
+                        ...state,
+                        chartShowingType: 'areaChart'
                     }
             }
         default: return state

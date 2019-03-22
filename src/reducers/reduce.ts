@@ -4,6 +4,7 @@ import drawPieChart from '../assets/Shuju_DrawFunc/pieChart.js';
 import drawBarChart from '../assets/Shuju_DrawFunc/drawBarChart.js';
 import drawAreaChart from '../assets/Shuju_DrawFunc/drawAreaChart';
 import drawLineChart from '../assets/Shuju_DrawFunc/drawLineChart';
+import drawSolidScatter from '../assets/Shuju_DrawFunc/drawSolidScatter';
 
 
 const Reducer = (state:StoreState,action:any) => {
@@ -112,6 +113,12 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
                     return{
                         ...state,
                         chartShowingType: 'lineChart'
+                    }
+                case 4: 
+                    drawSolidScatter(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),'#000000','circle',1);
+                    return{
+                        ...state,
+                        chartShowingType: 'scatterSolid'
                     }
             }
         default: return state

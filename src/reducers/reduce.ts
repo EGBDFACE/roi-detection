@@ -3,6 +3,7 @@ import { StoreState, enthusiasm,variable_status, shuju_variable, chartToDisplay 
 import drawPieChart from '../assets/Shuju_DrawFunc/pieChart.js';
 import drawBarChart from '../assets/Shuju_DrawFunc/drawBarChart.js';
 import drawAreaChart from '../assets/Shuju_DrawFunc/drawAreaChart';
+import drawLineChart from '../assets/Shuju_DrawFunc/drawLineChart';
 
 
 const Reducer = (state:StoreState,action:any) => {
@@ -105,6 +106,12 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
                     return{
                         ...state,
                         chartShowingType: 'areaChart'
+                    }
+                case 3:
+                    drawLineChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),'#000000','circle',1);
+                    return{
+                        ...state,
+                        chartShowingType: 'lineChart'
                     }
             }
         default: return state

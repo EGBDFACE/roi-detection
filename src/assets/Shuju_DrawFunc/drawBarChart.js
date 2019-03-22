@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { dataChartGet } from '../Shuju_data/dataFunc';
 
-export default function drawBarChart(selectedVariables){
+export default function drawBarChart(selectedVariables,color){
     let yVariablesLabel = selectedVariables[1];
     // for(let i = 0;i<selectedVariables.length;i++){
     //     if((selectedVariables[i])&&(selectedVariables[i] != 'ID编号')){
@@ -100,7 +100,7 @@ export default function drawBarChart(selectedVariables){
         .data(dataArray)
         .enter()
         .append("rect")
-        .attr("fill",'#000')
+        .attr("fill",color)
         .attr("x",function(d){
         return xScale(d["ID"])+xScale.bandwidth()/2;
         })

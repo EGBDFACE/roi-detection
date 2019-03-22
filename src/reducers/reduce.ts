@@ -83,10 +83,13 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
                 chartShowingType: ''
             }
         case 'CHART_DISPLAY':
+            if(document.getElementsByTagName('svg').length != 0){
+                document.getElementById('chart').removeChild(document.getElementsByTagName('svg')[0]);
+            }
             switch(action.key){
                 case 0:
                     // drawBarChart(state.variables.map(d=>{if(d.display){ return d.name;}}));
-                    drawBarChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name));
+                    drawBarChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),'#000000');
                     return{
                         ...state,
                         chartShowingType: 'barChart'
@@ -98,7 +101,7 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
                         chartShowingType: 'pie'
                     }
                 case 2: 
-                    drawAreaChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name));
+                    drawAreaChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),'#000000','circle',1);
                     return{
                         ...state,
                         chartShowingType: 'areaChart'

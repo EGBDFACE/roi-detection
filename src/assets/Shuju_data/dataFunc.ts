@@ -18,6 +18,7 @@ export function dataInit(){
 
 export function dataChartGet(...arg:string[]){
     if(arg.length === 1){
+        console.log(arg[0]);
         return countNum(dataArray.map((value,index)=>{
             return value[arg[0]];
         }))

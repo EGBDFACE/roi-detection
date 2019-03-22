@@ -3,7 +3,13 @@ import store from '../../store/store';
 import { dataChartGet } from '../Shuju_data/dataFunc';
 
 export default function drawPieChart(selectedVariable){
-    var pieData = dataChartGet(selectedVariable[0]);
+    let variant = '';
+    selectedVariable.map(d=>{
+        if(d){
+            variant = d;
+        }
+    });
+    var pieData = dataChartGet(variant);
     console.log(pieData);
     var pie = d3.pie();
     const width = 300,height = 300,

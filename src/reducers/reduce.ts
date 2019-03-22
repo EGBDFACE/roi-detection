@@ -90,7 +90,7 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
                         chartShowingType: 'barChart'
                     }
                 case 1:
-                    console.log('click');
+                    console.log(state.variables);
                     drawPieChart(state.variables.map(d=>{if(d.display){ return d.name;}}));
                     return{
                         ...state,

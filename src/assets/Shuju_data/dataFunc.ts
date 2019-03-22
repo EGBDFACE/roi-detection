@@ -17,13 +17,18 @@ export function dataInit(){
 }
 
 export function dataChartGet(...arg:string[]){
+    console.log(arg);
     if(arg.length === 1){
-        console.log(arg[0]);
         return countNum(dataArray.map((value,index)=>{
             return value[arg[0]];
         }))
     }else if(arg.length  === 2){
-        
+        return dataArray.map((value,index)=>{
+            let tempObj:any = {};
+            tempObj[arg[0]] = parseFloat(value[arg[0]]);
+            tempObj[arg[1]] = parseFloat(value[arg[1]]);
+            return tempObj;
+        })
     }
 }
 

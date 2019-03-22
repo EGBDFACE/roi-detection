@@ -1,7 +1,7 @@
 import { Shuju,EnthusiasmAction,VariableState, selectedVariableDelete } from '../actions/action';
 import { StoreState, enthusiasm,variable_status, shuju_variable, chartToDisplay } from '../store/store';
 import drawPieChart from '../assets/Shuju_DrawFunc/pieChart.js';
-// import drawBarChart from '../assets/Shuju_DrawFunc/drawBarChart.js';
+import drawBarChart from '../assets/Shuju_DrawFunc/drawBarChart.js';
 
 
 const Reducer = (state:StoreState,action:any) => {
@@ -84,13 +84,12 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
         case 'CHART_DISPLAY':
             switch(action.key){
                 case 0:
-                    // drawBarChart();
+                    drawBarChart(state.variables.map(d=>{if(d.display){ return d.name;}}));
                     return{
                         ...state,
                         chartShowingType: 'barChart'
                     }
                 case 1:
-                    console.log(state.variables);
                     drawPieChart(state.variables.map(d=>{if(d.display){ return d.name;}}));
                     return{
                         ...state,

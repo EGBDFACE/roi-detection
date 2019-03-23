@@ -62,7 +62,7 @@ export const initialState:StoreState = {
         [
             {name:'性别',...initDimensions},
             {name:'病史',...initDimensions},
-            {name:'ID编号',...initDimensions},
+            {name:'ID',...initDimensions},
             {name:'自检表征',...initDimensions},
             {name:'触检表征',...initDimensions},
             {name:'肿瘤性质',...initDimensions},

@@ -7,6 +7,7 @@ import drawLineChart from '../assets/Shuju_DrawFunc/drawLineChart';
 import drawSolidScatter from '../assets/Shuju_DrawFunc/drawSolidScatter';
 import drawSolidHollow from '../assets/Shuju_DrawFunc/drawSolidHollow';
 import drawTidyTree from '../assets/Shuju_DrawFunc/drawTidyTree';
+import drawChordDiagram from '../assets/Shuju_DrawFunc/drawChordDiagram';
 
 
 const Reducer = (state:StoreState,action:any) => {
@@ -135,6 +136,13 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
                         ...state,
                         chartShowingType: 'tidyTree'
                     }
+                case 7:
+                    drawChordDiagram(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name));
+                    return{
+                        ...state,
+                        chartShowingType: 'chordDiagram'
+                    }
+                
             }
         default: return state
     }

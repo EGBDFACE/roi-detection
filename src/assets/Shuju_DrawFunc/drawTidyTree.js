@@ -29,7 +29,7 @@ export default function drawTidyTree(selectedVariables){
         var root = d3.hierarchy(data);
         root.dx = 10-selectedVariables.length; //第一个元素的初始位置
         root.dy = width/(root.height+1);
-        console.log(root);
+        // console.log(root);
         return d3.tree().nodeSize([root.dx,root.dy])(root);
     }
     const root = tree(json2);

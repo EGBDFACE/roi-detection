@@ -9,6 +9,7 @@ import drawSolidHollow from '../assets/Shuju_DrawFunc/drawSolidHollow';
 import drawTidyTree from '../assets/Shuju_DrawFunc/drawTidyTree';
 import drawChordDiagram from '../assets/Shuju_DrawFunc/drawChordDiagram';
 import drawIcicle from '../assets/Shuju_DrawFunc/drawIcicle';
+import drawSunburst from '../assets/Shuju_DrawFunc/drawSunburst';
 
 
 const Reducer = (state:StoreState,action:any) => {
@@ -148,6 +149,12 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
                     return{
                         ...state,
                         chartShowingType: 'icicle'
+                    }
+                case 9:
+                    drawSunburst(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name));
+                    return{
+                        ...state,
+                        chartShowingType: 'sunburst'
                     }
             }
         default: return state

@@ -15,6 +15,7 @@ export function dataInit(){
     });
     console.log(dataArray);
 }
+export var dataSet = dataArray;
 
 export function dataChartGet(...arg:string[]){
     console.log(arg);

@@ -6,6 +6,7 @@ import drawAreaChart from '../assets/Shuju_DrawFunc/drawAreaChart';
 import drawLineChart from '../assets/Shuju_DrawFunc/drawLineChart';
 import drawSolidScatter from '../assets/Shuju_DrawFunc/drawSolidScatter';
 import drawSolidHollow from '../assets/Shuju_DrawFunc/drawSolidHollow';
+import drawTidyTree from '../assets/Shuju_DrawFunc/drawTidyTree';
 
 
 const Reducer = (state:StoreState,action:any) => {
@@ -40,7 +41,8 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
                 ...state,
                 variables: stateChange(state.variables,action.key),
                 selectedVariablesNumber: state.selectedVariablesNumber+1,
-                chartList: chartStateAdd(state,action.key)
+                chartList: chartStateAdd(state,action.key),
+                chartShowingType: ''
                 // variables: state.variables.map((value,index)=>{
                 //     if(index == action.key){
                 //         return {
@@ -127,6 +129,12 @@ function variables(state:shuju_variable,action:Shuju):shuju_variable{
                         ...state,
                         chartShowingType: 'scatterHollow'
                     }
+                case 6:
+                    drawTidyTree(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name));
+                    return{
+                        ...state,
+                        chartShowingType: 'tidyTree'
+                    }
             }
         default: return state
     }
@@ -180,6 +188,9 @@ function displayDelete(state:shuju_variable,key:number):variable_status[]{
     }
 }
 function chartStateAdd(state:shuju_variable,key:number):chartToDisplay[]{
+    if(document.getElementsByTagName('svg').length != 0){
+        document.getElementById('chart').removeChild(document.getElementsByTagName('svg')[0]);
+    }
     let newChartList: chartToDisplay[] = [];
     console.log(state.selectedVariablesNumber);
     for(let i=0;i<state.chartList.length;i++){

@@ -1,11 +1,11 @@
 import * as d3 from 'd3';
-import { dataChartGet } from '../Shuju_data/dataFunc';
+import { dataPccsGet } from '../Shuju_data/dataFunc';
 
 export default function drawChordDiagram(selectedVariables){
     var width = 500, height = 500;
 
-    var dataArray = dataChartGet(...selectedVariables);
-    
+    var dataArray = dataPccsGet(...selectedVariables);
+
     var svg = d3.select("#chart")
         .append("svg")
         .attr("width",width)

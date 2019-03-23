@@ -30,16 +30,18 @@ export function dataChartGet(...arg:string[]){
             tempObj[arg[1]] = parseFloat(value[arg[1]]);
             return tempObj;
         })
-    }else{
-        let tempArray : number[][]=[];
-        for(let i =0;i<arg.length;i++){
-            tempArray[i] = new Array();
-            for(let j=0;j<dataArray.length;j++){
-                tempArray[i][j] = parseFloat(dataArray[j][arg[i]]);
-            }
-        }
-        return tempArray;
     }
+}
+
+export function dataPccsGet(...arg:string[]){
+    let tempArray : number[][]=[];
+    for(let i =0;i<arg.length;i++){
+        tempArray[i] = new Array();
+        for(let j=0;j<dataArray.length;j++){
+            tempArray[i][j] = parseFloat(dataArray[j][arg[i]]);
+        }
+    }
+    return tempArray;
 }
 
 function countNum(inputArray:any[]){

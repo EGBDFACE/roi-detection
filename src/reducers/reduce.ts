@@ -213,7 +213,6 @@ function chartStateAdd(state:shuju_variable,key:number):chartToDisplay[]{
         document.getElementById('chart').removeChild(document.getElementsByTagName('svg')[0]);
     }
     let newChartList: chartToDisplay[] = [];
-    console.log(state.selectedVariablesNumber);
     for(let i=0;i<state.chartList.length;i++){
         newChartList[i] = {...state.chartList[i],state:false};
     }

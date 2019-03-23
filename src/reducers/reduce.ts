@@ -1,4 +1,4 @@
-import { Shuju,EnthusiasmAction,VariableState, selectedVariableDelete } from '../actions/action';
+import { Shuju,EnthusiasmAction,VariableState, selectedVariableDelete, VariablesTab } from '../actions/action';
 import { StoreState, enthusiasm,variable_status, shuju_variable, chartToDisplay } from '../store/store';
 import drawPieChart from '../assets/Shuju_DrawFunc/pieChart.js';
 import drawBarChart from '../assets/Shuju_DrawFunc/drawBarChart.js';
@@ -15,7 +15,61 @@ import drawSunburst from '../assets/Shuju_DrawFunc/drawSunburst';
 const Reducer = (state:StoreState,action:any) => {
     return{
         enthusiasm: enthusiasm(state.enthusiasm,action),
-        shuju_variables: variables(state.shuju_variables,action)
+        shuju_variables: variables(state.shuju_variables,action),
+        chartStyle: chartStyle(state,action)
+    }
+}
+function chartStyle(state:StoreState,action:VariablesTab){
+    if((action.type === 'CHART_COLOR_CHANGE')||(action.type ==='CHART_SHAPE_CHANGE')||(action.type === 'CHART_SIZE_CHANGE')){
+        if(document.getElementsByTagName('svg').length != 0){
+            document.getElementById('chart').removeChild(document.getElementsByTagName('svg')[0]);
+        }
+        console.log(action);
+        console.log(state);
+        console.log((action.size ===state.chartStyle.size)?state.chartStyle.size:action.size);
+        console.log(((action.shape === state.chartStyle.shape)||(!action.shape))?state.chartStyle.shape:action.shape);
+        switch(state.shuju_variables.chartShowingType){
+            case 'barChart':
+                drawBarChart(state.shuju_variables.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),((action.color === state.chartStyle.color)||(!action.color))?state.chartStyle.color:action.color);
+                break;
+            case 'areaChart':
+                drawAreaChart(state.shuju_variables.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),((action.color === state.chartStyle.color)||(!action.color))?state.chartStyle.color:action.color,((action.shape === state.chartStyle.shape)||(!action.shape))?state.chartStyle.shape:action.shape,((action.size ===state.chartStyle.size)||(!action.size))?state.chartStyle.size:action.size);
+                break;
+            case 'lineChart':
+                drawLineChart(state.shuju_variables.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),((action.color === state.chartStyle.color)||(!action.color))?state.chartStyle.color:action.color,((action.shape === state.chartStyle.shape)||(!action.shape))?state.chartStyle.shape:action.shape,((action.size ===state.chartStyle.size)||(!action.size))?state.chartStyle.size:action.size);
+                break;
+            case 'scatterSolid':
+                drawSolidScatter(state.shuju_variables.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),((action.color === state.chartStyle.color)||(!action.color))?state.chartStyle.color:action.color,((action.shape === state.chartStyle.shape)||(!action.shape))?state.chartStyle.shape:action.shape,((action.size ===state.chartStyle.size)||(!action.size))?state.chartStyle.size:action.size);
+                break;
+            case 'scatterHollow':
+                drawSolidHollow(state.shuju_variables.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),((action.color === state.chartStyle.color)||(!action.color))?state.chartStyle.color:action.color,((action.shape === state.chartStyle.shape)||(!action.shape))?state.chartStyle.shape:action.shape,((action.size ===state.chartStyle.size)||(!action.size))?state.chartStyle.size:action.size);
+                break;
+        }
+    }
+    switch(action.type){
+        case 'CHART_COLOR_CHANGE':
+            return{
+                shape: state.chartStyle.shape,
+                color: action.color,
+                size: state.chartStyle.size
+            }
+        case 'CHART_SHAPE_CHANGE':
+            return{
+                color: state.chartStyle.color,
+                shape: action.shape,
+                size: state.chartStyle.size
+            }
+        case 'CHART_SIZE_CHANGE':
+            return{
+                color: state.chartStyle.color,
+                size: action.size,
+                shape: state.chartStyle.shape
+            }
+        default: return {
+            color: state.chartStyle.color,
+            shape: state.chartStyle.shape,
+            size: state.chartStyle.size
+        }
     }
 }
 function enthusiasm (state:enthusiasm,action:EnthusiasmAction){

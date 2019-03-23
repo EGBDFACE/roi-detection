@@ -24,6 +24,12 @@ interface ChartSizeChange{
     type: string,
     size: number
 }
+export interface VariablesTab{
+    type: string,
+    color?: string,
+    shape?: string,
+    size?: number
+}
 
 const INCREMENT_ENTHUSIASM = 'INCREMENT_ENTHUSIASM';
 const DECREMENT_ENTHUSIASM = 'DECREMENT_ENTHUSIASM';
@@ -39,7 +45,6 @@ export type VariableState = Variable_State;
 export type ChartDisplay = Chart_Display;
 export type Shuju = Variable_State|Chart_Display;
 export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
-export type VariablesTab = ChartColorChange | ChartShapeChange | ChartSizeChange;
 
 export function incrementEnthusiasm():IncrementEnthusiasm{
     return {
@@ -88,6 +93,7 @@ export function chart_shape_change(shape:string):ChartShapeChange{
     }
 }
 export function chart_size_change(size:number):ChartSizeChange{
+    // console.log(size);
     return{
         type: CHART_SIZE_CHANGE,
         size

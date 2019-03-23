@@ -2,6 +2,8 @@ import * as d3 from 'd3';
 import { dataChartGet } from '../Shuju_data/dataFunc';
 
 export default function drawAreaChart(selectedVariables,color,shape,size){
+    console.log(size);
+    console.log(shape)
     var yVariablesLabel = selectedVariables[1];
     var dataArray = dataChartGet('ID',yVariablesLabel);
     var width = 700,height = 500, padding = 20;

@@ -5,6 +5,11 @@ export interface enthusiasm{
     languageName: string,
     enthusiasmLevel: number
 }
+export interface chartStyle{
+    shape: string,
+    color: string,
+    size: number
+}
 export interface variable_status{
     name: string,
     state:boolean,
@@ -37,7 +42,8 @@ export interface StoreState{
     enthusiasm:enthusiasm,
     // variables:variables
     // variables: variable_status[]
-    shuju_variables: shuju_variable
+    shuju_variables: shuju_variable,
+    chartStyle: chartStyle
 }
 const initVariables = {
     state: true,
@@ -56,6 +62,11 @@ export const initialState:StoreState = {
     enthusiasm: {
         languageName: 'TypeScript',
         enthusiasmLevel: 1
+    },
+    chartStyle:{
+        shape: 'circle',
+        color: '#000000',
+        size: 1
     },
     shuju_variables:{
         variables:

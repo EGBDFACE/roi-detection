@@ -42,7 +42,9 @@ export default function drawPieChart(selectedVariable){
             d3.select(this)
               .attr('fill','black');
             var e = event || window.event;
-            store.dispatch(actions.pieTooltipInfoAdd(selectedVariable[0],d.data['key'],e.clientX-1200,e.clientY-600,toPercent(d.value/dataSet.length)));
+            // store.dispatch(actions.pieTooltipInfoAdd(selectedVariable[0],d.data['key'],e.clientX-1200,e.clientY-600,toPercent(d.value/dataSet.length)));
+            let displayInfo = [{label: selectedVariable[0],data: d.data['key']}];
+            store.dispatch(actions.pieTooltipInfoAdd(displayInfo,e.clientX-1200,e.clientY-600,toPercent(d.value/dataSet.length)));
         })
         .on('mouseout',function(){
             d3.select(this).attr('fill',currentColor);

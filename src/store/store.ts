@@ -10,9 +10,12 @@ export interface chartStyle{
     color: string,
     size: number
 }
-export interface tooltipInfo{
+export interface displayUnitInfo{
     label: string,
-    data: number,
+    data: number
+}
+export interface tooltipInfo{
+    unitInfo: displayUnitInfo[]
     left: number,
     top: number,
     proportion?: number
@@ -51,7 +54,7 @@ export interface StoreState{
     // variables: variable_status[]
     shuju_variables: shuju_variable,
     chartStyle: chartStyle,
-    tooltip: tooltipInfo[]
+    tooltip: tooltipInfo
 }
 const initVariables = {
     state: true,
@@ -130,7 +133,11 @@ export const initialState:StoreState = {
         ],
         chartShowingType: ''
     },
-    tooltip: []
+    tooltip: {
+        unitInfo:[],
+        left: 0,
+        top: 0,
+    }
 };
 
 let store = createStore(Reducer,initialState);

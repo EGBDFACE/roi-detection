@@ -1,5 +1,7 @@
 import * as d3 from 'd3';
 import { dataChartGet } from '../Shuju_data/dataFunc';
+import store from '../../store/store';
+import * as actions from '../../actions/action';
 
 export default function drawBarChart(selectedVariables,color){
     let yVariablesLabel = selectedVariables[1];
@@ -111,4 +113,12 @@ export default function drawBarChart(selectedVariables,color){
         .attr("height",function(d){
         return height-yScale(d[yVariablesLabel])-3*padding;
         })
+        .on('mouseover',function(d){
+            d3.select(this).attr('fill','black');
+            var xPosition = parseFloat(d3.select(this).attr('x'))+20;
+            var yPosition = parseFloat(d3.select(this).attr('y'))+20;
+            store.dispatch(actions.tooltipInfoAdd(selectedVariables[0]),d[selectedVariables[0]],xPosition,yPosition);
+            store.dispatch(actions.tooltipInfoAdd(selectedVariables[1]),d[selectedVariables[1]],xPosition,yPosition);
+        })
+        
 }

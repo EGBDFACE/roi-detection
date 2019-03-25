@@ -1,3 +1,5 @@
+import { displayUnitInfo } from '../store/store';
+
 interface IncrementEnthusiasm {
     type: string;
 }
@@ -32,8 +34,7 @@ export interface VariablesTab{
 }
 export interface TooltipInfoAdd{
     type: string,
-    label: string,
-    data: number,
+    unitInfo: displayUnitInfo[],
     left: number,
     top: number,
     proportion?: string
@@ -60,21 +61,19 @@ export type ChartDisplay = Chart_Display;
 export type Shuju = Variable_State|Chart_Display;
 export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
 
-export function pieTooltipInfoAdd(label:string,data: number,left:number,top:number,proportion:string):TooltipInfoAdd{
+export function pieTooltipInfoAdd(unitInfo:displayUnitInfo[],left:number,top:number,proportion:string):TooltipInfoAdd{
     return {
         type: PIE_TOOLTIP_INFO_ADD,
-        label,
-        data,
+        unitInfo,
         left,
         top,
         proportion
     }
 }
-export function tooltipInfoAdd(label:string,data:number,left:number,top:number):TooltipInfoAdd{
+export function tooltipInfoAdd(unitInfo:displayUnitInfo[],left:number,top:number):TooltipInfoAdd{
     return{
         type: TOOLTIP_INFO_ADD,
-        label,
-        data,
+        unitInfo,
         left,
         top
     }

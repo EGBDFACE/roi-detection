@@ -1,5 +1,5 @@
 import { Shuju,EnthusiasmAction,VariableState, selectedVariableDelete, VariablesTab, tooltipInfoAdd } from '../actions/action';
-import { StoreState, enthusiasm,variable_status, shuju_variable, chartToDisplay, tooltipInfo } from '../store/store';
+import { StoreState, enthusiasm,variable_status, shuju_variable, chartToDisplay, tooltipInfo, displayUnitInfo } from '../store/store';
 import drawPieChart from '../assets/Shuju_DrawFunc/pieChart.js';
 import drawBarChart from '../assets/Shuju_DrawFunc/drawBarChart.js';
 import drawAreaChart from '../assets/Shuju_DrawFunc/drawAreaChart';
@@ -21,29 +21,42 @@ const Reducer = (state:StoreState,action:any) => {
         tooltip: tooltip(state.tooltip,action)
     }
 }
-function tooltip(state:tooltipInfo[],action:any){
+function tooltip(state:tooltipInfo,action:any){
     switch(action.type){
         case 'TOOLTIP_INFO_ADD':
             // let tempArray:tooltipInfo[] = state;
             // tempArray.push({label: action.label,data: action.data,left:action.left,top:action.top});
             // // console.log(tempArray);
             // return tempArray;
-            return [
-                ...state,
-                {label: action.label, data: action.data, left: action.left, top: action.top}
-            ]
+            return {
+                // ...state,
+                top: action.top,
+                left: action.left,
+                unitInfo: action.unitInfo.map((value:displayUnitInfo)=>value)
+            }
         case 'PIE_TOOLTIP_INFO_ADD':
             // let pieTempArray:tooltipInfo[] = state;
             // pieTempArray.push({label: action.label, data: action.data, left: action.left, top: action.top,proportion:action.proportion});
             // // console.log(pieTempArray);
             // return pieTempArray;
-            return [
-                ...state,
-                {label: action.label, data: action.data, left: action.left, top: action.top, proportion: action.proportion}
-            ]
+            // return [
+            //     ...state,
+            //     {label: action.label, data: action.data, left: action.left, top: action.top, proportion: action.proportion}
+            // ]
+            return {
+                // ...state,
+                top: action.top,
+                left: action.left,
+                unitInfo: action.unitInfo.map((value:displayUnitInfo)=>value),
+                proportion: action.proportion
+            }
         case 'TOOLTIP_INFO_CLEAR':
             // setTimeout('console.log(dsf)',4000);
-            return [];
+            return {
+                unitInfo:[],
+                top: 0,
+                left: 0
+            };
         default: return state;
     }
 }

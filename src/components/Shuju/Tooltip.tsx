@@ -39,14 +39,25 @@ export default class Tooltip extends React.Component<Props,States>{
                 left: tooltip.left,
                 top: tooltip.top
             }
-            return(
-                <div className='tooltip' style={position}>
-                    {/* <p><strong>{tooltip[0].label}</strong><span>{tooltip[0].data}</span></p>
-                    <p><strong>所占比例:</strong><span>{tooltip[0].proportion}</span></p> */}
-                    <p><strong>{tooltip.unitInfo[0].label}</strong><span>{tooltip.unitInfo[0].data}</span></p>
-                    <p><strong>所占比例:</strong><span>{tooltip.proportion}</span></p>
-                </div>
-            )
+            console.log(tooltip.proportion)
+            if(!tooltip.proportion){
+                // console.log('chord');
+                return(
+                    <div className='tooltip' style={position}>
+                        <p><strong>{tooltip.unitInfo[0].label}</strong><span>{tooltip.unitInfo[0].data}</span></p>
+                    </div>
+                )
+            }else{
+                // console.log('pie')
+                return(
+                    <div className='tooltip' style={position}>
+                        {/* <p><strong>{tooltip[0].label}</strong><span>{tooltip[0].data}</span></p>
+                        <p><strong>所占比例:</strong><span>{tooltip[0].proportion}</span></p> */}
+                        <p><strong>{tooltip.unitInfo[0].label}</strong><span>{tooltip.unitInfo[0].data}</span></p>
+                        <p><strong>所占比例:</strong><span>{tooltip.proportion}</span></p>
+                    </div>
+                )
+            }
         }else {
             let position = {
                 // left: tooltip[0].left,

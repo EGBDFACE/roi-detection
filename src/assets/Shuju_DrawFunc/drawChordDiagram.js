@@ -1,5 +1,7 @@
 import * as d3 from 'd3';
 import { dataPccsGet } from '../Shuju_data/dataFunc';
+import store from '../../store/store';
+import * as actions from '../../actions/action';
 
 export default function drawChordDiagram(selectedVariables){
     var width = 500, height = 500;
@@ -87,6 +89,7 @@ export default function drawChordDiagram(selectedVariables){
         .attr("text-anchor",d=>d.angle>Math.PI?"end":null)
         .text(d=>f(d.value));
 
+    var currentColor = '';
     svg.append("g")
         .attr("fill-opacity",0.67)
         .selectAll("path")
@@ -95,7 +98,21 @@ export default function drawChordDiagram(selectedVariables){
         .append("path")
         .attr("d",ribbon)
         .attr("fill",d=>color(d.target.index))
-        .attr("stroke",d=>d3.rgb(color(d.target.index)).darker());
+        .attr("stroke",d=>d3.rgb(color(d.target.index)).darker())
+        .on('mouseover',function(d,i){
+            currentColor = d3.select(this).attr('fill');
+            d3.select(this).attr('fill','black');
+            var e = event || window.event;
+            let displayInfo = [{
+                label: `PCCS(${selectedVariables[d.source.index]}-${selectedVariables[d.target.index]}): `,
+                data: d.source.value
+            }]
+            store.dispatch(actions.tooltipInfoAdd(displayInfo,e.clientX-1200,e.clientY-600));
+        })
+        .on('mouseout',function(d){
+            d3.select(this).attr('fill',currentColor);
+            store.dispatch(actions.tooltipInfoClear());
+        })
 }
 
 function average(m){

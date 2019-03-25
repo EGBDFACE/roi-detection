@@ -55,7 +55,8 @@ function tooltip(state:tooltipInfo,action:any){
             return {
                 unitInfo:[],
                 top: 0,
-                left: 0
+                left: 0,
+                proportion: 0
             };
         default: return state;
     }

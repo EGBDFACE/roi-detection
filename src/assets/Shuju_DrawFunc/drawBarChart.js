@@ -117,8 +117,17 @@ export default function drawBarChart(selectedVariables,color){
             d3.select(this).attr('fill','black');
             var xPosition = parseFloat(d3.select(this).attr('x'))+20;
             var yPosition = parseFloat(d3.select(this).attr('y'))+20;
-            store.dispatch(actions.tooltipInfoAdd(selectedVariables[0]),d[selectedVariables[0]],xPosition,yPosition);
-            store.dispatch(actions.tooltipInfoAdd(selectedVariables[1]),d[selectedVariables[1]],xPosition,yPosition);
+            let displayInfo = selectedVariables.map((value)=>{
+                return{
+                    label: value,
+                    data: d[value]
+                }
+            });
+            store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+        })
+        .on('mouseout',function(){
+            d3.select(this).attr('fill',color);
+            store.dispatch(actions.tooltipInfoClear());
         })
         
 }

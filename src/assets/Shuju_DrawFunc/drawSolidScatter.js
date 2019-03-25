@@ -1,5 +1,7 @@
 import * as d3 from 'd3';
 import { dataChartGet } from '../Shuju_data/dataFunc';
+import store from '../../store/store';
+import * as actions from '../../actions/action';
 
 export default function drawSolidScatter(selectedVariables,color,shape,size){
     var dataArray = dataChartGet(...selectedVariables);
@@ -37,6 +39,22 @@ export default function drawSolidScatter(selectedVariables,color,shape,size){
              return yScale(d[selectedVariables[1]]);
             })
             .attr("r",size)
+            .on('mouseover',function(d){
+              d3.select(this).attr('fill','black');
+              var xPosition = parseFloat(d3.select(this).attr('cx'));
+              var yPosition = parseFloat(d3.select(this).attr('cy'));
+              let displayInfo = selectedVariables.map((value)=>{
+                  return{
+                      label: value,
+                      data: d[value]
+                  }
+              })
+              store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+            })
+            .on('mouseout',function(){
+                d3.select(this).attr('fill',color);
+                store.dispatch(actions.tooltipInfoClear());
+            })
     }else if(shape == "rect"){
             var g = svg.append("g")
             .attr("id","svgrects")
@@ -54,6 +72,22 @@ export default function drawSolidScatter(selectedVariables,color,shape,size){
             .attr("width",size)
             .attr("height",size)
             .attr("fill",color)
+            .on('mouseover',function(d){
+              d3.select(this).attr('fill','black');
+              var xPosition = parseFloat(d3.select(this).attr('x'));
+              var yPosition = parseFloat(d3.select(this).attr('y'));
+              let displayInfo = selectedVariables.map((value)=>{
+                  return{
+                      label: value,
+                      data: d[value]
+                  }
+              })
+              store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+            })
+            .on('mouseout',function(){
+                d3.select(this).attr('fill',color);
+                store.dispatch(actions.tooltipInfoClear());
+            })
     }else if(shape == "ellipse"){
             var g = svg.append("g")
             .attr("id","svgellipses")
@@ -71,6 +105,22 @@ export default function drawSolidScatter(selectedVariables,color,shape,size){
             .attr("rx",size)
             .attr("ry",size/2)
             .attr("fill",color)
+            .on('mouseover',function(d){
+              d3.select(this).attr('fill','black');
+              var xPosition = parseFloat(d3.select(this).attr('cx'));
+              var yPosition = parseFloat(d3.select(this).attr('cy'));
+              let displayInfo = selectedVariables.map((value)=>{
+                  return{
+                      label: value,
+                      data: d[value]
+                  }
+              })
+              store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+            })
+            .on('mouseout',function(){
+                d3.select(this).attr('fill',color);
+                store.dispatch(actions.tooltipInfoClear());
+            })
         }
 
     var xAxis = d3.axisBottom(xScale).tickSize(0,0,0);

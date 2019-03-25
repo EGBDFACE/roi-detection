@@ -3,6 +3,7 @@ import './css_Variables.scss';
 // import { csv } from 'd3-fetch';
 import { dataInit } from '../../assets/Shuju_data/dataFunc';
 import './css_chart.scss';
+import Tooltip from '../../containers/Shuju/Tooltip';
 
 interface Props{}
 interface States{
@@ -28,6 +29,7 @@ export default class ChartArea extends React.Component<Props,States>{
         return(
             <div className='chartArea'>
                 <div id='chart'></div>
+                <Tooltip/>
             </div>
         )
     }

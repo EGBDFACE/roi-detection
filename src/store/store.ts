@@ -10,6 +10,13 @@ export interface chartStyle{
     color: string,
     size: number
 }
+export interface tooltipInfo{
+    label: string,
+    data: number,
+    left: number,
+    top: number,
+    proportion?: number
+}
 export interface variable_status{
     name: string,
     state:boolean,
@@ -20,7 +27,7 @@ export interface variable_status{
 export interface chartToDisplay{
     name: string,
     state : boolean,
-    label: string
+    label: string,
     // pie:boolean,
     // barChart:boolean,
     // areaChart:boolean,
@@ -43,7 +50,8 @@ export interface StoreState{
     // variables:variables
     // variables: variable_status[]
     shuju_variables: shuju_variable,
-    chartStyle: chartStyle
+    chartStyle: chartStyle,
+    tooltip: tooltipInfo[]
 }
 const initVariables = {
     state: true,
@@ -121,7 +129,8 @@ export const initialState:StoreState = {
             {label:'sunburst',state:false,name:'放射圆'}
         ],
         chartShowingType: ''
-    }
+    },
+    tooltip: []
 };
 
 let store = createStore(Reducer,initialState);

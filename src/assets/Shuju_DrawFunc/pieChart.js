@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import store from '../../store/store';
-import { dataChartGet } from '../Shuju_data/dataFunc';
+import { dataChartGet,dataSet } from '../Shuju_data/dataFunc';
+import * as actions from '../../actions/action';
 
 export default function drawPieChart(selectedVariable){
     // let variant = '';
@@ -12,7 +13,7 @@ export default function drawPieChart(selectedVariable){
     // var pieData = dataChartGet(variant);
     // var pieData = dataChartGet(selectedVariable.filter(d=>d)[0])
     var pieData = dataChartGet(selectedVariable);
-    console.log(pieData);
+    // console.log(pieData);
     var pie = d3.pie();
     const width = 300,height = 300,
         outerRadius = width/2,innerRadius = width/4;
@@ -30,9 +31,27 @@ export default function drawPieChart(selectedVariable){
         .append('g')
         .attr('class','src')
         .attr('transform','translate('+outerRadius+','+outerRadius+')');
+    var currentColor = '';
     arcs.append('path')
         .attr('fill',function(d,i){
             return color(i);
         })
-        .attr('d',arc);
+        .attr('d',arc)
+        .on('mouseover',function(d){
+            currentColor = d3.select(this).attr('fill');
+            d3.select(this)
+              .attr('fill','black');
+            var e = event || window.event;
+            store.dispatch(actions.pieTooltipInfoAdd(selectedVariable[0],d.data['key'],e.clientX-1200,e.clientY-600,toPercent(d.value/dataSet.length)));
+        })
+        .on('mouseout',function(){
+            d3.select(this).attr('fill',currentColor);
+            // setTimeout("store.dispatch(actions.tooltipInfoClear())",1000);
+            store.dispatch(actions.tooltipInfoClear());
+        })
+}
+function toPercent(point){
+    var str = Number(point*100).toFixed(2);
+    str += '%';
+    return str;
 }

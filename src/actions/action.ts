@@ -30,6 +30,17 @@ export interface VariablesTab{
     shape?: string,
     size?: number
 }
+export interface TooltipInfoAdd{
+    type: string,
+    label: string,
+    data: number,
+    left: number,
+    top: number,
+    proportion?: string
+}
+export interface TooltipInfoClear{
+    type: string
+}
 
 const INCREMENT_ENTHUSIASM = 'INCREMENT_ENTHUSIASM';
 const DECREMENT_ENTHUSIASM = 'DECREMENT_ENTHUSIASM';
@@ -40,12 +51,39 @@ const CHART_DISPLAY = 'CHART_DISPLAY';
 const CHART_COLOR_CHANGE = 'CHART_COLOR_CHANGE';
 const CHART_SHAPE_CHANGE = 'CHART_SHAPE_CHANGE';
 const CHART_SIZE_CHANGE = 'CHART_SIZE_CHANGE';
+const TOOLTIP_INFO_ADD = 'TOOLTIP_INFO_ADD';
+const TOOLTIP_INFO_CLEAR = 'TOOLTIP_INFO_CLEAR';
+const PIE_TOOLTIP_INFO_ADD = 'PIE_TOOLTIP_INFO_ADD';
 
 export type VariableState = Variable_State;
 export type ChartDisplay = Chart_Display;
 export type Shuju = Variable_State|Chart_Display;
 export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
 
+export function pieTooltipInfoAdd(label:string,data: number,left:number,top:number,proportion:string):TooltipInfoAdd{
+    return {
+        type: PIE_TOOLTIP_INFO_ADD,
+        label,
+        data,
+        left,
+        top,
+        proportion
+    }
+}
+export function tooltipInfoAdd(label:string,data:number,left:number,top:number):TooltipInfoAdd{
+    return{
+        type: TOOLTIP_INFO_ADD,
+        label,
+        data,
+        left,
+        top
+    }
+}
+export function tooltipInfoClear():TooltipInfoClear{
+    return{
+        type: TOOLTIP_INFO_CLEAR
+    }
+}
 export function incrementEnthusiasm():IncrementEnthusiasm{
     return {
         type: INCREMENT_ENTHUSIASM

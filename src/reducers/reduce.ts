@@ -1,5 +1,5 @@
-import { Shuju,EnthusiasmAction,VariableState, selectedVariableDelete, VariablesTab } from '../actions/action';
-import { StoreState, enthusiasm,variable_status, shuju_variable, chartToDisplay } from '../store/store';
+import { Shuju,EnthusiasmAction,VariableState, selectedVariableDelete, VariablesTab, tooltipInfoAdd } from '../actions/action';
+import { StoreState, enthusiasm,variable_status, shuju_variable, chartToDisplay, tooltipInfo } from '../store/store';
 import drawPieChart from '../assets/Shuju_DrawFunc/pieChart.js';
 import drawBarChart from '../assets/Shuju_DrawFunc/drawBarChart.js';
 import drawAreaChart from '../assets/Shuju_DrawFunc/drawAreaChart';
@@ -10,13 +10,41 @@ import drawTidyTree from '../assets/Shuju_DrawFunc/drawTidyTree';
 import drawChordDiagram from '../assets/Shuju_DrawFunc/drawChordDiagram';
 import drawIcicle from '../assets/Shuju_DrawFunc/drawIcicle';
 import drawSunburst from '../assets/Shuju_DrawFunc/drawSunburst';
+import Tooltip from '../components/Shuju/Tooltip';
 
 
 const Reducer = (state:StoreState,action:any) => {
     return{
         enthusiasm: enthusiasm(state.enthusiasm,action),
         shuju_variables: variables(state.shuju_variables,action),
-        chartStyle: chartStyle(state,action)
+        chartStyle: chartStyle(state,action),
+        tooltip: tooltip(state.tooltip,action)
+    }
+}
+function tooltip(state:tooltipInfo[],action:any){
+    switch(action.type){
+        case 'TOOLTIP_INFO_ADD':
+            // let tempArray:tooltipInfo[] = state;
+            // tempArray.push({label: action.label,data: action.data,left:action.left,top:action.top});
+            // // console.log(tempArray);
+            // return tempArray;
+            return [
+                ...state,
+                {label: action.label, data: action.data, left: action.left, top: action.top}
+            ]
+        case 'PIE_TOOLTIP_INFO_ADD':
+            // let pieTempArray:tooltipInfo[] = state;
+            // pieTempArray.push({label: action.label, data: action.data, left: action.left, top: action.top,proportion:action.proportion});
+            // // console.log(pieTempArray);
+            // return pieTempArray;
+            return [
+                ...state,
+                {label: action.label, data: action.data, left: action.left, top: action.top, proportion: action.proportion}
+            ]
+        case 'TOOLTIP_INFO_CLEAR':
+            // setTimeout('console.log(dsf)',4000);
+            return [];
+        default: return state;
     }
 }
 function chartStyle(state:StoreState,action:VariablesTab){
@@ -24,10 +52,10 @@ function chartStyle(state:StoreState,action:VariablesTab){
         if(document.getElementsByTagName('svg').length != 0){
             document.getElementById('chart').removeChild(document.getElementsByTagName('svg')[0]);
         }
-        console.log(action);
-        console.log(state);
-        console.log((action.size ===state.chartStyle.size)?state.chartStyle.size:action.size);
-        console.log(((action.shape === state.chartStyle.shape)||(!action.shape))?state.chartStyle.shape:action.shape);
+        // console.log(action);
+        // console.log(state);
+        // console.log((action.size ===state.chartStyle.size)?state.chartStyle.size:action.size);
+        // console.log(((action.shape === state.chartStyle.shape)||(!action.shape))?state.chartStyle.shape:action.shape);
         switch(state.shuju_variables.chartShowingType){
             case 'barChart':
                 drawBarChart(state.shuju_variables.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),((action.color === state.chartStyle.color)||(!action.color))?state.chartStyle.color:action.color);

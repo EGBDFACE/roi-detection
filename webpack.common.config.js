@@ -1,6 +1,7 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-    mode: 'development',
+    // mode: 'development',
     entry: './src/index.tsx',
     output:{
         path : path.resolve(__dirname,'./dist'),
@@ -25,7 +26,25 @@ module.exports = {
                 enforce:'pre',
                 test:/\.js$/,
                 loader:'source-map-loader'
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader'
+                ]
+            },
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 8192
+                    }
+                }]
             }
+
         ]
     },
     // externals:{
@@ -33,5 +52,8 @@ module.exports = {
     //     'react-dom':'ReactDom'
     // },
     plugins:[
+        new HtmlWebpackPlugin({
+            template: '!!ejs-loader!./template.html'
+        })
     ]
 }

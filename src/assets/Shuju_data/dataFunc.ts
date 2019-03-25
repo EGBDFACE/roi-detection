@@ -13,12 +13,12 @@ export function dataInit(){
             dataArray[i] = {...data[i]};
         }
     });
-    console.log(dataArray);
+    // console.log(dataArray);
 }
 export var dataSet = dataArray;
 
 export function dataChartGet(...arg:string[]){
-    console.log(arg);
+    // console.log(arg);
     if(arg.length === 1){
         return countNum(dataArray.map((value,index)=>{
             return value[arg[0]];

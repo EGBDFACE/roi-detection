@@ -73,7 +73,7 @@ export default class VariablesTab extends React.Component<Props,States>{
             return(
                 <ul>
                     <li><p>颜色<input className='inputColor' type='color' onChange={(e)=>colorChange(e.target.value)}></input></p></li>
-                    <li><p>大小<input className='inputSize' type='range' max='10' min='1' onChange={(e)=>sizeChange(+e.target.value)}></input></p></li>
+                    <li><p>大小<input className='inputSize' type='range' max='10' min='1' defaultValue='1' onChange={(e)=>sizeChange(+e.target.value)}></input></p></li>
                     <li>
                         <p>形状</p>
                         <i className='tabRect' onClick={()=>shapeChange('rect')}></i>

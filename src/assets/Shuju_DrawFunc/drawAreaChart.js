@@ -4,8 +4,8 @@ import store from '../../store/store';
 import * as actions from '../../actions/action';
 
 export default function drawAreaChart(selectedVariables,color,shape,size){
-    console.log(size);
-    console.log(shape)
+    // console.log(size);
+    // console.log(shape)
     var yVariablesLabel = selectedVariables[1];
     var dataArray = dataChartGet('ID',yVariablesLabel);
     var width = 700,height = 500, padding = 20;

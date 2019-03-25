@@ -39,7 +39,7 @@ export default class Tooltip extends React.Component<Props,States>{
                 left: tooltip.left,
                 top: tooltip.top
             }
-            console.log(tooltip.proportion)
+            // console.log(tooltip.proportion)
             if(!tooltip.proportion){
                 // console.log('chord');
                 return(

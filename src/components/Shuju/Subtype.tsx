@@ -38,7 +38,7 @@ export default class Subtype extends React.Component<Props,States>{
     }
     render(){
         // const {chartList} = this.props;
-        console.log(this.props.chartList);
+        // console.log(this.props.chartList);
         return(
             <table>
                 <tbody>

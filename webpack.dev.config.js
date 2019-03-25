@@ -20,40 +20,41 @@ const commonConfig = require('./webpack.common.config');
 // config.plugins.push(new HtmlWebpackPlugin());
 module.exports = merge(commonConfig,{
     //entry: './src/index.tsx',
+    mode: 'development',
     devServer:{
         hot: true,
         historyApiFallback: true
     },
-    module:{
-        rules:[
-            {
-                test: /\.scss$/,
-                // include:[path.join(__dirname,'./../','src')],
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'sass-loader'
-                ]
-            },
-            {
-                test: /\.(png|jpg|gif)$/,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        limit: 8192
-                    }
-                }]
-            }
-            // {
-            //     test: /\.svg/,
-            //     use:['raw-loader']
-            // }
-        ]
-    },
+    // module:{
+    //     rules:[
+    //         {
+    //             test: /\.scss$/,
+    //             // include:[path.join(__dirname,'./../','src')],
+    //             use: [
+    //                 'style-loader',
+    //                 'css-loader',
+    //                 'sass-loader'
+    //             ]
+    //         },
+    //         {
+    //             test: /\.(png|jpg|gif)$/,
+    //             use: [{
+    //                 loader: 'url-loader',
+    //                 options: {
+    //                     limit: 8192
+    //                 }
+    //             }]
+    //         }
+    //         // {
+    //         //     test: /\.svg/,
+    //         //     use:['raw-loader']
+    //         // }
+    //     ]
+    // },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new HtmlWebpackPlugin({
-            template: '!!ejs-loader!./template.html'
-        })
+        // new HtmlWebpackPlugin({
+        //     template: '!!ejs-loader!./template.html'
+        // })
     ]
 })

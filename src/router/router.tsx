@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Loadable from 'react-loadable';
-// import {Route,BrowserRouter as Router} from 'react-router-dom';
+import {Route,BrowserRouter as Router} from 'react-router-dom';
 import Shuju from '../pages/Shuju';
-import { HashRouter as Router, Route} from 'react-router-dom';
+// import { HashRouter as Router, Route} from 'react-router-dom';
 // import createHistory from 'history/createHashHistory';
 // const history = createHistory();
 // import TopNav from '../components/TopNav';
@@ -22,7 +22,8 @@ const TopNav = Loadable({
 });
 
 export default (
-    <Router>
+    // <Router>
+    <Router basename='/emr'>
         <div className='page'>
             <TopNav/>
             <div>

@@ -7,12 +7,13 @@ interface pieDataObj{
 
 const dataArray:any[] = [];
 const dataset = require('../../../dataset.csv');
-console.log(dataset);
+// console.log(dataset);
 
 export function dataInit(){
     // csv('/dist/dataset.csv').then(data=>{
     // csv('/dataset.csv').then(data=>{
-    csv('http://localhost/~shaoxiangzhou/breast-cancer-parient-emr/dataset.csv').then(data=>{
+    csv(dataset).then(data=>{
+    // csv('http://localhost/~shaoxiangzhou/breast-cancer-parient-emr/dataset.csv').then(data=>{
         for(let i=0;i<data.length;i++){
             dataArray[i] = {...data[i]};
         }

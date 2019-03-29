@@ -9,6 +9,7 @@ import SelectedVariables from '../containers/Shuju/SelectedVariables';
 import ChartArea from '../components/Shuju/ChartArea';
 import Subtype from '../containers/Shuju/Subtype';
 import VariablesTab from '../containers/Shuju/VariablesTab';
+import TopNav from '../components/TopNav';
 // import Tooltip from '../containers/Shuju/Tooltip';
 // import Tooltip from '../components/Shuju/Tooltip';
 
@@ -26,7 +27,9 @@ export default class Shuju extends React.Component<Props,States>{
     }
     render(){
         return(
-            <div className='main'>
+            <div>
+                <TopNav/>
+                <div className='main'>
                 <div className='leftNav'>
                 <ul>
                     <li><Link to='/jiezhen'>
@@ -67,6 +70,8 @@ export default class Shuju extends React.Component<Props,States>{
                 </div>
                 </div>
             </div>
+            </div>
+            
         )
     }
 }

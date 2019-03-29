@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Link} from 'react-router-dom';
 import {firstRouterLabelPic} from './Shuju';
+import TopNav from '../components/TopNav';
 
 interface Props{
 
@@ -14,7 +15,9 @@ export default class Jiezhen extends React.Component<Props,States>{
     }
     render(){
         return(
-            <div className='main'>
+            <div>
+                <TopNav></TopNav>
+                <div className='main'>
                 <div className='leftNav'>
                 <ul>
                     <li>
@@ -34,6 +37,8 @@ export default class Jiezhen extends React.Component<Props,States>{
                 </ul>
             </div>
             </div>
+            </div>
+            
         )
     }
 }

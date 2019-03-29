@@ -2,6 +2,7 @@ import * as React from 'react';
 import Loadable from 'react-loadable';
 import {Route,BrowserRouter as Router} from 'react-router-dom';
 import Shuju from '../pages/Shuju';
+import '../index.scss';
 // import { HashRouter as Router, Route} from 'react-router-dom';
 // import createHistory from 'history/createHashHistory';
 // const history = createHistory();
@@ -10,27 +11,25 @@ import Shuju from '../pages/Shuju';
 // import Huizhen from '../pages/Huizhen';
 const Jiezhen = Loadable({
     loader: () => import('../pages/Jiezhen'),
-    loading: () => <div>loading...</div>
+    loading: () => <div className='loadingPage'><div className='sk-rotating-plane'></div></div>
 });
 const Huizhen = Loadable({
     loader: () => import('../pages/Huizhen'),
-    loading: () => <div>loading...</div>
+    loading: () => <div className='loadingPage'><div className='sk-rotating-plane'></div></div>
 });
-const TopNav = Loadable({
-    loader: () => import('../components/TopNav'),
-    loading: () => <div>loading...</div>
-});
+// const TopNav = Loadable({
+//     loader: () => import('../components/TopNav'),
+//     loading: () => <div className='loadingPage'><div className='sk-rotating-plane'></div></div>
+// });
 
 export default (
     // <Router>
-    <Router basename='/emr'>
+     <Router basename='/emr'>
         <div className='page'>
-            <TopNav/>
-            <div>
-                <Route exact path="/" component={Shuju}/>
-                <Route path="/jiezhen" component={Jiezhen}/>
-                <Route path="/huizhen" component={Huizhen}/>
-            </div>
+            {/* <TopNav/> */}
+            <Route exact path="/" component={Shuju}/>
+            <Route path="/jiezhen" component={Jiezhen}/>
+            <Route path="/huizhen" component={Huizhen}/>
         </div>
     </Router>
 );

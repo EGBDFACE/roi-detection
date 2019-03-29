@@ -23,8 +23,8 @@ const Huizhen = Loadable({
 // });
 
 export default (
-    // <Router>
-     <Router basename='/emr'>
+    <Router>
+    {/* //  <Router basename='/emr'> */}
         <div className='page'>
             {/* <TopNav/> */}
             <Route exact path="/" component={Shuju}/>

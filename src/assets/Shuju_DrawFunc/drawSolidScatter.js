@@ -43,13 +43,15 @@ export default function drawSolidScatter(selectedVariables,color,shape,size){
               d3.select(this).attr('fill','black');
               var xPosition = parseFloat(d3.select(this).attr('cx'));
               var yPosition = parseFloat(d3.select(this).attr('cy'));
+              var e = event || window.event;
               let displayInfo = selectedVariables.map((value)=>{
                   return{
                       label: value,
                       data: d[value]
                   }
               })
-              store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+            //   store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+            store.dispatch(actions.tooltipInfoAdd(displayInfo,e.clientX,e.clientY));
             })
             .on('mouseout',function(){
                 d3.select(this).attr('fill',color);
@@ -76,13 +78,15 @@ export default function drawSolidScatter(selectedVariables,color,shape,size){
               d3.select(this).attr('fill','black');
               var xPosition = parseFloat(d3.select(this).attr('x'));
               var yPosition = parseFloat(d3.select(this).attr('y'));
+              var e = event || window.event;
               let displayInfo = selectedVariables.map((value)=>{
                   return{
                       label: value,
                       data: d[value]
                   }
               })
-              store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+            //   store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+            store.dispatch(actions.tooltipInfoAdd(displayInfo,e.clientX,e.clientY));
             })
             .on('mouseout',function(){
                 d3.select(this).attr('fill',color);
@@ -109,13 +113,15 @@ export default function drawSolidScatter(selectedVariables,color,shape,size){
               d3.select(this).attr('fill','black');
               var xPosition = parseFloat(d3.select(this).attr('cx'));
               var yPosition = parseFloat(d3.select(this).attr('cy'));
+              var e = event || window.event;
               let displayInfo = selectedVariables.map((value)=>{
                   return{
                       label: value,
                       data: d[value]
                   }
               })
-              store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+            //   store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+            store.dispatch(actions.tooltipInfoAdd(displayInfo,e.clientX,e.clientY));
             })
             .on('mouseout',function(){
                 d3.select(this).attr('fill',color);

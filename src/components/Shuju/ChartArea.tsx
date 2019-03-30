@@ -29,7 +29,7 @@ export default class ChartArea extends React.Component<Props,States>{
         return(
             <div className='chartArea'>
                 <div id='chart'></div>
-                <Tooltip/>
+                {/* <Tooltip/> */}
             </div>
         )
     }

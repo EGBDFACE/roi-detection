@@ -16,7 +16,7 @@ import Tooltip from '../components/Shuju/Tooltip';
 const Reducer = (state:StoreState,action:any) => {
     return{
         enthusiasm: enthusiasm(state.enthusiasm,action),
-        shuju_variables: variables(state.shuju_variables,action,state.chartStyle.color),
+        shuju_variables: variables(state.shuju_variables,action,state.chartStyle.color,state.chartStyle.shape,state.chartStyle.size),
         chartStyle: chartStyle(state,action),
         tooltip: tooltip(state.tooltip,action)
     }
@@ -72,9 +72,14 @@ function chartStyle(state:StoreState,action:VariablesTab){
         // console.log(((action.shape === state.chartStyle.shape)||(!action.shape))?state.chartStyle.shape:action.shape);
         switch(state.shuju_variables.chartShowingType){
             case 'barChart':
+                // console.log(action.color);
+                // console.log(state.chartStyle.color);
                 drawBarChart(state.shuju_variables.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),((action.color === state.chartStyle.color)||(!action.color))?state.chartStyle.color:action.color);
                 break;
             case 'areaChart':
+                // console.log((!action.shape)?action.shape:'');
+                // console.log(action.shape);
+                // console.log(state.chartStyle.shape);
                 drawAreaChart(state.shuju_variables.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),((action.color === state.chartStyle.color)||(!action.color))?state.chartStyle.color:action.color,((action.shape === state.chartStyle.shape)||(!action.shape))?state.chartStyle.shape:action.shape,((action.size ===state.chartStyle.size)||(!action.size))?state.chartStyle.size:action.size);
                 break;
             case 'lineChart':
@@ -132,7 +137,7 @@ function enthusiasm (state:enthusiasm,action:EnthusiasmAction){
         default: return state;
     }
 }
-function variables(state:shuju_variable,action:Shuju,color:string):shuju_variable{
+function variables(state:shuju_variable,action:Shuju,color:string,shape:string,size:number):shuju_variable{
     // console.log(state);
     switch(action.type){
         case 'VARIABLE_STATE_CHANGE':
@@ -205,25 +210,29 @@ function variables(state:shuju_variable,action:Shuju,color:string):shuju_variabl
                         chartShowingType: 'pie'
                     }
                 case 2: 
-                    drawAreaChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,'circle',1);
+                    // drawAreaChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,'circle',1);
+                    drawAreaChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,shape,size);
                     return{
                         ...state,
                         chartShowingType: 'areaChart'
                     }
                 case 3:
-                    drawLineChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,'circle',1);
+                    // drawLineChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,'circle',1);
+                    drawLineChart(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,shape,size);
                     return{
                         ...state,
                         chartShowingType: 'lineChart'
                     }
                 case 4: 
-                    drawSolidScatter(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,'circle',1);
+                    // drawSolidScatter(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,'circle',1);
+                    drawSolidScatter(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,shape,size);
                     return{
                         ...state,
                         chartShowingType: 'scatterSolid'
                     }
                 case 5: 
-                    drawSolidHollow(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,'circle',1);
+                    // drawSolidHollow(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,'circle',1);
+                    drawSolidHollow(state.variables.filter(d=>{if(d.display){return d}}).map(d=>d.name),color,shape,size);
                     return{
                         ...state,
                         chartShowingType: 'scatterHollow'

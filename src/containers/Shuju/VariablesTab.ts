@@ -6,7 +6,10 @@ import VariablesTab from '../../components/Shuju/VariablesTab';
 
 function mapStateToProps(state:StoreState){
     return{
-        chartShowingType: state.shuju_variables.chartShowingType
+        chartShowingType: state.shuju_variables.chartShowingType,
+        color_store: state.chartStyle.color,
+        shape_store: state.chartStyle.shape,
+        size_store: state.chartStyle.size
     }
 }
 

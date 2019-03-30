@@ -3,6 +3,9 @@ import './css_VariablesTab.scss';
 
 interface Props{
     chartShowingType: string,
+    color_store: string,
+    shape_store: string,
+    size_store: number,
     colorChange: (color:string) => void,
     shapeChange: (shape:string) => void,
     sizeChange: (size:number) => void
@@ -62,23 +65,27 @@ export default class VariablesTab extends React.Component<Props,States>{
     // }
     render(){
         // const chartShowingType = this.props.chartShowingType;
-        const { chartShowingType,colorChange,shapeChange,sizeChange } = this.props;
+        const { chartShowingType,colorChange,shapeChange,sizeChange,color_store,shape_store,size_store } = this.props;
+        const size_store_string = size_store.toString();
+        const displayingShape = {
+            borderColor: 'blue'
+        };
         if(chartShowingType === 'barChart'){
             return(
                 <ul>
-                    <li><p>颜色<input className='inputColor' type='color' onChange={(e)=>colorChange(e.target.value)}></input></p></li>
+                    <li><p>颜色<input className='inputColor' value={color_store} type='color' onChange={(e)=>colorChange(e.target.value)}></input></p></li>
                 </ul>
             )
         }else if((chartShowingType === 'areaChart')||(chartShowingType === 'lineChart')||(chartShowingType === 'scatterSolid')||(chartShowingType === 'scatterHollow')){
             return(
                 <ul>
-                    <li><p>颜色<input className='inputColor' type='color' onChange={(e)=>colorChange(e.target.value)}></input></p></li>
-                    <li><p>大小<input className='inputSize' type='range' max='10' min='1' defaultValue='1' onChange={(e)=>sizeChange(+e.target.value)}></input></p></li>
+                    <li><p>颜色<input className='inputColor' value={color_store} type='color' onChange={(e)=>colorChange(e.target.value)}></input></p></li>
+                    <li><p>大小<input className='inputSize' type='range' max='10' min='1' defaultValue={size_store_string} onChange={(e)=>sizeChange(+e.target.value)}></input></p></li>
                     <li>
                         <p>形状</p>
-                        <i className='tabRect' onClick={()=>shapeChange('rect')}></i>
-                        <i className='tabEllipse' onClick={()=>shapeChange('ellipse')}></i>
-                        <i className='tabCircle' onClick={()=>shapeChange('circle')}></i>
+                        <i className='tabRect' style={(shape_store === 'rect')?displayingShape:null} onClick={()=>shapeChange('rect')}></i>
+                        <i className='tabEllipse' style={(shape_store === 'ellipse')?displayingShape:null} onClick={()=>shapeChange('ellipse')}></i>
+                        <i className='tabCircle' style={(shape_store === 'circle')?displayingShape:null} onClick={()=>shapeChange('circle')}></i>
                     </li>
                 </ul>
             )

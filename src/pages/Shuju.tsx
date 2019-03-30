@@ -10,6 +10,7 @@ import ChartArea from '../components/Shuju/ChartArea';
 import Subtype from '../containers/Shuju/Subtype';
 import VariablesTab from '../containers/Shuju/VariablesTab';
 import TopNav from '../components/TopNav';
+import Tooltip from '../containers/Shuju/Tooltip';
 // import Tooltip from '../containers/Shuju/Tooltip';
 // import Tooltip from '../components/Shuju/Tooltip';
 
@@ -70,6 +71,7 @@ export default class Shuju extends React.Component<Props,States>{
                 </div>
                 </div>
             </div>
+            <Tooltip/>
             </div>
             
         )

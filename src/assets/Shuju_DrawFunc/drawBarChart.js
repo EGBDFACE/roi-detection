@@ -117,13 +117,15 @@ export default function drawBarChart(selectedVariables,color){
             d3.select(this).attr('fill','black');
             var xPosition = parseFloat(d3.select(this).attr('x'))+20;
             var yPosition = parseFloat(d3.select(this).attr('y'))+20;
+            var e = event || window.event;
             let displayInfo = selectedVariables.map((value)=>{
                 return{
                     label: value,
                     data: d[value]
                 }
             });
-            store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+            // store.dispatch(actions.tooltipInfoAdd(displayInfo,xPosition,yPosition));
+            store.dispatch(actions.tooltipInfoAdd(displayInfo,e.clientX,e.clientY));
         })
         .on('mouseout',function(){
             d3.select(this).attr('fill',color);

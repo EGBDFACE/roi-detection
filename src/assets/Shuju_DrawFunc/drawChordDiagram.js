@@ -107,7 +107,8 @@ export default function drawChordDiagram(selectedVariables){
                 label: `PCCS(${selectedVariables[d.source.index]}-${selectedVariables[d.target.index]}): `,
                 data: d.source.value
             }]
-            store.dispatch(actions.tooltipInfoAdd(displayInfo,e.clientX-1200,e.clientY-600));
+            // store.dispatch(actions.tooltipInfoAdd(displayInfo,e.clientX-1200,e.clientY-600));
+            store.dispatch(actions.tooltipInfoAdd(displayInfo,e.clientX,e.clientY));
         })
         .on('mouseout',function(d){
             d3.select(this).attr('fill',currentColor);

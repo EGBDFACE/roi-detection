@@ -76,8 +76,8 @@ export const initialState:StoreState = {
     },
     chartStyle:{
         shape: 'circle',
-        color: '#000000',
-        size: 1
+        color: '#ff0000',
+        size: 4
     },
     shuju_variables:{
         variables:

@@ -1,0 +1,11 @@
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="final" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Operartion-on-Results" transform="translate(-478.000000, -454.000000)">
+            <circle id="Oval-Copy" fill="#FFFFFF" cx="494" cy="471" r="14"></circle>
+            <path d="M494,454 C485.2,454 478,461.2 478,470 C478,478.8 485.2,486 494,486 C502.8,486 510,478.8 510,470 C510,461.2 502.8,454 494,454 Z M502,475.76 L499.76,478 L494,472.24 L488.24,478 L486,475.76 L491.76,470 L486,464.24 L488.24,462 L494,467.76 L499.76,462 L502,464.24 L496.24,470 L502,475.76 Z" id="Shape" fill="#FFE14F" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

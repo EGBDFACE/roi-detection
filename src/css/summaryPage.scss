@@ -1,0 +1,210 @@
+.summary__title{
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+    letter-spacing: 1.2px;
+}
+.summary__sideBar__content{
+    position: absolute;
+    top: 60px;
+    // width: 100%;
+    // height: 100%;
+    height: 94%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: 84%;
+    margin-left: 25px;
+    input{
+        cursor: pointer;
+    }
+    span{
+        @extend .summary__item__header__title;
+        // margin-left: 20px;
+    }
+}
+.summary__item__content__true, 
+.summary__item__content__false,
+.summary__item__content__notLabeled{
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+.content__select__icon{
+    background-image: url('./img/checked.svg');
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 20px;
+}
+.content__unselect__icon{
+    @extend .content__select__icon;
+    background-image: url('./img/unchecked.svg');
+}
+.summary__item__header{
+    position: relative;
+    height: 54px;
+    line-height: 54px;
+    border-bottom: 1px solid rgba(151,151,151,.2);
+}
+.summary__item__header__title{
+    // margin-left: 25px;
+    color: #1E2D52;
+    letter-spacing: 0.8px;
+}
+.summary__item__header__dropDownIcon{
+    position: absolute;
+    width: 10px;
+    height: 8px;
+    background-image: url('./img/dropDownIconLitter.svg');
+    background-repeat: no-repeat;
+    top: 50%;
+    margin-top: -4px;
+    right: 18px;
+    cursor: pointer;
+}
+.summary__item__header__dropUpIcon{
+    @extend .summary__item__header__dropDownIcon;
+    background-image: url('./img/dropUpIconLitter.svg');
+}
+.summary__content__rois{
+    width: 94%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #E4DCFF;
+    flex-wrap: wrap;
+    position: relative;
+    height: 80%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.rois{
+    width: 18%;
+    display: inline-block;
+    margin: 0 30px;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+.rois__pic{
+    // width: 213px;
+    // height: 213px;
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    cursor: pointer;
+    border: 4px solid rgba(34,34,34,0);
+    &:hover{
+        // border: 4px solid #AA93FA;
+        border: 4px solid #79FF6F;
+    }
+    img{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+    }
+    position: relative;
+}
+.rois__pic__label_true{
+    background-image: url('./img/trueHl.svg');
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+.rois__pic__label_false{
+    @extend .rois__pic__label_true;
+    background-image: url('./img/falseHl.svg');
+}
+.rois__pic__label_unlabelled{
+    @extend .rois__pic__label_true;
+    background-image: url('./img/unlabelled.svg');
+}
+.summary__content__next_area{
+    flex: 0 1 100%;
+    text-align: center;
+}
+.summary__content__render_icon{
+    background-image: url('./img/renderNext.svg');
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    // position: absolute;
+    // bottom: -60px;
+    cursor: pointer;
+}
+.summary__content__single_pic{
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    img{
+        // width: 680px;
+        // height: 680px;
+        width: 100%;
+        // height: 100%;
+    }
+}
+.single_pic__img{
+    // width: 100%;
+    // padding-bottom: 100%;
+    width: 60%;
+    padding-bottom: 60%;
+    margin: 0 auto;
+    height: 0;
+}
+.single_pic__title{
+    color: white;
+}
+.single_pic__close{
+    background-image: url('./img/close.svg');
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    cursor: pointer;
+}
+.single_pic__edit{
+    background-image: url('./img/edit.svg');
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    cursor: pointer;
+}
+.single_pic__pre{
+    background-image: url('./img/previous.svg');
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 48px;
+    height: 32px;
+    position: absolute;
+    bottom: 20px;
+    left: 40px;
+    cursor: pointer;
+}
+.single_pic__next{
+    background-image: url('./img/next.svg');
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 48px;
+    height: 32px;
+    position: absolute;
+    bottom: 20px;
+    right: 40px;
+    cursor: pointer;
+}

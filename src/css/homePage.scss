@@ -1,0 +1,140 @@
+$myColor: #1E2D52;
+.home__header{
+    position: relative;
+    display: block;
+}
+.home__bg{
+    position: absolute;
+    width: 100%;
+    height: 67.625%;
+    background-image: url('./img/homePageBg.svg');
+    background-size: cover;
+    display: inline-block;
+}
+.header__title{
+    display: inline-block;
+    padding-top: 3.39%;
+    padding-left: 5.42%;
+    font-weight: bold;
+    color: $myColor;
+    font-size: 1.5em;
+    letter-spacing: 1.2px;
+}
+.home__content{
+    margin-top: 11.52%;
+    position: relative;
+}
+.content__title{
+    color: #1d2686;
+}
+.content__introduction{
+    // width: 50%;
+    // display: inline-block;
+    display: block;
+}
+.content__interactive{
+    // @extend .content__introduction;
+    position: absolute;
+    right: 11.86%;
+    top: 0;
+    width: 30.3%;
+}
+.content__introduction__title{
+    margin-left: 21.8%;
+    // margin-right: 28%;
+    width: 33%;
+    font-weight: 400;
+    color: $myColor;
+    letter-spacing: 1.17px;
+}
+.content__introduction__supplement{
+    margin-left: 21.8%;
+    color: #3C3C3C;
+    // margin-right: 50%;
+    width: 19%;
+    opacity: .4;
+    letter-spacing: 1.5px;
+}
+.content__interactive__login__id{
+    box-shadow: 0 5px 20px rgba(26,26,26,.1);
+    // padding: 1.5rem;
+    border-radius: .5rem;
+    margin-bottom: 25px;
+    background-color: white;
+}
+.content__interactive__login__password{
+    @extend .content__interactive__login__id;
+}
+.login__id__label,.login__password__label{
+    color: gray;
+    border-right: 1px solid rgba(128,128,128,.2);
+    padding: 1.5rem;
+    color: $myColor;
+    width: 38%;
+    letter-spacing: 1px;
+    padding-left: 2rem;
+    display: inline-block;
+}
+.login__id__input, .login__password__input{
+    padding: 1.5rem;
+    outline: none;
+    border: none;
+    font-weight: bold;
+    color: #171B26;
+    letter-spacing: 1px;
+}
+.content__interactive__submit{
+   @extend .content__interactive__login__id;
+   color: white;
+   display: block;
+   background-color: #613ED8;
+   margin: 0;
+   text-align: center;
+   padding: 1.5rem;
+   cursor: pointer;
+}
+.home__footer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 1.5rem 0;
+    border-top: 1px solid rgba(128,128,128,.2);
+    color: gray;
+}
+.footer__copyright{
+    display: inline-block;
+    margin-left: 11.38%;
+}
+.footer__copyright__icon{
+    background-image: url('../css/img//copyright.png');
+    background-size: cover;
+    width: .7rem;
+    height: .7rem;
+    display: inline-block;
+    margin-right: .5rem;
+}
+.footer__copyright__title{
+    display: inline;
+}
+.footer__contact{
+    // display: inline-block;
+    margin-right: 10%;
+    float: right;
+}
+// .errorSubmit{
+//     input::-webkit-input-placeholder{
+//         color: red;
+//     }
+// }
+.inputError::-webkit-input-placeholder{
+    color: red;
+}
+.inputError::-ms-input-placeholder{
+    color: red;
+}
+.inputError::-moz-placeholder{
+    color: red;
+}
+// input::-webkit-input-placeholder{
+//     color: red;
+// }

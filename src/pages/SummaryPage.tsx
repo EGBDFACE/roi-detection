@@ -88,8 +88,8 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
                 svsId: selectedRoi.svsId
             };
             setPic(pic);
-            // history.push('/mainPage');
-            history.push('/roi/mainPage');
+            history.push('/mainPage');
+            // history.push('/roi/mainPage');
         }).catch( error =>{
             // console.error(error);
         });
@@ -210,8 +210,8 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         this.props.setStatistics(newStatistics);
     }
     public mainPage(){
-        // history.push('/mainPage');
-        history.push('/roi/mainPage');
+        history.push('/mainPage');
+        // history.push('/roi/mainPage');
     }
     public renderSummaryLabelItemDetail(value: ISummaryStatisticsItem, index: number){
         if(value.showDetialFlag){

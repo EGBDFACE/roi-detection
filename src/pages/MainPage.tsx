@@ -86,8 +86,8 @@ export default class MainPage extends React.Component<IProps, IStates>{
     public logout(){
         const { userSignOut } = this.props;
         userSignOut();
-        // history.push('/');
-        history.push('/roi');
+        history.push('/');
+        // history.push('/roi');
     }
     public showLogOutEnable(){
         this.setState({
@@ -262,8 +262,8 @@ export default class MainPage extends React.Component<IProps, IStates>{
             });
         }
         
-        // history.push('/dataSummary');
-        history.push('/roi/dataSummary');
+        history.push('/dataSummary');
+        // history.push('/roi/dataSummary');
     }
     public showShortList(){
         this.setState({

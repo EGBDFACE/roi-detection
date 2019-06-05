@@ -1,6 +1,7 @@
 import * as React from 'react';
 // import * as actions from '../actions';
 import { getFileList, getPicHttp, signInHttp } from '../api';
+import { FILE_LIST_DISPLAY_NUMBER as listShowNum } from '../constant';
 import '../css/global.scss';
 import '../css/homePage.scss';
 import history from '../router/history';
@@ -12,6 +13,7 @@ import { IFileListItem, IPicInfo, IRoiInfo } from '../store';
 
 
 interface IProps{
+    selectFileList: (list: IFileListItem[]) => void,
     selectSvs: (id: number) => void,
     setFileList: (list: IFileListItem[]) => void,
     setPic: (pic: IPicInfo) => void,
@@ -65,7 +67,7 @@ export default class SignIn extends React.Component<IProps,IStates>{
             // const userSign = this.props.userSign;
             // const setFileList = this.props.setFileList;
             // const setPic = this.props.setPic;
-            const { selectSvs, setFileList, setPic, userSign } = this.props;
+            const { selectFileList, selectSvs, setFileList, setPic, userSign } = this.props;
             signInHttp(user).then( (res: any) => {
                 // tslint:disable-next-line:no-console
                 // console.log(res);
@@ -88,6 +90,11 @@ export default class SignIn extends React.Component<IProps,IStates>{
                         }
                         // list[0].selectedFlag = true;
                         setFileList(list);
+                        const listShow: IFileListItem[] = [];
+                        for(i=0; i<listShowNum; i++){   
+                            listShow[i] = list[i];
+                        }
+                        selectFileList(listShow);
                         getPicHttp(list[0].svsId).then( (resPic: any) => {
                             // tslint:disable-next-line:no-console
                             // console.log(resPic);

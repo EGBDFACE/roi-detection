@@ -6,6 +6,7 @@ import { IPicInfo, IStoreState, ISummaryItem, ISummaryStatisticsItem } from '../
 
 function mapStateToProps (state: IStoreState){
     return {
+        // selectedRoiDisplayId: state.select.selectedRoiId,
         selectedRoisPage: state.select.selectedRoisPage,
         summaryDisplay: state.summary.filterDisplay,
         summaryFilter: state.summary.filter,
@@ -18,6 +19,8 @@ function mapStateToProps (state: IStoreState){
 function mapDispatchToProps (dispatch: Dispatch<any>){
     return {
         roiPageNext: () => dispatch(actions.roiPageNext()),
+        selectAllRoi: (flag: boolean) => dispatch(actions.selectAllRoiFlagChange(flag)),
+        selectRoi: (id: number) => dispatch(actions.selectRoi(id)),
         selectSvs: (id: number) => dispatch(actions.selectSvs(id)),
         setFilter: (data: ISummaryItem[]) => dispatch(actions.setFilter(data)),
         setFilterDisplay: (data: ISummaryItem[]) => dispatch(actions.setFilterDisplay(data)),

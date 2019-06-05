@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { getPicHttp, getSummaryHttp, setRoiStatus } from '../api';
 // import { CANCER_TYPE as cancerType, PIC_SIZE as picSize, ROI_SCORE_THRESHOLD as threshold } from '../constant';
-import { CANCER_TYPE as cancerType, PIC_SIZE as picSize } from '../constant';
+import { CANCER_TYPE as cancerType, PIC_SIZE as picSize, FILE_LIST_DISPLAY_NUMBER as listShowLength  } from '../constant';
 import '../css/global.scss';
 import '../css/mainPage.scss';
 import history from '../router/history';
@@ -18,26 +18,34 @@ import resolveSummary from '../utils/resolveSummary';
 // }
 interface IProps{
     fileList: IFileListItem[],
-    selectedRoiId: number,
+    fileListPage: number,
+    fileListShow: IFileListItem[],
+    selectedRoiDisplayId: number,
     selectedSvsId: number,
+    selectAllRoi: (flag: boolean) => void,
     selectRoi: (id: number) => void,
     selectSvs: (id: number) => void,
     setFileList: (list: IFileListItem[]) => void,
+    setFileListPage: (page: number) => void,
+    setFileListShow: (list: IFileListItem[]) => void,
     setPic: (pic: IPicInfo) => void,
     setStatistics: (data: ISummaryStatisticsItem[]) => void,
     setSummary: (data: ISummaryTotal) => void,
+    showAllRoisFlag: boolean,
     statistics: ISummaryStatisticsItem[]
     userName: string,
     userSignOut: () => void,
     pic: IPicInfo
 }
 interface IStates{
-    roiMenuItemIndex: number,
+    hoveredRoiId: number,
+    // roiMenuItemIndex: number,
     selectedPicItem: number,
-    selectedRoiId: number,
-    showAllRoisFlag: boolean,
+    // selectedRoiId: number,
+    // showAllRoisFlag: boolean,
     showLogOutFlag: boolean,
     showShortListFlag: boolean,
+    preScrollTop: number,
     wantToChangeIndex: number
     // selectedRoiItem: number
 }
@@ -45,13 +53,15 @@ export default class MainPage extends React.Component<IProps, IStates>{
     constructor(props: IProps){
         super(props);
         this.state = {
-            roiMenuItemIndex: -1,
+            hoveredRoiId: -1,
+            // roiMenuItemIndex: -1,
             selectedPicItem: 0,
-            selectedRoiId: -1,
+            // selectedRoiId: -1,
             // selectedRoiItem: -1,
-            showAllRoisFlag: true,
+            // showAllRoisFlag: true,
             showLogOutFlag: false,
             showShortListFlag: false,
+            preScrollTop: 0,
             wantToChangeIndex: -1
         }
         this.showShortList = this.showShortList.bind(this);
@@ -70,18 +80,121 @@ export default class MainPage extends React.Component<IProps, IStates>{
         this.logout = this.logout.bind(this);
         this.showAllRoisFlagChange = this.showAllRoisFlagChange.bind(this);
         this.setRoiMenuItemIndex = this.setRoiMenuItemIndex.bind(this);
+        // this.handleTableScroll = this.handleTableScroll.bind(this);
         // this.hoverEnterRoi = this.hoverEnterRoi.bind(this);
         // this.hoverLeaveRoi = this.hoverLeaveRoi.bind(this);
     }
+    // public componentDidMount(){
+    //     const clientHeight = document.getElementsByClassName('sideBar__table__content')[0].clientHeight;
+    //     console.log(clientHeight);
+    // }
+    // 去抖版本
+    // public handleTableScroll = debounce((e:any)=>{
+    //     const { fileList, fileListPage, setFileListShow, setFileListPage } = this.props;
+    //     const scrollHeight = e.target.scrollHeight;
+    //     const clientHeight = e.target.clientHeight;
+    //     const scrollTop = e.target.scrollTop;
+    //     if(scrollTop + clientHeight >= (scrollHeight - 50)){
+    //         const totalPage = Math.ceil(fileList.length/listShowLength);
+    //         if(fileListPage <= totalPage - 1){ 
+    //             const newFileListPage = fileListPage + 1;
+    //             const newFileList: IFileListItem[] = [];
+    //             let i: number;
+    //             const length = (fileListPage === totalPage-1) ? (fileList.length-fileListPage*listShowLength + 10) : (listShowLength+10);
+    //             for(i=0; i<length; i++){
+    //                 newFileList[i] = fileList[fileListPage*listShowLength - 10  + i];
+    //             }
+    //             setFileListPage(newFileListPage);
+    //             setFileListShow(newFileList);
+    //             document.getElementsByClassName('sideBar__table__content')[0].scrollTop = 100;
+    //         }
+    //     }
+    //     if(scrollTop < 50){
+    //         if(fileListPage !== 1){
+    //             const newFileListPage = fileListPage - 1;
+    //             const newFileList: IFileListItem[] = [];
+    //             let i: number;
+    //             if(fileListPage === 2){
+    //                 for(i=0; i<listShowLength; i++){
+    //                     newFileList[i] = fileList[(fileListPage-2)*listShowLength + i];
+    //                 }
+    //             }else{
+    //                 for(i=0; i<listShowLength+10; i++){
+    //                     newFileList[i] = fileList[(fileListPage-2)*listShowLength + i + 10]
+    //                 }
+    //             }
+                
+    //             setFileListPage(newFileListPage);
+    //             setFileListShow(newFileList);
+    //             document.getElementsByClassName('sideBar__table__content')[0].scrollTop = scrollHeight - clientHeight - 100;
+    //         }
+    //     }
+    // })
+    // public handleTableScroll(e:any){
+    //     const { fileList, fileListPage, setFileListShow, setFileListPage } = this.props;
+    //     const { preScrollTop } = this.state;
+    //     const totalPage = Math.ceil(fileList.length/((listShowLength/3)*2));
+    //     const scrollHeight = e.target.scrollHeight;
+    //     const clientHeight = e.target.clientHeight;
+    //     const scrollTop = e.target.scrollTop;
+    //     // console.log('scrollTop'+scrollTop);
+    //     // console.log('clientHeight'+clientHeight);
+    //     // console.log('scrollHeight'+scrollHeight);
+    //     if(Math.abs(scrollTop - clientHeight) < 80){
+    //         if(preScrollTop <= scrollTop){
+    //             console.log('xia');
+    //             if(fileListPage !== totalPage - 1){
+    //                 const newFileListPage = fileListPage + 1;
+    //                 const newFileListShow: IFileListItem[] = [];
+    //                 let i: number;
+    //                 for(i=0; i<listShowLength; i++){
+    //                     newFileListShow[i] = fileList[fileListPage*((listShowLength/3)*2)+i];
+    //                 }
+    //                 setFileListPage(newFileListPage);
+    //                 setFileListShow(newFileListShow);
+    //                 document.getElementsByClassName('sideBar__table__content')[0].scrollTop = 0;
+    //             }else{
+    //                 const lastFileListShow: IFileListItem[] = [];
+    //                 let i: number;
+    //                 const length = fileList.length - fileListPage*((listShowLength/3)*2);
+    //                 for(i=0; i<length; i++){
+    //                     lastFileListShow[i] = fileList[fileListPage*((listShowLength/3)*2)+i];
+    //                 }
+    //                 setFileListShow(lastFileListShow);
+    //                 document.getElementsByClassName('sideBar__table__content')[0].scrollTop = 0;
+    //             }
+    //         }else if(preScrollTop > scrollTop){
+    //             console.log('shang');
+    //             if(fileListPage !== 1){
+    //                 const newFileListPage = fileListPage - 1;
+    //                 const newFileListShow: IFileListItem[] = [];
+    //                 let i: number;
+    //                 for(i=0; i<listShowLength; i++){
+    //                     newFileListShow[i] = fileList[(fileListPage-2)*((listShowLength/3)*2)+i];
+    //                 }
+    //                 setFileListPage(newFileListPage);
+    //                 setFileListShow(newFileListShow);
+    //                 document.getElementsByClassName('sideBar__table__content')[0].scrollTop = clientHeight * 2;
+    //             }
+    //         }
+    //     }
+    //     setTimeout(()=>{
+    //         this.setState({
+    //             preScrollTop: scrollTop
+    //         })
+    //     },0)
+    // }
     public setRoiMenuItemIndex = (index: number) => (event:any) => {
-        this.setState({
-            roiMenuItemIndex: index
-        })
+        // this.setState({
+        //     roiMenuItemIndex: index
+        // })
+        this.props.selectRoi(index);
     }
-    public showAllRoisFlagChange(){
-        this.setState({
-            showAllRoisFlag: !this.state.showAllRoisFlag
-        })
+    public showAllRoisFlagChange = (flag: boolean) => (event: any) => {
+        this.props.selectAllRoi(flag);
+        // this.setState({
+        //     showAllRoisFlag: !this.state.showAllRoisFlag
+        // })
     }
     public logout(){
         const { userSignOut } = this.props;
@@ -147,13 +260,17 @@ export default class MainPage extends React.Component<IProps, IStates>{
     }
     public roiMouseEnter = (id: number) => (event: any) => {
         this.setState({
-            selectedRoiId: id
+            // selectedRoiId: id
+            hoveredRoiId: id
         });
+        // this.props.selectRoi(id);
     }
     public roiMouseLeave(){
         this.setState({
-            selectedRoiId: -1
+            // selectedRoiId: -1
+            hoveredRoiId: -1
         });
+        // this.props.selectRoi(-1);
     }
     // public selectRoiClick = (id: number) => (event: any) =>{
     //     this.props.sele
@@ -271,35 +388,41 @@ export default class MainPage extends React.Component<IProps, IStates>{
         });
     }
     public renderRoiMenu(value: IRoiInfo, index: number){
-        const { selectedRoiId, wantToChangeIndex } = this.state;
-        // if(selectedRoiId === value.roiId){
-        //     if(value.status === 'unlabeled'){
-        //         return(
-        //             <div className='main__content__roi__menu'>
-        //                 <i className='roi__menu_true' />
-        //                 <i className='roi__menu_false' />
-        //             </div>
-        //         )
-        //     }else if(value.status === 'true'){
-
-        //     }else if(value.status === 'false'){
-
-        //     }
-        //     return(
-        //         <div className='main__content__roi__menu'>
-
-        //         </div>
-        //     )
-        // }else {
-        //     return null
-        // }
+        // const { selectedRoiId, wantToChangeIndex } = this.state;
+        const { wantToChangeIndex, hoveredRoiId } = this.state;
+        const { pic } = this.props;
+        const roiWidth = ((value.x2-value.x1)/pic.picWidth) * picSize;
+        const smallRoiMenuSytle = {
+            // width: '25px',
+            // height: '25px',
+            // marginLeft: '5px',
+            width: roiWidth/3 + 'px',
+            height: roiWidth/3 + 'px',
+            marginLeft: roiWidth/15 + 'px',
+            backgroundSize: 'cover'
+        }
+        const smallRoiMenuAreaStyle = {
+            right: roiWidth/20 + 'px',
+            bottom: roiWidth/20 + 'px'
+        };
+        const wantToChangeStyle ={
+            // width: '20px',
+            // height: '20px',
+            // marginLeft: '5px',
+            width: roiWidth/5 + 'px',
+            height: roiWidth/5 + 'px',
+            backgroundSize: 'cover'
+        };
         if(value.status === 'unlabeled'){
-            if(selectedRoiId === value.roiId){
+            if(hoveredRoiId === value.roiId){
               return( 
-                    <div className='main__content__roi__menu'>
+                    <div className='main__content__roi__menu'
+                        style={roiWidth < 100 ? smallRoiMenuAreaStyle : undefined} >
                         <i className='roi__menu_true' 
+                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined}
                             onClick={this.roiStatusChange(value.roiId, 'true', index)} />
                         <i className='roi__menu_false' 
+                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined}
                             onClick={this.roiStatusChange(value.roiId, 'false', index)} />
                     </div>
                 )  
@@ -311,10 +434,13 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 return(
                     <div className='main__content__roi__menu'
                         onMouseLeave={this.notWantToChange} 
+                        style={roiWidth < 100 ? smallRoiMenuAreaStyle : undefined} 
                         >
                         <i className='roi__menu_false'
+                            style= { roiWidth < 100 ? wantToChangeStyle : undefined}
                             onClick={this.roiStatusChange(value.roiId, 'false', index)} />
                         <i className='roi__menu_true_hl' 
+                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined}
                             onMouseEnter={this.wantToChange(index)} />
                     </div> 
                 )
@@ -322,8 +448,10 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 return(
                     <div className='main__content__roi__menu'
                         onMouseLeave={this.notWantToChange} 
+                        style={roiWidth < 100 ? smallRoiMenuAreaStyle : undefined} 
                         >
-                        <i className='roi__menu_true_hl' 
+                        <i className='roi__menu_true_hl'
+                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined} 
                             onMouseEnter={this.wantToChange(index)} />
                     </div>
                 )
@@ -333,10 +461,13 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 return(
                     <div className='main__content__roi__menu'
                         onMouseLeave={this.notWantToChange}
+                        style={roiWidth < 100 ? smallRoiMenuAreaStyle : undefined} 
                         >
                         <i className='roi__menu_true'
+                            style= { roiWidth < 100 ? wantToChangeStyle : undefined}
                             onClick={this.roiStatusChange(value.roiId, 'true', index)} />
                         <i className='roi__menu_false_hl' 
+                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined}
                             onMouseEnter={this.wantToChange(index)} />
                     </div>
                 )
@@ -344,8 +475,10 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 return(
                     <div className='main__content__roi__menu'
                         onMouseLeave={this.notWantToChange}
+                        style={roiWidth < 100 ? smallRoiMenuAreaStyle : undefined} 
                         >
                         <i className='roi__menu_false_hl' 
+                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined}
                             onMouseEnter={this.wantToChange(index)} />
                     </div>
                 )
@@ -355,61 +488,43 @@ export default class MainPage extends React.Component<IProps, IStates>{
         }
     }
     public renderRois(value: IRoiInfo,index:number){
-        const { pic } = this.props;
+        const { pic, showAllRoisFlag, selectedRoiDisplayId } = this.props;
         // const { selectedRoiId } = this.state;
-        const { showAllRoisFlag, roiMenuItemIndex } = this.state;
-        const roiPosX = (value.x1/pic.picWidth)*picSize + 'px';
-        const roiPosY = (value.y1/pic.picHeight)*picSize +'px';
+        // const { roiMenuItemIndex } = this.state;
+        const roiPosX = (value.x1/pic.picWidth)*picSize;
+        const roiPosY = (value.y1/pic.picHeight)*picSize;
+        const roiWidth = ((value.x2-value.x1)/pic.picWidth) * picSize;
+        const roiHeight = ((value.y2-value.y1)/pic.picHeight) * picSize;
         const roiPosStyle={
-            height: ((value.y2-value.y1)/pic.picHeight) * picSize + 'px',
-            left: roiPosX,
-            top: roiPosY,
-            width: ((value.x2-value.x1)/pic.picWidth) * picSize + 'px',
+            height: roiHeight + 'px',
+            left: roiPosX + 'px',
+            top: roiPosY + 'px',
+            width: roiWidth + 'px',
         };
+        let commonRoiTitleStyle;
+        if(roiWidth < 86){
+            commonRoiTitleStyle = {
+                width: roiWidth + 'px'
+            };
+        }else{
+            commonRoiTitleStyle = undefined;
+        }
+        // const smallRoiTitleTypeStyle = {
+        //     fontSize: '14px'
+        // };
+        // const smallRoiTitleScoreStyle ={
+        //     fontSize: '12px'
+        // };
         const falseBorderStyle = {
             ...roiPosStyle,
             borderColor: '#FFE14F' 
         };
-        const falseTitleStyle ={
+        const falseTitleStyle = {
+            ...commonRoiTitleStyle,
             backgroundColor: '#FFE14F'
         };
-        // const hidden = { display: 'none'};
-        // const zIndexStyle = { 
-        //     ...roiPosStyle,
-        //     zIndex: 1
-        // };
-        // const roiTitlePosStyle = {
-        //     left: roiPosX,
-        //     top: roiPosY
-        // };
-        // if(value.score > threshold){
-        //     return (
-        //         <div className='main__content__roi' 
-        //             // style={roiPosStyle} 
-        //             key={index} 
-        //             // onClick={this.selectRoiFn(value.roiId)}
-        //             onMouseEnter={this.roiMouseEnter(value.roiId)}
-        //             onMouseLeave={this.roiMouseLeave}
-        //             // style={this.props.selectedRoiId === value.roiId ? zIndexStyle : roiPosStyle} 
-        //             // style={ selectedRoiId === value.roiId ? zIndexStyle : roiPosStyle}
-        //             style={roiPosStyle}
-        //             >
-        //             <div className='main__content__roi__title'>
-        //                 <span className='main__content__roi__title__type'>{cancerType[value.type]}</span>
-        //                 <span className='main__content__roi__title__score'>{value.score.toFixed(2)}</span>
-        //             </div> 
-        //             {this.renderRoiMenu(value, index)}
-        //             {/* <div className='main__content__roi__menu'
-        //                 style={this.props.selectedRoiId === value.roiId ? undefined : hidden}>
-        //                 <i className='main__content__roi__menu__true' />
-        //                 <i className='main__content__roi__menu__false' />
-        //             </div>   */}
-        //         </div>
-        //     )
-        // }else{
-        //     return null
-        // }
-        if((showAllRoisFlag) || (roiMenuItemIndex === index)){
+        // if((showAllRoisFlag) || (roiMenuItemIndex === index)){
+        if((showAllRoisFlag) || (selectedRoiDisplayId === value.roiId)){
             return (
                 <div className='main__content__roi' 
                     // style={roiPosStyle} 
@@ -422,9 +537,11 @@ export default class MainPage extends React.Component<IProps, IStates>{
                     style={(value.status === 'false') ? falseBorderStyle : roiPosStyle}
                     >
                     <div className='main__content__roi__title'
-                        style={ value.status === 'false' ? falseTitleStyle : undefined} >
-                        <span className='main__content__roi__title__type'>{cancerType[value.type]}</span>
-                        <span className='main__content__roi__title__score'>{value.score.toFixed(2)}</span>
+                        style={ value.status === 'false' ? falseTitleStyle : commonRoiTitleStyle} >
+                        <span className='main__content__roi__title__type'
+                            >{cancerType[value.type]}</span>
+                        <span className='main__content__roi__title__score'
+                            >{value.score.toFixed(2)}</span>
                     </div> 
                     {this.renderRoiMenu(value, index)}
                     {/* <div className='main__content__roi__menu'
@@ -439,7 +556,8 @@ export default class MainPage extends React.Component<IProps, IStates>{
         }
     }
     public renderRoiSwitchBarItem(value: IRoiInfo, index: number){
-        const { showAllRoisFlag, roiMenuItemIndex } = this.state;
+        // const { roiMenuItemIndex } = this.state;
+        const {  selectedRoiDisplayId ,showAllRoisFlag } = this.props;
         const greenStyle = { backgroundColor: '#79FF6F'};
         const yellowStyle = { backgroundColor: '#FFE14F'};
         const grayStyle = { backgroundColor: '#BBBBBB'};
@@ -471,7 +589,8 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 ...valueStyle,
                 cursor: 'pointer'
             };
-            if(roiMenuItemIndex === index){
+            // if(roiMenuItemIndex === index){
+            if(selectedRoiDisplayId === value.roiId){
                 return(
                     <div style={ newSelectedStyle }
                         className='roi__switch_item'
@@ -482,7 +601,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 return(
                     <div style={ newValueStyle } 
                         className='roi__switch_item'
-                        onClick={this.setRoiMenuItemIndex(index)} 
+                        onClick={this.setRoiMenuItemIndex(value.roiId)} 
                         key={index}
                         > {index + 1} </div> 
                 )
@@ -491,7 +610,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
     }
     public renderTable(index: number, value: IFileListItem){
         // const oddBgStyle = { backgroundColor: '#EEEEEE' };
-        const id = toFiveNumberString(index+1);
+        const id = toFiveNumberString(value.svsId);
         const oddIconStyle = { backgroundColor: '#613ED8', border: '1px solid #613ED8' };
         const selectedBg = { backgroundColor: '#E4DCFF' };
         // const selectedPicItem = this.state.selectedPicItem;
@@ -551,9 +670,9 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 <div>please sign in</div>
             )
         }
-        const { fileList, pic, selectedSvsId, userName } = this.props;
+        const { fileList, fileListShow, pic, selectedSvsId, showAllRoisFlag, userName } = this.props;
         // const { selectedPicItem } = this.state;
-        const { showLogOutFlag, showAllRoisFlag } = this.state;
+        const { showLogOutFlag } = this.state;
         const hidden = { display: 'none'};
         const shortListContentStyle = {
             left: '8%',
@@ -607,7 +726,9 @@ export default class MainPage extends React.Component<IProps, IStates>{
                         <div className='table__header__magn'>MAGN</div>
                         <div className='table__header__roi'>ROI</div>
                     </div>
-                    <div className='sideBar__table__content'>
+                    <div className='sideBar__table__content'
+                        // onScroll={this.handleTableScroll}
+                        >
                         {fileList.map((value,index)=> this.renderTable(index, value))}
                     </div>
                 </div>
@@ -632,8 +753,14 @@ export default class MainPage extends React.Component<IProps, IStates>{
                         <div className='roi__switch_area'>
                             {pic.roi.map((value, index) => this.renderRoiSwitchBarItem(value, index))}
                         </div>
-                        <i className={showAllRoisFlag ? 'roi__switch_all_enable' : 'roi__switch_all_disable'} 
-                            onClick={this.showAllRoisFlagChange} />
+                        {/* <i className={showAllRoisFlag ? 'roi__switch_all_enable' : 'roi__switch_all_disable'} 
+                            onClick={this.showAllRoisFlagChange} /> */}
+                        <i className='roi__switch_all_enable' 
+                            style={ showAllRoisFlag ? undefined : hidden}
+                            onClick={this.showAllRoisFlagChange(false)} />
+                        <i className='roi__switch_all_disable' 
+                            style={ showAllRoisFlag ? hidden : undefined}
+                            onClick={this.showAllRoisFlagChange(true)} />
                     </div>
                 </div>
             </div>
@@ -645,4 +772,21 @@ function toFiveNumberString(i: number){
     const decimal = i / Math.pow(10,5);
     const decimalStr = decimal.toFixed(5)+'';
     return decimalStr.substr(decimalStr.indexOf('.')+1)
+}
+// function debounce(method: any, context: any) {
+//     clearTimeout(method.tId);
+//     method.tId = setTimeout(function() {
+//       method.call(context);
+//     }, 1000);
+//   }
+function debounce(func:any, wait=500) {
+    let timeout:any;  // 定时器变量
+    return function(event:any){
+        clearTimeout(timeout);  // 每次触发时先清除上一次的定时器,然后重新计时
+        event.persist && event.persist()   //保留对事件的引用
+        //const event = e && {...e}   //深拷贝事件对象
+        timeout = setTimeout(()=>{
+            func(event)
+        }, wait);  // 指定 xx ms 后触发真正想进行的操作 handler
+    };
 }

@@ -35,6 +35,7 @@ export default function resolveSummary(data: any){
     for(i=0; i<data.length; i++){
         const r = data[i];
         const v:ISummaryItem = {
+            roiId: r.roi_id,
             roiUrl: r.roi_url,
             status: r.status,
             svsId: r.svs_id,

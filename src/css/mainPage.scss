@@ -270,11 +270,18 @@ $myColor: #1E2D52;
     }
 }
 .main__content__roi__title{
+    white-space: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
     position: absolute;
     // height: 23px;
     left: -3px;
     top: -23px;
     background-color: #79FF6F;
+}
+.main__content__roi__title::-webkit-scrollbar{
+    display: none;
+    width: 0 !important;
 }
 .main__content__roi__title__score{
     color: black;
@@ -286,6 +293,7 @@ $myColor: #1E2D52;
     font-size: 16px;
 }
 .main__content__roi__menu{
+    white-space: nowrap;
     position: absolute;
     right: 10px;
     bottom: 10px;

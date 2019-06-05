@@ -102,6 +102,21 @@ function setSelect(state: ISelect, action: ISelectAction){
                 ...state,
                 selectedRoisPage: state.selectedRoisPage+1
             }
+        case 'SELECT_ALL_ROI':
+            return{
+                ...state,
+                selectedAllRoiFlag: action.flag
+            }
+        case 'SELECT_FILE_LIST_PAGE':
+            return{
+                ...state,
+                selectedFileListPage: action.page
+            }
+        case 'SELECT_FILE_LIST':
+            return{
+                ...state,
+                selectedFileList: action.list
+            }
         default: return state
     }
 }

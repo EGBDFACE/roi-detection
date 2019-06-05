@@ -13,7 +13,10 @@ export interface IPicAction{
     type: string
 }
 export interface ISelectAction{
+    flag?: boolean,
     id?: number,
+    list?: IFileListItem[],
+    page?: number,
     type: string
 }
 export interface ISummaryAction{
@@ -37,6 +40,9 @@ const SET_FILTER_DISPLAY = 'SET_FILTER_DISPLAY';
 const SELECT_SVS = 'SELECT_SVS';
 const SELECT_ROI = 'SELECT_ROI';
 const SELECT_ROI_PAGE_NEXT = 'SELECT_ROI_PAGE_NEXT';
+const SELECT_ALL_ROI = 'SELECT_ALL_ROI';
+const SELECT_FILE_LIST = 'SELECT_FILE_LIST';
+const SELECT_FILE_LIST_PAGE = 'SELECT_FILE_LIST_PAGE';
 
 export function userSignIn(name: string): IUserAction{
     return{
@@ -106,5 +112,23 @@ export function selectSvs(id: number): ISelectAction{
 export function roiPageNext(): ISelectAction{
     return{
         type: SELECT_ROI_PAGE_NEXT
+    }
+}
+export function selectAllRoiFlagChange(flag: boolean): ISelectAction{
+    return{
+        flag,
+        type: SELECT_ALL_ROI
+    }
+}
+export function selectFileListPage(page: number): ISelectAction{
+    return{
+        page,
+        type: SELECT_FILE_LIST_PAGE
+    }
+}
+export function selectFileList(list: IFileListItem[]): ISelectAction{
+    return{
+        list,
+        type: SELECT_FILE_LIST,
     }
 }

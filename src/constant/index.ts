@@ -19,3 +19,5 @@ export const CANCER_TYPE:cancerType = {
 
 export const PIC_SIZE = 600;
 export const ROI_SCORE_THRESHOLD = 0.1;
+
+export const FILE_LIST_DISPLAY_NUMBER = 90;

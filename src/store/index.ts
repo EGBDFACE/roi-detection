@@ -28,6 +28,9 @@ export interface IRoiInfo{
     y2: number
 }
 export interface ISelect{
+    selectedAllRoiFlag: boolean,
+    selectedFileList: IFileListItem[],
+    selectedFileListPage: number,
     selectedRoiId: number,
     selectedRoisPage: number,
     selectedSvsId: number,
@@ -52,6 +55,7 @@ export interface ISummary{
     total: ISummaryTotal,
 }
 export interface ISummaryItem{
+    roiId: number,
     roiUrl: string,
     status: string,
     svsId: number,
@@ -105,6 +109,9 @@ const initialState: IStoreState = {
         svsId: -1
     },
     select: {
+        selectedAllRoiFlag: true,
+        selectedFileList: [],
+        selectedFileListPage: 1,
         selectedRoiId: -1,
         selectedRoisPage: 0,
         selectedSvsId: -1,

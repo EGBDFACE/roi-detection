@@ -10,6 +10,8 @@ import { IPicInfo, IRoiInfo, ISummaryItem, ISummaryStatisticsItem, ISummaryTotal
 interface IProps{
     roiPageNext: () => void,
     selectedRoisPage: number,
+    selectAllRoi: (flag: boolean) => void,
+    selectRoi: (id: number) => void,
     selectSvs: (id: number) => void,
     // setSummary: (data: ISummary) => void,
     setFilter: (data: ISummaryItem[]) => void,
@@ -38,9 +40,10 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
             // summaryFilter: []
             filterRoiPicUrl: [],
             selectedRoi: {
+                roiId: -1,
                 roiUrl: '',
                 status: '',
-                svsId: 0,
+                svsId: -1,
                 svsUrl: '',
                 type: '',
                 userName: ''
@@ -58,9 +61,11 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         this.editSingleRoi = this.editSingleRoi.bind(this);
     }
     public editSingleRoi(){
-        const { selectSvs, setPic } = this.props;
+        const { selectAllRoi, selectRoi, selectSvs, setPic } = this.props;
         // this.props.selectSvs(this.state.selectedRoi.svsId);
         const { selectedRoi } = this.state;
+        selectAllRoi(false);
+        selectRoi(selectedRoi.roiId);
         selectSvs(selectedRoi.svsId);
         getPicHttp(selectedRoi.svsId).then( (res: any) => {
             const roiD: IRoiInfo[] = [];
@@ -343,6 +348,7 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
             )
         }
         const { summaryStatistics } = this.props;
+        const hidden = { display: 'none'};
         return (
             <div className='page'>
                 <div className='main__header'>
@@ -363,7 +369,8 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
                 <div className='main__sideBar'>
                     <div className='sideBar__header'>
                         <span className='sideBar__header__title'>ROI分类</span>
-                        <i className='sideBar__header__icon' />
+                        <i className='sideBar__header__icon' 
+                            style={hidden} />
                     </div>
                     <div className='summary__sideBar__content'>
                         {summaryStatistics.map((value: ISummaryStatisticsItem, index: number)=> this.renderSummaryLabelItem(value, index))}

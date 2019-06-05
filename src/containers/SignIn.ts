@@ -12,6 +12,7 @@ function mapStateToProps (state: IStoreState){
 
 function mapDispatchToProps (dispatch: Dispatch<any>){
     return {
+        selectFileList: (list: IFileListItem[]) => dispatch(actions.selectFileList(list)),
         selectSvs: (id: number) => dispatch(actions.selectSvs(id)),
         setFileList: (list: IFileListItem[]) => dispatch(actions.setFileList(list)),
         setPic: (pic: IPicInfo) => dispatch(actions.setPic(pic)),

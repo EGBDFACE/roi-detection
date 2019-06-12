@@ -126,8 +126,8 @@ export default class SignIn extends React.Component<IProps,IStates>{
                             };
                             setPic(pic);
                             selectSvs(list[0].svsId)
-                            history.push('/mainPage');
-                            // history.push('/roi/mainPage');
+                            // history.push('/mainPage');
+                            history.push('/roi/mainPage');
                         })
                     }).catch( error => {
                         // console.error(error);

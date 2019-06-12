@@ -1,9 +1,9 @@
 // export const BASE_URL = 'http://222.20.79.250:8081/api/';
 // export const BASE_URL ='http://222.20.79.123:5000';
 // export const BASE_URL = 'http://222.20.79.250:5000';
-export const BASE_URL = 'http://54.203.111.1:5000';
+// export const BASE_URL = 'http://54.203.111.1:5000';
 // export const BASE_URL = '/api';
-// export const BASE_URL = 'http://www.elongevity.ai/api/'
+export const BASE_URL = 'http://www.elongevity.ai/api/'
 
 interface ICancerType{
     [N:string]: string,

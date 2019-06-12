@@ -23,12 +23,12 @@ const Summary = Loadable({
 export default(
     <Router history={history}>
         <div className='page'>
-            <Route exact={true} path='/' component={ SignIn }/>
+            {/* <Route exact={true} path='/' component={ SignIn }/>
             <Route path='/mainPage' component={Main} />
-            <Route path='/dataSummary' component={Summary} />
-            {/* <Route exact={true} path='/roi' component={ SignIn } />
+            <Route path='/dataSummary' component={Summary} /> */}
+            <Route exact={true} path='/roi' component={ SignIn } />
             <Route path='/roi/mainPage' component={ Main } />
-            <Route path='/roi/dataSummary' component={ Summary } /> */}
+            <Route path='/roi/dataSummary' component={ Summary } />
         </div>
     </Router>
 )

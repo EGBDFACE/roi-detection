@@ -1,7 +1,8 @@
 import * as React from 'react';
+import * as ReactDom from 'react-dom';
 import { getPicHttp, getSummaryHttp, setRoiStatus } from '../api';
 // import { CANCER_TYPE as cancerType, PIC_SIZE as picSize, ROI_SCORE_THRESHOLD as threshold } from '../constant';
-import { CANCER_TYPE as cancerType, PIC_SIZE as picSize, FILE_LIST_DISPLAY_NUMBER as listShowLength  } from '../constant';
+import { CANCER_TYPE as cancerType, FILE_LIST_DISPLAY_NUMBER as listShowLength, PIC_SIZE as picSize, ROI_MENU_MAX_LENGTH as menuMaxLength } from '../constant';
 import '../css/global.scss';
 import '../css/mainPage.scss';
 import history from '../router/history';
@@ -39,12 +40,21 @@ interface IProps{
 }
 interface IStates{
     hoveredRoiId: number,
+    imgDragFlag: boolean,
+    imgDragPrePos: {
+        x: number,
+        y: number
+    }
+    imgZoomScale: number,
+    imgZoomStyle: any,
     // roiMenuItemIndex: number,
-    selectedPicItem: number,
+    // selectedPicId: number,
     // selectedRoiId: number,
     // showAllRoisFlag: boolean,
+    selectedSvsIndex: number,
     showLogOutFlag: boolean,
     showShortListFlag: boolean,
+    showZoomInFlag: boolean,
     preScrollTop: number,
     wantToChangeIndex: number
     // selectedRoiItem: number
@@ -54,13 +64,22 @@ export default class MainPage extends React.Component<IProps, IStates>{
         super(props);
         this.state = {
             hoveredRoiId: -1,
+            imgDragFlag: false,
+            imgDragPrePos: {
+                x: 0,
+                y: 0
+            },
+            imgZoomScale: 1,
+            imgZoomStyle: undefined,
             // roiMenuItemIndex: -1,
-            selectedPicItem: 0,
+            // selectedPicId: 1,
             // selectedRoiId: -1,
             // selectedRoiItem: -1,
             // showAllRoisFlag: true,
+            selectedSvsIndex: 0,
             showLogOutFlag: false,
             showShortListFlag: false,
+            showZoomInFlag: false,
             preScrollTop: 0,
             wantToChangeIndex: -1
         }
@@ -80,56 +99,185 @@ export default class MainPage extends React.Component<IProps, IStates>{
         this.logout = this.logout.bind(this);
         this.showAllRoisFlagChange = this.showAllRoisFlagChange.bind(this);
         this.setRoiMenuItemIndex = this.setRoiMenuItemIndex.bind(this);
-        // this.handleTableScroll = this.handleTableScroll.bind(this);
+        this.handleTableScroll = this.handleTableScroll.bind(this);
+        this.zoomInFlagChange = this.zoomInFlagChange.bind(this);
+        this.handleImgWheel = this.handleImgWheel.bind(this);
+        this.handleImgDrag = this.handleImgDrag.bind(this);
+        this.handleImgMouseDown = this.handleImgMouseDown.bind(this);
+        this.handleImgMouseUp = this.handleImgMouseUp.bind(this);
         // this.hoverEnterRoi = this.hoverEnterRoi.bind(this);
         // this.hoverLeaveRoi = this.hoverLeaveRoi.bind(this);
+    }
+    public handleImgMouseDown(e:any){
+        // console.log(e);
+        // this.setState({
+        //     imgDragFlag: true,
+        //     imgDragPrePos: {
+        //         x: e.clientX,
+        //         y: e.clientY
+        //     }
+        // })
+        e.preventDefault();
+        const { imgDragPrePos } = this.state;
+        const disx = e.pageX - imgDragPrePos.x || 0 ;
+        const disy = e.pageY - imgDragPrePos.y || 0 ;
+        let _this = this;
+        document.onmouseup = function() {
+            // document.getElementById('svs_img').onmouseup = function(){
+                document.onmousemove = null;
+                document.onmousedown = null;
+            }
+        document.onmousemove = function(ev: any){
+        // document.getElementById('svs_img').onmousemove = function(ev: any){
+            _this.setState({
+                imgDragPrePos: {
+                    x: ev.pageX - disx,
+                    y: ev.pageY - disy
+                }
+            })
+        }
+       
+    }
+    public handleImgMouseUp(e: any){
+        console.log(e);
+        this.setState({
+            imgDragFlag: false
+        })
+    }
+    public handleImgDrag(e:any){
+        const { imgDragFlag, imgDragPrePos, imgZoomStyle } = this.state;
+        if(imgDragFlag){
+            const newPosX = imgZoomStyle.left || 0 + e.clientX - imgDragPrePos.x + 'px';
+            const newPosY = imgZoomStyle.top || 0 + e.clientY - imgDragPrePos.y + 'px';
+            this.setState({
+                imgZoomStyle: {
+                    ...imgZoomStyle,
+                    left: newPosX,
+                    top: newPosY
+                }
+            })
+            console.log(newPosX);
+        }
+    }
+    public handleImgWheel(e:any){
+        // console.log(e.deltaY);
+        const eve = e||window.event;
+        const { imgZoomScale, imgZoomStyle } = this.state; 
+        // let scale =  scale + e.deltaY * -0.01;
+        let scale = imgZoomScale + eve.deltaY * -0.01;
+        // Restrict scale
+        scale = Math.min(Math.max(.125, scale), 4);
+        this.setState({
+            imgZoomScale: scale,
+            // imgZoomStyle: {
+            //     ...imgZoomStyle,
+            //     transform: `scale(${scale})`
+            // }
+        })
+
+        // const imgEle = document.getElementById('svg_img');
+        // const oldWidth = imgEle.offsetWidth;
+        // const oldHeight = imgEle.offsetHeight;
+        // const oldLeft = imgEle.offsetLeft;
+        // const oldTop = imgEle.offsetTop;
+        // const scaleX = (e.clientX - oldLeft) / oldWidth;
+        // const scaleY = (e.clientY - oldTop) / oldHeight;
+        // if(e.deltaY > 0 ) {
+        //     this.setState({
+        //         imgZoomStyle: {
+        //             height: imgEle.offsetHeight * 0.9 + 'px',
+        //             width: imgEle.offsetWidth * 0.9 + 'px'
+        //         }
+        //     })
+        // }else{
+        //     this.setState({
+        //         imgZoomStyle: {
+        //             height: imgEle.offsetHeight * 1.1 + 'px',
+        //             width: imgEle.offsetWidth * 1.1 + 'px'
+        //         }
+        //     })
+        // }
+    }
+    public zoomInFlagChange = (value: boolean) => (event:any) => {
+        if(this.props.selectedRoiDisplayId !== -1){
+            this.setState({
+                showZoomInFlag: value
+            })
+        }
     }
     // public componentDidMount(){
     //     const clientHeight = document.getElementsByClassName('sideBar__table__content')[0].clientHeight;
     //     console.log(clientHeight);
     // }
     // 去抖版本
-    // public handleTableScroll = debounce((e:any)=>{
-    //     const { fileList, fileListPage, setFileListShow, setFileListPage } = this.props;
-    //     const scrollHeight = e.target.scrollHeight;
-    //     const clientHeight = e.target.clientHeight;
-    //     const scrollTop = e.target.scrollTop;
-    //     if(scrollTop + clientHeight >= (scrollHeight - 50)){
-    //         const totalPage = Math.ceil(fileList.length/listShowLength);
-    //         if(fileListPage <= totalPage - 1){ 
-    //             const newFileListPage = fileListPage + 1;
-    //             const newFileList: IFileListItem[] = [];
-    //             let i: number;
-    //             const length = (fileListPage === totalPage-1) ? (fileList.length-fileListPage*listShowLength + 10) : (listShowLength+10);
-    //             for(i=0; i<length; i++){
-    //                 newFileList[i] = fileList[fileListPage*listShowLength - 10  + i];
-    //             }
-    //             setFileListPage(newFileListPage);
-    //             setFileListShow(newFileList);
-    //             document.getElementsByClassName('sideBar__table__content')[0].scrollTop = 100;
-    //         }
-    //     }
-    //     if(scrollTop < 50){
-    //         if(fileListPage !== 1){
-    //             const newFileListPage = fileListPage - 1;
-    //             const newFileList: IFileListItem[] = [];
-    //             let i: number;
-    //             if(fileListPage === 2){
-    //                 for(i=0; i<listShowLength; i++){
-    //                     newFileList[i] = fileList[(fileListPage-2)*listShowLength + i];
-    //                 }
-    //             }else{
-    //                 for(i=0; i<listShowLength+10; i++){
-    //                     newFileList[i] = fileList[(fileListPage-2)*listShowLength + i + 10]
-    //                 }
-    //             }
-                
-    //             setFileListPage(newFileListPage);
-    //             setFileListShow(newFileList);
-    //             document.getElementsByClassName('sideBar__table__content')[0].scrollTop = scrollHeight - clientHeight - 100;
-    //         }
-    //     }
-    // })
+    public handleTableScroll = debounce((e:any)=>{
+        const { fileList, fileListPage, setFileListShow, setFileListPage } = this.props;
+        const scrollHeight = e.target.scrollHeight;
+        const clientHeight = e.target.clientHeight;
+        const scrollTop = e.target.scrollTop;
+        const element: any = document.getElementsByClassName('sideBar__table__content')[0];
+        const elementBrief :any = document.getElementsByClassName('sideBar__brief__table__content')[0];
+        // if(scrollTop + clientHeight >= (scrollHeight - 50)){
+        if(scrollTop + clientHeight === scrollHeight){
+            const totalPage = Math.ceil(fileList.length/listShowLength);
+            const newFileListShow: IFileListItem[] = [];
+            let i: number;
+            if(fileListPage <= (totalPage - 1)){ 
+                const newFileListPage = fileListPage + 1;
+                const length = (fileListPage === (totalPage-1)) ? (fileList.length-fileListPage*(listShowLength)) : listShowLength;
+                for(i=0; i<length; i++){
+                    // newFileListShow[i] = fileList[fileListPage*(listShowLength-10)+i];
+                    newFileListShow[i] = fileList[fileListPage*listShowLength+i];
+                }
+                setFileListPage(newFileListPage);
+                setFileListShow(newFileListShow);
+                // element.scrollTop = 100;
+                // elementBrief.scrollTop = 100;
+                element.scrollTop = 10;
+                elementBrief.scrollTop = 10;
+            }
+            // else if(fileListPage === (totalPage-1) ){
+            //     // for(i=0; i<(fileList.length-fileListPage*(listShowLength-10)); i++){
+            //     //     newFileListShow[i] = fileList[fileListPage*(listShowLength-10)+i];
+            //     // }
+            //     for(i=0; i<(fileList.length-fileListPage*listShowLength); i++){
+            //         newFileListShow[i] = fileList[fileListPage*listShowLength + i];
+            //     }
+            //     setFileListPage(totalPage);
+            //     setFileListShow(newFileListShow);
+            //     // element.scrollTop = 100;
+            //     // elementBrief.scrollTop = 100;
+            //     element.scrollTop = 10;
+            //     elementBrief.scrollTop = 10;
+            // }
+        }
+        // if(scrollTop < 50){
+        if(scrollTop === 0){
+            if(fileListPage !== 1){
+                const newFileListPage = fileListPage - 1;
+                const newFileList: IFileListItem[] = [];
+                let i: number;
+                // if(fileListPage === 2){
+                //     for(i=0; i<listShowLength; i++){
+                //         newFileList[i] = fileList[i];
+                //     }
+                // }else{
+                //     for(i=0; i<listShowLength; i++){
+                //         newFileList[i] = fileList[(fileListPage-2)*(listShowLength-10) + i]
+                //     }
+                // }
+                for(i=0; i<listShowLength; i++){
+                    newFileList[i] = fileList[(fileListPage-2)*listShowLength+i];
+                }
+                setFileListPage(newFileListPage);
+                setFileListShow(newFileList);
+                // element.scrollTop = scrollHeight - clientHeight - 100;
+                // elementBrief.scrollTop = scrollHeight - clientHeight - 100;
+                element.scrollTop = scrollHeight - clientHeight - 10;
+                element.scrollTop = scrollHeight - clientHeight - 10;
+            }
+        }
+    })
     // public handleTableScroll(e:any){
     //     const { fileList, fileListPage, setFileListShow, setFileListPage } = this.props;
     //     const { preScrollTop } = this.state;
@@ -192,6 +340,9 @@ export default class MainPage extends React.Component<IProps, IStates>{
     }
     public showAllRoisFlagChange = (flag: boolean) => (event: any) => {
         this.props.selectAllRoi(flag);
+        if(flag){
+            this.props.selectRoi(-1);
+        }
         // this.setState({
         //     showAllRoisFlag: !this.state.showAllRoisFlag
         // })
@@ -223,7 +374,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
         });
     }
     public roiStatusChange = (id: number, newStatus: string, index: number) => (event: any) => {
-        const { fileList, pic, setFileList, setPic } = this.props;
+        const { fileList, pic, setFileList, setPic, statistics } = this.props;
         const newRoiStatus = {
             roi_id: id,
             status: newStatus,
@@ -246,6 +397,16 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 // tslint:disable-next-line:no-console
                 // console.log(res);
                     const summaryData = resolveSummary(resSum.data.response);
+                    for(let i=0; i<summaryData.statistics.length; i++){
+                        for(let j=0; j<statistics.length; j++){
+                            if(summaryData.statistics[i].subject === statistics[j].subject){
+                                summaryData.statistics[i].selectFalse = statistics[j].selectFalse;
+                                summaryData.statistics[i].selectTrue = statistics[j].selectTrue;
+                                summaryData.statistics[i].selectNotSure = statistics[j].selectNotSure;
+                                summaryData.statistics[j].selectUnlabelled = statistics[j].selectUnlabelled;
+                            }
+                        }
+                    }
                     this.props.setSummary(summaryData.total);
                     this.props.setStatistics(summaryData.statistics);
                 }).catch( error => {
@@ -276,7 +437,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
     //     this.props.sele
     // }
     // public componentDidMount(){
-    //     draw(this.props.pic.picUrl);
+    //     draw(this.props.pic);
     // }
     // public hoverEnterRoi = (id: number) => (event: any) => {
     //     this.props.selectRoi(id);
@@ -294,42 +455,132 @@ export default class MainPage extends React.Component<IProps, IStates>{
     //     this.props.selectRoi(id);
     // }
     public next(){
-        const { selectedPicItem } = this.state;
-        const { fileList } = this.props;
-        if(selectedPicItem === fileList.length-1){
+        // const { selectedPicId } = this.state;
+        const { fileList, fileListPage, setFileListPage, setFileListShow, selectedSvsId } = this.props;
+        const element  = document.getElementsByClassName('sideBar__table__content')[0];
+        const elementBrief = document.getElementsByClassName('sideBar__brief__table__content')[0];
+        const totalPage = Math.ceil(fileList.length/listShowLength);
+        const newFileListShow: IFileListItem[] = [];
+        // if(selectedPicId === fileList[fileList.length-1].svsId){
+        if(selectedSvsId === fileList[fileList.length-1].svsId){
+            // this.setState({
+            //     selectedPicId: 1
+            // });
+            this.getPic(1);
+            let i: number;
+            for(i=0; i<listShowLength; i++){
+                newFileListShow[i] = fileList[i];
+            }
+            setFileListPage(1);
+            setFileListShow(newFileListShow);
+            element.scrollTop = 0;
+            elementBrief.scrollTop = 0;
             this.setState({
-                selectedPicItem: 0
-            });
-            this.getPic(fileList[0].svsId)
+                selectedSvsIndex: 0
+            })
         }else{
-            this.getPic(fileList[this.state.selectedPicItem+1].svsId);
-            this.setState({
-                selectedPicItem: this.state.selectedPicItem+1
-            });
+            // this.getPic(selectedPicId+1);
+            // if((selectedSvsId+2)>fileList[(fileListPage-1)*(listShowLength-10)+listShowLength].svsId){
+            // if((selectedSvsId+1)>listShowLength*fileListPage){
+            if(((selectedSvsId+1)<=listShowLength*fileListPage)&&((selectedSvsId+1)>=(fileListPage-1)*listShowLength+1)){
+                // 当前页面内
+                this.setState({
+                    selectedSvsIndex: this.state.selectedSvsIndex+1
+                })
+            }else{
+                const totalPage = Math.ceil(fileList.length/listShowLength);
+                const newFileListShow: IFileListItem[] = [];
+                const newFileListPage = Math.ceil((selectedSvsId+1) / listShowLength);
+                let i: number;
+                if(fileListPage <= (totalPage - 1)){ 
+                    // const newFileListPage = fileListPage + 1;
+                    // for(i=0; i<listShowLength; i++){
+                    //     newFileListShow[i] = fileList[fileListPage*(listShowLength-10)+i];
+                    // }
+                    const length = (newFileListPage === totalPage) ? (fileList.length-(totalPage-1)*listShowLength) : listShowLength;
+                    for(i=0; i<length; i++){
+                        newFileListShow[i] = fileList[(newFileListPage-1)*listShowLength+i];
+                    }
+                    setFileListPage(newFileListPage);
+                    setFileListShow(newFileListShow);
+                    // element.scrollTop = 100;
+                    // elementBrief.scrollTop = 100;
+                    element.scrollTop = 10;
+                    elementBrief.scrollTop = 10;
+                }
+                this.setState({
+                    selectedSvsIndex: ((selectedSvsId+1)%listShowLength === 0) ? 89 : (selectedSvsId+1)%listShowLength
+                })
+            }
+            this.getPic(selectedSvsId+1);
         }
     }
     public previous(){
-        const { selectedPicItem } = this.state;
-        const { fileList } = this.props;
+        // const { selectedPicId } = this.state;
+        const { fileList, fileListPage, setFileListPage, setFileListShow, selectedSvsId } = this.props;
+        const element  = document.getElementsByClassName('sideBar__table__content')[0];
+        const elementBrief = document.getElementsByClassName('sideBar__brief__table__content')[0];
+        const totalPage = Math.ceil(fileList.length/listShowLength);
+        const newFileListShow: IFileListItem[] = [];
         // const { fileList } = this.props;
-        if(selectedPicItem === 0){
-            this.setState({
-                selectedPicItem: fileList.length-1
-            });
+        // if(selectedPicId === 1){
+        if(selectedSvsId === 1){
+            // this.setState({
+            //     selectedPicId: fileList[fileList.length-1].svsId
+            // });
             const svsId = fileList[fileList.length-1].svsId;
             this.getPic(svsId)
-        }else{
-            this.getPic(fileList[this.state.selectedPicItem-1].svsId)
+            const newFileListPage = totalPage;
+            let i: number;
+            // for(i=0; i<(fileList.length-(totalPage-1)*(listShowLength-10)); i++){
+            //     // newFileListShow[i] = fileList[(totalPage-1)*listShowLength - 10 + i];
+            //     newFileListShow[i] = fileList[(totalPage-1)*(listShowLength-10)+i];
+            // }
+            for(i=0; i<(fileList.length-(totalPage-1)*listShowLength); i++){
+                newFileListShow[i] = fileList[(totalPage-1)*listShowLength+i];
+            }
+            setFileListPage(newFileListPage);
+            setFileListShow(newFileListShow);
             this.setState({
-                selectedPicItem: this.state.selectedPicItem-1
-            })
+                selectedSvsIndex: fileList.length-(totalPage-1)*listShowLength-1
+            });
+            // element.scrollTop = element.scrollHeight - element.clientHeight -100;
+        }else{
+            // this.getPic(selectedPicId-1)
+            // if((selectedSvsId-1)<fileList[(fileListPage-1)*(listShowLength-10)].svsId){
+            if(((selectedSvsId-1)>=(fileListPage-1)*listShowLength+1)&&((selectedSvsId-1)<=fileListPage*listShowLength)){
+                // 当前页面内
+                this.setState({
+                    selectedSvsIndex: this.state.selectedSvsIndex-1
+                })
+            }else{
+                const newFileListPage = Math.ceil((selectedSvsId-1)/listShowLength);
+                let i: number;
+                const length = (newFileListPage === totalPage) ? (fileList.length - (totalPage-1)*listShowLength) : listShowLength;
+                for(i=0; i<length; i++){
+                    newFileListShow[i] = fileList[(newFileListPage-1)*listShowLength+i]
+                }
+                // console.log(newFileListShow);
+                setFileListPage(newFileListPage);
+                setFileListShow(newFileListShow);
+                this.setState({
+                    selectedSvsIndex: ((selectedSvsId+1)%listShowLength === 0) ? 89 : (selectedSvsId+1)%listShowLength
+                })
+            }
+            this.getPic(selectedSvsId-1);
+            // this.setState({
+            //     selectedPicId: selectedPicId-1
+            // })
         }
     }
-    public switchPic = (index: number) => (event: any) => {
-        const { fileList } = this.props;
-        const svsId = fileList[index].svsId;
+    public switchPic = (svsId: number, index: number) => (event: any) => {
+        // const { fileList } = this.props;
+        // const svsId = fileList[index].svsId;
+        // this.setState({
+        //     selectedPicId: svsId
+        // });
         this.setState({
-            selectedPicItem: index
+            selectedSvsIndex: index
         });
         this.getPic(svsId);
     }
@@ -392,12 +643,12 @@ export default class MainPage extends React.Component<IProps, IStates>{
         const { wantToChangeIndex, hoveredRoiId } = this.state;
         const { pic } = this.props;
         const roiWidth = ((value.x2-value.x1)/pic.picWidth) * picSize;
-        const smallRoiMenuSytle = {
+        const smallRoiMenuStyle = {
             // width: '25px',
             // height: '25px',
             // marginLeft: '5px',
-            width: roiWidth/3 + 'px',
-            height: roiWidth/3 + 'px',
+            width: roiWidth/5 + 'px',
+            height: roiWidth/5 + 'px',
             marginLeft: roiWidth/15 + 'px',
             backgroundSize: 'cover'
         }
@@ -409,20 +660,24 @@ export default class MainPage extends React.Component<IProps, IStates>{
             // width: '20px',
             // height: '20px',
             // marginLeft: '5px',
-            width: roiWidth/5 + 'px',
-            height: roiWidth/5 + 'px',
+            width: roiWidth/7 + 'px',
+            height: roiWidth/7 + 'px',
+            marginLeft: roiWidth/15 + 'px',
             backgroundSize: 'cover'
         };
         if(value.status === 'unlabeled'){
             if(hoveredRoiId === value.roiId){
               return( 
                     <div className='main__content__roi__menu'
-                        style={roiWidth < 100 ? smallRoiMenuAreaStyle : undefined} >
+                        style={roiWidth < menuMaxLength ? smallRoiMenuAreaStyle : undefined} >
+                        <i className='roi__menu_notSure'
+                            style={ roiWidth < menuMaxLength ? smallRoiMenuStyle : undefined }
+                            onClick={this.roiStatusChange(value.roiId,'notsure',index)} />
                         <i className='roi__menu_true' 
-                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined}
+                            style={ roiWidth < menuMaxLength ? smallRoiMenuStyle : undefined}
                             onClick={this.roiStatusChange(value.roiId, 'true', index)} />
                         <i className='roi__menu_false' 
-                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined}
+                            style={ roiWidth < menuMaxLength ? smallRoiMenuStyle : undefined}
                             onClick={this.roiStatusChange(value.roiId, 'false', index)} />
                     </div>
                 )  
@@ -434,13 +689,16 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 return(
                     <div className='main__content__roi__menu'
                         onMouseLeave={this.notWantToChange} 
-                        style={roiWidth < 100 ? smallRoiMenuAreaStyle : undefined} 
+                        style={roiWidth < menuMaxLength ? smallRoiMenuAreaStyle : undefined} 
                         >
+                        <i className='roi__menu_notSure'
+                            style={ roiWidth < menuMaxLength ? wantToChangeStyle : undefined}
+                            onClick={this.roiStatusChange(value.roiId, 'notsure',index)} />
                         <i className='roi__menu_false'
-                            style= { roiWidth < 100 ? wantToChangeStyle : undefined}
+                            style= { roiWidth < menuMaxLength ? wantToChangeStyle : undefined}
                             onClick={this.roiStatusChange(value.roiId, 'false', index)} />
                         <i className='roi__menu_true_hl' 
-                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined}
+                            style={ roiWidth < menuMaxLength ? smallRoiMenuStyle : undefined}
                             onMouseEnter={this.wantToChange(index)} />
                     </div> 
                 )
@@ -448,10 +706,10 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 return(
                     <div className='main__content__roi__menu'
                         onMouseLeave={this.notWantToChange} 
-                        style={roiWidth < 100 ? smallRoiMenuAreaStyle : undefined} 
+                        style={roiWidth < menuMaxLength ? smallRoiMenuAreaStyle : undefined} 
                         >
                         <i className='roi__menu_true_hl'
-                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined} 
+                            style={ roiWidth < menuMaxLength ? smallRoiMenuStyle : undefined} 
                             onMouseEnter={this.wantToChange(index)} />
                     </div>
                 )
@@ -461,13 +719,16 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 return(
                     <div className='main__content__roi__menu'
                         onMouseLeave={this.notWantToChange}
-                        style={roiWidth < 100 ? smallRoiMenuAreaStyle : undefined} 
+                        style={roiWidth < menuMaxLength ? smallRoiMenuAreaStyle : undefined} 
                         >
+                        <i className='roi__menu_notSure'
+                            style={ roiWidth < menuMaxLength ? wantToChangeStyle : undefined}
+                            onClick = { this.roiStatusChange(value.roiId, 'notsure', index)} />
                         <i className='roi__menu_true'
-                            style= { roiWidth < 100 ? wantToChangeStyle : undefined}
+                            style= { roiWidth < menuMaxLength ? wantToChangeStyle : undefined}
                             onClick={this.roiStatusChange(value.roiId, 'true', index)} />
                         <i className='roi__menu_false_hl' 
-                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined}
+                            style={ roiWidth < menuMaxLength ? smallRoiMenuStyle : undefined}
                             onMouseEnter={this.wantToChange(index)} />
                     </div>
                 )
@@ -475,10 +736,40 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 return(
                     <div className='main__content__roi__menu'
                         onMouseLeave={this.notWantToChange}
-                        style={roiWidth < 100 ? smallRoiMenuAreaStyle : undefined} 
+                        style={roiWidth < menuMaxLength ? smallRoiMenuAreaStyle : undefined} 
                         >
                         <i className='roi__menu_false_hl' 
-                            style={ roiWidth < 100 ? smallRoiMenuSytle : undefined}
+                            style={ roiWidth < menuMaxLength ? smallRoiMenuStyle : undefined}
+                            onMouseEnter={this.wantToChange(index)} />
+                    </div>
+                )
+            }
+        }else if(value.status === 'notsure'){
+            if(wantToChangeIndex === index){
+                return(
+                    <div className='main__content__roi__menu'
+                        onMouseLeave={this.notWantToChange}
+                        style={ roiWidth < menuMaxLength ? smallRoiMenuAreaStyle: undefined}
+                        >
+                        <i className='roi__menu_true'
+                            style={ roiWidth < menuMaxLength ? wantToChangeStyle : undefined}
+                            onClick={ this.roiStatusChange(value.roiId, 'true', index)} />
+                        <i className='roi__menu_false'
+                            style={ roiWidth < menuMaxLength ? wantToChangeStyle : undefined}
+                            onClick={ this.roiStatusChange(value.roiId, 'false', index)} />
+                        <i className='roi__menu_notSure_hl'
+                            style={ roiWidth < menuMaxLength ? smallRoiMenuStyle : undefined}
+                            onMouseEnter={this.wantToChange(index)} />
+                    </div>
+                )
+            }else{
+                return(
+                    <div className='main__content__roi__menu'
+                        onMouseLeave={this.notWantToChange}
+                        style={roiWidth < menuMaxLength ? smallRoiMenuAreaStyle : undefined}
+                        >
+                        <i className='roi__menu_notSure_hl'
+                            style={ roiWidth < menuMaxLength ? smallRoiMenuStyle : undefined}
                             onMouseEnter={this.wantToChange(index)} />
                     </div>
                 )
@@ -491,24 +782,64 @@ export default class MainPage extends React.Component<IProps, IStates>{
         const { pic, showAllRoisFlag, selectedRoiDisplayId } = this.props;
         // const { selectedRoiId } = this.state;
         // const { roiMenuItemIndex } = this.state;
-        const roiPosX = (value.x1/pic.picWidth)*picSize;
-        const roiPosY = (value.y1/pic.picHeight)*picSize;
-        const roiWidth = ((value.x2-value.x1)/pic.picWidth) * picSize;
-        const roiHeight = ((value.y2-value.y1)/pic.picHeight) * picSize;
-        const roiPosStyle={
-            height: roiHeight + 'px',
-            left: roiPosX + 'px',
-            top: roiPosY + 'px',
-            width: roiWidth + 'px',
-        };
-        let commonRoiTitleStyle;
-        if(roiWidth < 86){
-            commonRoiTitleStyle = {
-                width: roiWidth + 'px'
-            };
-        }else{
+        // const { showZoomInFlag } = this.state;
+        // const roiPosX = (value.x1/pic.picWidth)*picSize;
+        // const roiPosY = (value.y1/pic.picHeight)*picSize;
+        // const roiWidth = ((value.x2-value.x1)/pic.picWidth) * picSize;
+        // const roiHeight = ((value.y2-value.y1)/pic.picHeight) * picSize;
+        const roiPosX = (value.x1/pic.picWidth)*100;
+        const roiPosY = (value.y1/pic.picWidth)*100;
+        const roiWidth = ((value.x2-value.x1)/pic.picWidth) * 100;
+        const roiHeight = ((value.y2-value.y1)/pic.picHeight) *100;
+        let roiPosStyle = undefined,
             commonRoiTitleStyle = undefined;
+            // proportion;
+        // if(selectedRoiDisplayId !== value.roiId){
+        // roiPosStyle = {
+        //     left: roiPosX + 'px',
+        //     height: roiHeight + 'px',
+        //     top: roiPosY + 'px',
+        //     width: roiWidth + 'px',
+        // };
+        roiPosStyle = {
+            left: roiPosX + '%',
+            height: roiHeight + '%',
+            top: roiPosY + '%',
+            width: roiWidth + '%'
+        };
+        // if(roiWidth < 86){
+        //     commonRoiTitleStyle = {
+        //         width: roiWidth + 'px'
+        //     };
+        // }else{
+        //     commonRoiTitleStyle = undefined;
+        // }
+        if((roiWidth*picSize/100) < 86){
+            commonRoiTitleStyle = {
+                width: roiWidth*picSize/100 + 'px'
+            };
         }
+        // }else{
+        // if(showZoomInFlag && (selectedRoiDisplayId === value.roiId)){
+        //     if(roiWidth >= roiHeight){
+        //         proportion = picSize / roiWidth;
+        //         roiPosStyle = {
+        //             left: roiPosX*proportion + 'px',
+        //             top: roiPosY*proportion + 'px',
+        //             width: picSize + 'px',
+        //             height: roiHeight*proportion + 'px'
+        //         }
+        //     }else{
+        //         proportion = picSize / roiHeight;
+        //         roiPosStyle = {
+        //             left: roiPosX*proportion + 'px',
+        //             top: roiPosY*proportion + 'px',
+        //             width: roiWidth*proportion + 'px',
+        //             height: picSize + 'px'
+        //         }
+        //     }
+        // }
+        
         // const smallRoiTitleTypeStyle = {
         //     fontSize: '14px'
         // };
@@ -523,6 +854,47 @@ export default class MainPage extends React.Component<IProps, IStates>{
             ...commonRoiTitleStyle,
             backgroundColor: '#FFE14F'
         };
+        const tureBorderStyle = {
+            ...roiPosStyle,
+            borderColor: '#79FF6F'
+        };
+        const trueTitleStyle = {
+            ...commonRoiTitleStyle,
+            backgroundColor: '#79FF6F'
+        };
+        const notSureBorderStyle = {
+            ...roiPosStyle,
+            borderColor: '#FFC997'
+        };
+        const notSureTitleStyle = {
+            ...commonRoiTitleStyle,
+            backgroundColor: '#FFC997'
+        };
+        let roiTitleStyle, roiBorderStyle;
+        switch(value.status){
+            case 'true':
+                roiTitleStyle = trueTitleStyle;
+                roiBorderStyle = tureBorderStyle;
+                break;
+            case 'false':
+                roiTitleStyle = falseTitleStyle;
+                roiBorderStyle = falseBorderStyle;
+                break;
+            case 'unlabeled':
+                roiTitleStyle = commonRoiTitleStyle;
+                roiBorderStyle = roiPosStyle;
+                break;
+            case 'notsure':
+                roiBorderStyle = notSureBorderStyle;
+                roiTitleStyle = notSureTitleStyle;
+                break;
+        }
+        if((roiPosY*picSize/100) < 23){
+            roiTitleStyle = {
+                ...roiTitleStyle,
+                top: '0px'
+            }
+        }
         // if((showAllRoisFlag) || (roiMenuItemIndex === index)){
         if((showAllRoisFlag) || (selectedRoiDisplayId === value.roiId)){
             return (
@@ -534,10 +906,10 @@ export default class MainPage extends React.Component<IProps, IStates>{
                     onMouseLeave={this.roiMouseLeave}
                     // style={this.props.selectedRoiId === value.roiId ? zIndexStyle : roiPosStyle} 
                     // style={ selectedRoiId === value.roiId ? zIndexStyle : roiPosStyle}
-                    style={(value.status === 'false') ? falseBorderStyle : roiPosStyle}
+                    style={roiBorderStyle}
                     >
                     <div className='main__content__roi__title'
-                        style={ value.status === 'false' ? falseTitleStyle : commonRoiTitleStyle} >
+                        style={ roiTitleStyle } >
                         <span className='main__content__roi__title__type'
                             >{cancerType[value.type]}</span>
                         <span className='main__content__roi__title__score'
@@ -561,6 +933,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
         const greenStyle = { backgroundColor: '#79FF6F'};
         const yellowStyle = { backgroundColor: '#FFE14F'};
         const grayStyle = { backgroundColor: '#BBBBBB'};
+        const notSureStyle = { backgroundColor : '#FFC997'};
         const selectedStyle = { backgroundColor: 'white'};
         let valueStyle: any;
         switch(value.status){
@@ -572,6 +945,10 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 break;
             case 'unlabeled':
                 valueStyle = grayStyle;
+                break;
+            case 'notsure':
+                valueStyle = notSureStyle;
+                break;
         }
         if(showAllRoisFlag){
             return(
@@ -622,7 +999,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 // style={selectedPicItem === index ? selectedBg : undefined}
                 style={selectedSvsId ===value.svsId ? selectedBg : undefined}
                 key={index}
-                onClick={this.switchPic(index)}>
+                onClick={this.switchPic(value.svsId, index)}>
                 <div className='table__item__id'>
                     <i className='table__item__id__icon' 
                         style={value.labeledCount ? oddIconStyle : undefined} />
@@ -650,7 +1027,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 // style={selectedPicItem === index ? selectedBg : undefined}
                 style={selectedSvsId === value.svsId ? selectedBg : undefined}
                 key={index}
-                onClick={this.switchPic(index)}>
+                onClick={this.switchPic(value.svsId, index)}>
                 <div className='table__item__id'>
                     <i className='table__item__id__icon'
                         style={value.labeledCount ? doneIconStyle : undefined} />    
@@ -670,14 +1047,45 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 <div>please sign in</div>
             )
         }
-        const { fileList, fileListShow, pic, selectedSvsId, showAllRoisFlag, userName } = this.props;
+        const { fileList, fileListShow, pic, selectedRoiDisplayId, selectedSvsId, showAllRoisFlag, userName } = this.props;
         // const { selectedPicItem } = this.state;
-        const { showLogOutFlag } = this.state;
+        const { imgDragPrePos, imgZoomStyle, imgZoomScale, showLogOutFlag, showZoomInFlag } = this.state;
         const hidden = { display: 'none'};
         const shortListContentStyle = {
             left: '8%',
             width: '92%'
         };
+        // let zoomInImgStyle = undefined;
+        // if((selectedRoiDisplayId !== -1)&&showZoomInFlag){
+        //     let i;
+        //     for(i=0; i<pic.roi.length; i++){
+        //         if(pic.roi[i].roiId === selectedRoiDisplayId){
+        //             const roiPosX = pic.roi[i].x1/pic.picWidth * picSize;
+        //             const roiPosY = pic.roi[i].y1/pic.picHeight * picSize;
+        //             const roiWidth = (pic.roi[i].x2-pic.roi[i].x1)/pic.picWidth * picSize;
+        //             const roiHeight = (pic.roi[i].y2-pic.roi[i].y1)/pic.picHeight * picSize;
+        //             let proportion;
+        //             if(roiWidth >= roiHeight){
+        //                 proportion = picSize / roiWidth;
+        //                 zoomInImgStyle = {
+        //                     top: -(roiPosY*proportion-roiHeight/2) + 'px',
+        //                     left: -(roiPosX*proportion) + 'px',
+        //                     width: proportion*picSize + 'px',
+        //                     height: proportion*picSize + 'px'
+        //                 };
+        //             }else{
+        //                 proportion = picSize / roiHeight;
+        //                 zoomInImgStyle = {
+        //                     top: -(roiPosY*proportion) + 'px',
+        //                     left: -(roiPosY*proportion-roiWidth/2) + 'px',
+        //                     width: proportion*picSize + 'px',
+        //                     height: proportion*picSize + 'px'
+        //                 };
+        //             }
+        //             break;
+        //         }
+        //     }
+        // }
         return(
             <div className='page'>
                 <div className='main__header'>
@@ -708,6 +1116,10 @@ export default class MainPage extends React.Component<IProps, IStates>{
                         </div>
                         <span className='switch__next'
                             onClick={this.next}>next</span>
+                        { !showZoomInFlag && <i className='header__menu__switch_zoom_in' 
+                            onClick={this.zoomInFlagChange(true)} />}
+                        { showZoomInFlag && <i className='header__menu__switch_zoom_out' 
+                            onClick={this.zoomInFlagChange(false)} />}
                     </div>
                     <div>
                         <span className='header__menu__dataSummary'
@@ -727,9 +1139,8 @@ export default class MainPage extends React.Component<IProps, IStates>{
                         <div className='table__header__roi'>ROI</div>
                     </div>
                     <div className='sideBar__table__content'
-                        // onScroll={this.handleTableScroll}
-                        >
-                        {fileList.map((value,index)=> this.renderTable(index, value))}
+                        onScroll={this.handleTableScroll}>
+                        {fileListShow.map((value,index)=> this.renderTable(index, value))}
                     </div>
                 </div>
                 <div className='main__sideBar__brief' style={this.state.showShortListFlag ? undefined : hidden}>
@@ -738,16 +1149,33 @@ export default class MainPage extends React.Component<IProps, IStates>{
                             onClick={this.showShortList} />
                     </div>
                     <div className='sideBar__brief__table__header'>ROI</div>
-                    <div className='sideBar__brief__table__content'>
-                        {fileList.map((value, index)=> this.renderBriefTable(index, value))}
+                    <div className='sideBar__brief__table__content'
+                            onScroll={this.handleTableScroll}>
+                        {fileListShow.map((value, index)=> this.renderBriefTable(index, value))}
                     </div>
                 </div>
                 <div className='main__content'
                     style={this.state.showShortListFlag ? shortListContentStyle : undefined}>
                     <div className='main__content__pic__area'>
-                        <img src={pic.picUrl} className='main__content__pic' />
-                        {/* <canvas id='svsPic' /> */}
-                        {pic.roi.map((value, index)=>this.renderRois(value, index))}
+                        <div id='svs_img' 
+                            style={{
+                                left: imgDragPrePos.x,
+                                top: imgDragPrePos.y,
+                                transform: `scale(${imgZoomScale})`,
+                                position: 'relative'
+                            }}
+                            onWheel={this.handleImgWheel}
+                            // onMouseMove={this.handleImgDrag}
+                            onMouseDown={this.handleImgMouseDown}
+                            // onMouseUp={this.handleImgMouseUp}
+                            >
+                            <img src={pic.picUrl} 
+                                className='main__content__pic'
+                                // style={zoomInImgStyle} 
+                                />
+                            {/* <canvas id='svsPic' /> */}
+                            {pic.roi.map((value, index)=>this.renderRois(value, index))}
+                        </div>
                     </div>
                     <div className='main__content__roi__switch'>
                         <div className='roi__switch_area'>

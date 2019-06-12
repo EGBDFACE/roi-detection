@@ -81,7 +81,9 @@ export interface ISummaryStatisticsItem{
     labelFalseNumber: number;
     labelTrueNumber: number;
     nonLabelNumber: number;
+    notSureNumber: number;
     selectFalse: boolean;
+    selectNotSure: boolean;
     selectTrue: boolean;
     selectUnlabelled: boolean;
     showDetialFlag: boolean;
@@ -90,12 +92,14 @@ export interface ISummaryStatisticsItem{
     totalNumber: number;
 }
 export interface ISummaryStatus{
-    true: ISummaryItem[],
     false: ISummaryItem[],
+    notSure: ISummaryItem[],
+    true: ISummaryItem[],
     unlabelled: ISummaryItem[]
 }
 export const initSummaryStatus: ISummaryStatus = {
     false: [],
+    notSure: [],
     true: [],
     unlabelled: []
 }

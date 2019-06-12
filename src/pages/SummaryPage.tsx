@@ -170,6 +170,9 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
             case 'notLabelled':
                 newStatistics[index].selectUnlabelled = !newStatistics[index].selectUnlabelled;
                 break;
+            case 'notSure':
+                newStatistics[index].selectNotSure = !newStatistics[index].selectNotSure;
+                break;
         }
         this.props.setStatistics(newStatistics);
         let newSummaryData: ISummaryItem[] = [];
@@ -188,6 +191,9 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
             }
             if(newStatistics[i].selectUnlabelled){
                 newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].unlabelled);
+            }
+            if(newStatistics[i].selectNotSure){
+                newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].notSure);
             }
         }
         this.props.setFilter(newSummaryData);
@@ -241,6 +247,11 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
                             onClick={this.filterRoi(index, 'notLabelled')} />
                         <span>Non-labelled ({value.nonLabelNumber})</span>
                     </div>
+                    <div className='summary__item__content__notSure'>
+                        <i className={ value.selectNotSure ? 'content__select__icon' : 'content__unselect__icon' }
+                            onClick={this.filterRoi(index,'notSure')} />
+                        <span>Not Sure ({value.notSureNumber})</span>
+                    </div>
                 </div>
             )
         }else{
@@ -272,8 +283,12 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
             case 'false':
                 labelClass = 'rois__pic__label_false';
                 break;
+            case 'notsure': 
+                labelClass = 'rois__pic__label_notSure';
+                break;
             case 'unlabeled':
-                labelClass = 'rois__pic__label_unlabelled';
+                // labelClass = 'rois__pic__label_unlabelled';
+                labelClass = undefined;
                 break;
         }
         return(

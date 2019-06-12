@@ -24,7 +24,8 @@
 }
 .summary__item__content__true, 
 .summary__item__content__false,
-.summary__item__content__notLabeled{
+.summary__item__content__notLabeled,
+.summary__item__content__notSure{
     margin-top: 10px;
     display: flex;
     align-items: center;
@@ -125,6 +126,10 @@
 .rois__pic__label_unlabelled{
     @extend .rois__pic__label_true;
     background-image: url('./img/unlabelled.svg');
+}
+.rois__pic__label_notSure{
+    @extend .rois__pic__label_true;
+    background-image: url('./img/notSure.svg');
 }
 .summary__content__next_area{
     flex: 0 1 100%;

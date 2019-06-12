@@ -1,0 +1,13 @@
+<svg width="29px" height="29px" viewBox="0 0 29 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="final" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ROI-Navigation-view-original-size" transform="translate(-1328.000000, -170.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="shrink" transform="translate(1328.000000, 170.000000)">
+                <path d="M28.71,27.29 L18.71,17.29 C22.0797971,13.1637032 21.6230334,7.12004823 17.6713466,3.54709009 C13.7196598,-0.0258680455 7.6606849,0.126514957 3.89359993,3.89359993 C0.126514957,7.6606849 -0.0258680455,13.7196598 3.54709009,17.6713466 C7.12004823,21.6230334 13.1637032,22.0797971 17.29,18.71 L27.29,28.71 L28.71,27.29 Z M3,11 C3,6.581722 6.581722,3 11,3 C15.418278,3 19,6.581722 19,11 C19,15.418278 15.418278,19 11,19 C8.87826808,19 6.84343678,18.1571453 5.34314575,16.6568542 C3.84285472,15.1565632 3,13.1217319 3,11 Z" id="Shape"></path>
+                <rect id="Rectangle-path" x="6" y="10" width="10" height="2"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

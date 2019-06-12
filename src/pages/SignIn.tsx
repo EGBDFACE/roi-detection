@@ -91,8 +91,10 @@ export default class SignIn extends React.Component<IProps,IStates>{
                         // list[0].selectedFlag = true;
                         setFileList(list);
                         const listShow: IFileListItem[] = [];
-                        for(i=0; i<listShowNum; i++){   
-                            listShow[i] = list[i];
+                        for(i=0; i<listShowNum; i++){
+                            if(list[i]){
+                                listShow[i] = list[i];
+                            }   
                         }
                         selectFileList(listShow);
                         getPicHttp(list[0].svsId).then( (resPic: any) => {

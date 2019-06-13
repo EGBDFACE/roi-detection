@@ -109,8 +109,9 @@ export function selectSvs(id: number): ISelectAction{
         type: SELECT_SVS
     }
 }
-export function roiPageNext(): ISelectAction{
+export function setRoiPage(value: number): ISelectAction{
     return{
+        page: value,
         type: SELECT_ROI_PAGE_NEXT
     }
 }

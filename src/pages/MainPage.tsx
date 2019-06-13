@@ -102,11 +102,15 @@ export default class MainPage extends React.Component<IProps, IStates>{
         this.handleTableScroll = this.handleTableScroll.bind(this);
         this.zoomInFlagChange = this.zoomInFlagChange.bind(this);
         this.handleImgWheel = this.handleImgWheel.bind(this);
-        this.handleImgDrag = this.handleImgDrag.bind(this);
+        // this.handleImgDrag = this.handleImgDrag.bind(this);
         this.handleImgMouseDown = this.handleImgMouseDown.bind(this);
-        this.handleImgMouseUp = this.handleImgMouseUp.bind(this);
+        // this.handleImgMouseUp = this.handleImgMouseUp.bind(this);
+        this.getPic = this.getPic.bind(this);
         // this.hoverEnterRoi = this.hoverEnterRoi.bind(this);
         // this.hoverLeaveRoi = this.hoverLeaveRoi.bind(this);
+    }
+    public componentDidMount(){
+        console.log(document);
     }
     public handleImgMouseDown(e:any){
         // console.log(e);
@@ -138,27 +142,27 @@ export default class MainPage extends React.Component<IProps, IStates>{
         }
        
     }
-    public handleImgMouseUp(e: any){
-        console.log(e);
-        this.setState({
-            imgDragFlag: false
-        })
-    }
-    public handleImgDrag(e:any){
-        const { imgDragFlag, imgDragPrePos, imgZoomStyle } = this.state;
-        if(imgDragFlag){
-            const newPosX = imgZoomStyle.left || 0 + e.clientX - imgDragPrePos.x + 'px';
-            const newPosY = imgZoomStyle.top || 0 + e.clientY - imgDragPrePos.y + 'px';
-            this.setState({
-                imgZoomStyle: {
-                    ...imgZoomStyle,
-                    left: newPosX,
-                    top: newPosY
-                }
-            })
-            console.log(newPosX);
-        }
-    }
+    // public handleImgMouseUp(e: any){
+    //     console.log(e);
+    //     this.setState({
+    //         imgDragFlag: false
+    //     })
+    // }
+    // public handleImgDrag(e:any){
+    //     const { imgDragFlag, imgDragPrePos, imgZoomStyle } = this.state;
+    //     if(imgDragFlag){
+    //         const newPosX = imgZoomStyle.left || 0 + e.clientX - imgDragPrePos.x + 'px';
+    //         const newPosY = imgZoomStyle.top || 0 + e.clientY - imgDragPrePos.y + 'px';
+    //         this.setState({
+    //             imgZoomStyle: {
+    //                 ...imgZoomStyle,
+    //                 left: newPosX,
+    //                 top: newPosY
+    //             }
+    //         })
+    //         console.log(newPosX);
+    //     }
+    // }
     public handleImgWheel(e:any){
         // console.log(e.deltaY);
         const eve = e||window.event;
@@ -374,7 +378,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
         });
     }
     public roiStatusChange = (id: number, newStatus: string, index: number) => (event: any) => {
-        const { fileList, pic, setFileList, setPic, statistics } = this.props;
+        const { fileList, fileListPage, fileListShow,  pic, setFileList, setFileListShow, setPic, statistics } = this.props;
         const newRoiStatus = {
             roi_id: id,
             status: newStatus,
@@ -390,6 +394,11 @@ export default class MainPage extends React.Component<IProps, IStates>{
             }
         }
         setFileList(newFileList);
+        let newFileListShow: IFileListItem[] = [];
+        for(let i=0; i<fileListShow.length; i++){
+            newFileListShow[i] = newFileList[(fileListPage-1)*listShowLength + i];
+        }
+        setFileListShow(newFileListShow);
         setRoiStatus(newRoiStatus).then( res =>{
             // tslint:disable-next-line:no-console
             // console.log(res);
@@ -586,6 +595,13 @@ export default class MainPage extends React.Component<IProps, IStates>{
     }
     public getPic(svsIdNumber: number){
         const { selectSvs, setPic } = this.props;
+        this.setState({
+            imgDragPrePos: {
+                x: 0,
+                y: 0
+            },
+            imgZoomScale: 1
+        })
         selectSvs(svsIdNumber);
         getPicHttp(svsIdNumber).then( (res: any) => {
             const roiD: IRoiInfo[] = [];
@@ -1129,7 +1145,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 <div className='main__sideBar' style={this.state.showShortListFlag ? hidden : undefined}>
                     <div className='sideBar__header'>
                         <span className='sideBar__header__title'>Image List</span>
-                        <span className='sideBar__header__serialNumber'>30/{fileList.length}</span>
+                        <span className='sideBar__header__serialNumber'>{fileList.length < 30 ? fileList.length : 30}/{fileList.length}</span>
                         <i className='sideBar__header__icon' 
                             onClick={this.showShortList}/>
                     </div>

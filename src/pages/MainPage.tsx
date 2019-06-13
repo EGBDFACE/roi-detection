@@ -109,9 +109,6 @@ export default class MainPage extends React.Component<IProps, IStates>{
         // this.hoverEnterRoi = this.hoverEnterRoi.bind(this);
         // this.hoverLeaveRoi = this.hoverLeaveRoi.bind(this);
     }
-    public componentDidMount(){
-        console.log(document);
-    }
     public handleImgMouseDown(e:any){
         // console.log(e);
         // this.setState({

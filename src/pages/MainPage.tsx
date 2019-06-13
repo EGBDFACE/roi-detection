@@ -219,8 +219,13 @@ export default class MainPage extends React.Component<IProps, IStates>{
         const element: any = document.getElementsByClassName('sideBar__table__content')[0];
         const elementBrief :any = document.getElementsByClassName('sideBar__brief__table__content')[0];
         // if(scrollTop + clientHeight >= (scrollHeight - 50)){
+        const totalPage = Math.ceil(fileList.length/listShowLength);
+        if((fileList.length%listShowLength < 30)&&(fileListPage === totalPage)){
+            return;
+        }
         if(scrollTop + clientHeight === scrollHeight){
             const totalPage = Math.ceil(fileList.length/listShowLength);
+            // const totalPage = fileList.length%listShowLength < 50 ? Math.ceil(fileList.length/listShowLength)-1 : Math.ceil(fileList.length/listShowLength);
             const newFileListShow: IFileListItem[] = [];
             let i: number;
             if(fileListPage <= (totalPage - 1)){ 
@@ -466,6 +471,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
         const element  = document.getElementsByClassName('sideBar__table__content')[0];
         const elementBrief = document.getElementsByClassName('sideBar__brief__table__content')[0];
         const totalPage = Math.ceil(fileList.length/listShowLength);
+        // const totalPage = fileList.length%listShowLength < 50 ? Math.ceil(fileList.length/listShowLength)-1 : Math.ceil(fileList.length/listShowLength);
         const newFileListShow: IFileListItem[] = [];
         // if(selectedPicId === fileList[fileList.length-1].svsId){
         if(selectedSvsId === fileList[fileList.length-1].svsId){
@@ -495,11 +501,11 @@ export default class MainPage extends React.Component<IProps, IStates>{
                     selectedSvsIndex: this.state.selectedSvsIndex+1
                 })
             }else{
-                const totalPage = Math.ceil(fileList.length/listShowLength);
+                // const totalPage = Math.ceil(fileList.length/listShowLength);
                 const newFileListShow: IFileListItem[] = [];
                 const newFileListPage = Math.ceil((selectedSvsId+1) / listShowLength);
                 let i: number;
-                if(fileListPage <= (totalPage - 1)){ 
+                // if(fileListPage <= (totalPage - 1)){ 
                     // const newFileListPage = fileListPage + 1;
                     // for(i=0; i<listShowLength; i++){
                     //     newFileListShow[i] = fileList[fileListPage*(listShowLength-10)+i];
@@ -514,7 +520,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
                     // elementBrief.scrollTop = 100;
                     element.scrollTop = 10;
                     elementBrief.scrollTop = 10;
-                }
+                // }
                 this.setState({
                     selectedSvsIndex: ((selectedSvsId+1)%listShowLength === 0) ? 89 : (selectedSvsId+1)%listShowLength
                 })
@@ -528,6 +534,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
         const element  = document.getElementsByClassName('sideBar__table__content')[0];
         const elementBrief = document.getElementsByClassName('sideBar__brief__table__content')[0];
         const totalPage = Math.ceil(fileList.length/listShowLength);
+        // const totalPage = fileList.length%listShowLength < 50 ? Math.ceil(fileList.length/listShowLength)-1 : Math.ceil(fileList.length/listShowLength);
         const newFileListShow: IFileListItem[] = [];
         // const { fileList } = this.props;
         // if(selectedPicId === 1){
@@ -1061,8 +1068,9 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 <div>please sign in</div>
             )
         }
-        const { fileList, fileListShow, pic, selectedRoiDisplayId, selectedSvsId, showAllRoisFlag, userName } = this.props;
+        const { fileList, fileListPage, fileListShow, pic, selectedRoiDisplayId, selectedSvsId, showAllRoisFlag, userName } = this.props;
         // const { selectedPicItem } = this.state;
+        const totalPage = Math.ceil(fileList.length/listShowLength);
         const { imgDragPrePos, imgZoomStyle, imgZoomScale, showLogOutFlag, showZoomInFlag } = this.state;
         const hidden = { display: 'none'};
         const shortListContentStyle = {
@@ -1164,7 +1172,9 @@ export default class MainPage extends React.Component<IProps, IStates>{
                     </div>
                     <div className='sideBar__brief__table__header'>ROI</div>
                     <div className='sideBar__brief__table__content'
-                            onScroll={this.handleTableScroll}>
+                            onScroll={this.handleTableScroll}
+                            // onScroll={ (Math.ceil(fileList.length/listShowLength)<50)&&(fileListPage === totalPage) ? undefined : this.handleImgWheel}
+                            >
                         {fileListShow.map((value, index)=> this.renderBriefTable(index, value))}
                     </div>
                 </div>

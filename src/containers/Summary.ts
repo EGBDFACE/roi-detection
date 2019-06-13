@@ -2,10 +2,12 @@ import { Dispatch } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import SummaryPage from '../pages/SummaryPage';
-import { IPicInfo, IStoreState, ISummaryItem, ISummaryStatisticsItem } from '../store';
+import { IFileListItem, IPicInfo, IStoreState, ISummaryItem, ISummaryStatisticsItem } from '../store';
 
 function mapStateToProps (state: IStoreState){
     return {
+        fileList: state.fileList,
+        fileListPage: state.select.selectedFileListPage,
         // selectedRoiDisplayId: state.select.selectedRoiId,
         selectedRoisPage: state.select.selectedRoisPage,
         summaryDisplay: state.summary.filterDisplay,
@@ -22,6 +24,8 @@ function mapDispatchToProps (dispatch: Dispatch<any>){
         selectAllRoi: (flag: boolean) => dispatch(actions.selectAllRoiFlagChange(flag)),
         selectRoi: (id: number) => dispatch(actions.selectRoi(id)),
         selectSvs: (id: number) => dispatch(actions.selectSvs(id)),
+        setFileListPage: (page: number) => dispatch(actions.selectFileListPage(page)),
+        setFileListShow: (list: IFileListItem[]) => dispatch(actions.selectFileList(list)),
         setFilter: (data: ISummaryItem[]) => dispatch(actions.setFilter(data)),
         setFilterDisplay: (data: ISummaryItem[]) => dispatch(actions.setFilterDisplay(data)),
         setPic: (pic: IPicInfo) => dispatch(actions.setPic(pic)),

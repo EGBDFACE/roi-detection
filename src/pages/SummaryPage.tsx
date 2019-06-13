@@ -8,7 +8,7 @@ import history from '../router/history';
 import { IPicInfo, IRoiInfo, ISummaryItem, ISummaryStatisticsItem, ISummaryTotal } from '../store';
 
 interface IProps{
-    roiPageNext: () => void,
+    setRoiPage: (value: number) => void,
     selectedRoisPage: number,
     selectAllRoi: (flag: boolean) => void,
     selectRoi: (id: number) => void,
@@ -141,7 +141,7 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         })
     }
     public changeRoiPages(){
-        const { roiPageNext, selectedRoisPage, setFilterDisplay, summaryFilter } = this.props;
+        const { setRoiPage, selectedRoisPage, setFilterDisplay, summaryFilter } = this.props;
         const newFilterDisplay:ISummaryItem[] = [];
         let i: number;
         // const length = summaryDisplay.length < 48 ? summaryDisplay.length : 48;
@@ -151,7 +151,8 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         for(i=0; i<length; i++){
             newFilterDisplay[i] = summaryFilter[(selectedRoisPage+1)*48+i];
         }
-        roiPageNext();
+        // roiPageNext();
+        setRoiPage(selectedRoisPage+1);
         // tslint:disable-next-line:no-console
         // console.log(newFilterDisplay);
         // tslint:disable-next-line:no-console
@@ -176,7 +177,8 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         }
         this.props.setStatistics(newStatistics);
         let newSummaryData: ISummaryItem[] = [];
-        const { summaryTotal } = this.props;
+        const { setRoiPage, summaryTotal } = this.props;
+        setRoiPage(0);
         let i: number;
         for(i=0; i<newStatistics.length; i++){
             // switch(nextProps.statistics[i].subject){

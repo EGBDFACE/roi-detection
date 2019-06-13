@@ -100,7 +100,7 @@ function setSelect(state: ISelect, action: ISelectAction){
         case 'SELECT_ROI_PAGE_NEXT':
             return{
                 ...state,
-                selectedRoisPage: state.selectedRoisPage+1
+                selectedRoisPage: action.page
             }
         case 'SELECT_ALL_ROI':
             return{

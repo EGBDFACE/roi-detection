@@ -18,7 +18,7 @@ function mapStateToProps (state: IStoreState){
 }
 function mapDispatchToProps (dispatch: Dispatch<any>){
     return {
-        roiPageNext: () => dispatch(actions.roiPageNext()),
+        setRoiPage: (value: number) => dispatch(actions.setRoiPage(value)),
         selectAllRoi: (flag: boolean) => dispatch(actions.selectAllRoiFlagChange(flag)),
         selectRoi: (id: number) => dispatch(actions.selectRoi(id)),
         selectSvs: (id: number) => dispatch(actions.selectSvs(id)),

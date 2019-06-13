@@ -150,7 +150,7 @@ $myColor: #1E2D52;
     // top: 60px;
     display: flex;
     // align-items: center;
-    justify-content: space-between;
+    // justify-content: space-between;
     color: #666666;
     font-weight: bold;
     font-size: 1.2rem;
@@ -198,14 +198,19 @@ $myColor: #1E2D52;
 .table__header__id{
     margin-left: 52px;
 }
+.table__header__magn{
+    margin-left: 30%;
+}
 .table__header__roi{
-    margin-right: 25px;
+    // margin-right: 25px;
+    position: absolute;
+    right: 25px;
 }
 
 .table__item{
     height: 38px;
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     align-items: center;
     cursor: pointer;
     &:hover{
@@ -236,12 +241,18 @@ $myColor: #1E2D52;
     // margin-right: 30px;
     // position: absolute;
     // left: 150px;
+    position: absolute;
+    right: 42%;
 }
 .table__item__roi{
-    margin-right: 25px;
+    // margin-right: 25px;
+    position: absolute;
+    right: 25px;
 }
 .table__item__roi__brief{
-    margin-right: 40px;
+    // margin-right: 40px;
+    position: absolute;
+    right: 40px;
 }
 .table__item__roi__done{
     color: #613ED8;

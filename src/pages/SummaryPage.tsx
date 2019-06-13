@@ -1,19 +1,24 @@
 import * as React from 'react';
 import { getPicHttp } from '../api';
-import { CANCER_TYPE as cancerType } from '../constant';
+import { CANCER_TYPE as cancerType, FILE_LIST_DISPLAY_NUMBER as listShowLength } from '../constant';
 import '../css/global.scss';
 import '../css/mainPage.scss';
 import '../css/summaryPage.scss';
 import history from '../router/history';
-import { IPicInfo, IRoiInfo, ISummaryItem, ISummaryStatisticsItem, ISummaryTotal } from '../store';
+import { IFileListItem, IPicInfo, IRoiInfo, ISummaryItem, ISummaryStatisticsItem, ISummaryTotal } from '../store';
+import { selectFileListPage } from '../actions';
 
 interface IProps{
+    fileList: IFileListItem[],
+    fileListPage: number,
     setRoiPage: (value: number) => void,
     selectedRoisPage: number,
     selectAllRoi: (flag: boolean) => void,
     selectRoi: (id: number) => void,
     selectSvs: (id: number) => void,
     // setSummary: (data: ISummary) => void,
+    setFileListPage: (page: number) => void,
+    setFileListShow: (list: IFileListItem[]) => void,
     setFilter: (data: ISummaryItem[]) => void,
     setFilterDisplay: (data: ISummaryItem[]) => void,
     setPic: (pic: IPicInfo) => void,
@@ -61,7 +66,7 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         this.editSingleRoi = this.editSingleRoi.bind(this);
     }
     public editSingleRoi(){
-        const { selectAllRoi, selectRoi, selectSvs, setPic } = this.props;
+        const { fileList, selectAllRoi, selectRoi, selectSvs, setPic, setFileListPage, setFileListShow } = this.props;
         // this.props.selectSvs(this.state.selectedRoi.svsId);
         const { selectedRoi } = this.state;
         selectAllRoi(false);
@@ -93,6 +98,15 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
                 svsId: selectedRoi.svsId
             };
             setPic(pic);
+            const newFileListPage = Math.ceil(pic.svsId/listShowLength);
+            const newFileListShow: IFileListItem[] = [];
+            const totalPage = Math.ceil(fileList.length/listShowLength);
+            const length = (newFileListPage === totalPage) ? (fileList.length - (totalPage-1)*listShowLength) : listShowLength;
+            for(let i=0; i<length; i++){
+                newFileListShow[i] = fileList[(newFileListPage-1)*listShowLength + i];
+            } 
+            setFileListPage(newFileListPage);
+            setFileListShow(newFileListShow);
             history.push('/mainPage');
             // history.push('/roi/mainPage');
         }).catch( error =>{

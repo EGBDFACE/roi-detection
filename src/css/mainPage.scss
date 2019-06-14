@@ -170,6 +170,9 @@ $myColor: #1E2D52;
     height: 89%;
     // top: 115px;
 }
+// .sideBar__table__content::-webkit-scrollbar{
+//     display: none;
+// }
 .main__sideBar__brief{
     @extend .main__sideBar;
     width: 8%;
@@ -392,12 +395,15 @@ $myColor: #1E2D52;
     background-image: url('./img/allClose.svg');
 }
 .roi__switch_area{
-    // width: 60px;
-    width: 100px;
+    width: 60px;
+    // width: 100px;
     max-height: 400px;
     overflow-x: hidden;
     overflow-y: scroll;
-    padding-right: 30px;
+    // padding-right: 30px;
+}
+.roi__switch_area::-webkit-scorllbar{
+    display: none;
 }
 .roi__switch_item{
     display: inline-block;

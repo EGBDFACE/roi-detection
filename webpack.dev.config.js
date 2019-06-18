@@ -21,6 +21,7 @@ const commonConfig = require('./webpack.common.config');
 module.exports = merge(commonConfig,{
     //entry: './src/index.tsx',
     mode: 'development',
+    // devtool: false,
     devServer:{
         hot: true,
         historyApiFallback: true

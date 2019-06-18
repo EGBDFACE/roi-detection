@@ -1,8 +1,7 @@
 // export const BASE_URL = 'http://222.20.79.250:8081/api/';
 // export const BASE_URL ='http://222.20.79.123:5000';
-export const BASE_URL = 'http://222.20.79.250:5000';
-// export const BASE_URL = 'http://54.203.111.1:5000';
-// export const BASE_URL = '/api';
+// export const BASE_URL = 'http://222.20.79.250:5000';
+export const BASE_URL = 'http://54.203.111.1:5000';
 // export const BASE_URL = 'http://www.elongevity.ai/api/'
 
 interface ICancerType{
@@ -28,6 +27,7 @@ export const ROI_BG_COLOR = {
 }
 
 export const PIC_SIZE = 600;
+// export const ROI_MENU_MAX_LENGTH = 140;
 export const ROI_MENU_MAX_LENGTH = 130;
 export const ROI_SCORE_THRESHOLD = 0.1;
 

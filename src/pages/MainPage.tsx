@@ -671,6 +671,9 @@ export default class MainPage extends React.Component<IProps, IStates>{
             width: roiWidth/5 + 'px',
             height: roiWidth/5 + 'px',
             marginLeft: roiWidth/15 + 'px',
+            // width: roiWidth/3 + 'px',
+            // height: roiWidth/3 + 'px',
+            // marginLeft: roiWidth/8 + 'px',
             backgroundSize: 'cover'
         }
         const smallRoiMenuAreaStyle = {
@@ -837,7 +840,8 @@ export default class MainPage extends React.Component<IProps, IStates>{
         // }
         if((roiWidth*picSize/100) < 86){
             commonRoiTitleStyle = {
-                width: roiWidth*picSize/100 + 'px'
+                // width: roiWidth*picSize/100 + 'px'
+                width: '100%'
             };
         }
         // }else{

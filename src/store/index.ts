@@ -81,7 +81,7 @@ export interface ISummaryItem{
 export interface ISummaryStatisticsItem{
     labelFalseNumber: number;
     labelTrueNumber: number;
-    id: number,
+    id: number
     nonLabelNumber: number;
     notSureNumber: number;
     selectFalse: boolean;

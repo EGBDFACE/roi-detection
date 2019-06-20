@@ -10,10 +10,12 @@ function mapStateToProps (state: IStoreState){
         fileListPage: state.select.selectedFileListPage,
         // selectedRoiDisplayId: state.select.selectedRoiId,
         selectedRoisPage: state.select.selectedRoisPage,
-        summaryDisplay: state.summary.filterDisplay,
-        summaryFilter: state.summary.filter,
+        // summaryDisplay: state.summary.filterDisplay,
+        summaryDisplay: state.summary.filter,
+        // summaryFilter: state.summary.filter,
         summaryStatistics: state.summary.statistics,
-        summaryTotal: state.summary.total,
+        summaryTotalPage: state.summary.totalPage,
+        // summaryTotal: state.summary.total,
         // summary: state.summary,
         userName: state.user.name,
     }
@@ -29,7 +31,8 @@ function mapDispatchToProps (dispatch: Dispatch<any>){
         setFilter: (data: ISummaryItem[]) => dispatch(actions.setFilter(data)),
         setFilterDisplay: (data: ISummaryItem[]) => dispatch(actions.setFilterDisplay(data)),
         setPic: (pic: IPicInfo) => dispatch(actions.setPic(pic)),
-        setStatistics: (data: ISummaryStatisticsItem[]) => dispatch(actions.setStatistics(data))
+        setStatistics: (data: ISummaryStatisticsItem[]) => dispatch(actions.setStatistics(data)),
+        setSummaryTotalPage: (page: number) => dispatch(actions.setSummaryTotalPage(page))
     }
 }
 

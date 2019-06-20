@@ -1,4 +1,5 @@
 import * as React from 'react';
+import '../css/loadingMask.scss';
 
 class LoadingMask extends React.Component {
     public render(){

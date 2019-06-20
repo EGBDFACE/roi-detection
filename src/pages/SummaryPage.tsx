@@ -1,13 +1,24 @@
 import * as React from 'react';
-import { getPicHttp } from '../api';
+import { getPicHttp, getSummaryDetail } from '../api';
 import { CANCER_TYPE as cancerType, FILE_LIST_DISPLAY_NUMBER as listShowLength } from '../constant';
 import '../css/global.scss';
 import '../css/mainPage.scss';
 import '../css/summaryPage.scss';
 import history from '../router/history';
-import { IFileListItem, IPicInfo, IRoiInfo, ISummaryItem, ISummaryStatisticsItem, ISummaryTotal } from '../store';
-import { selectFileListPage } from '../actions';
+import { IFileListItem, IPicInfo, IRoiInfo, ISummaryItem, ISummaryStatisticsItem } from '../store';
 
+interface IRoiReqsItem{
+    cancer_id: number,
+    cancer_type: string,
+    false_req: boolean,
+    not_sure_req: boolean,
+    true_req: boolean,
+    unlabeled_req: boolean
+}
+interface IRoiReqs{
+    selected: IRoiReqsItem[],
+    selectedPage: number
+}
 interface IProps{
     fileList: IFileListItem[],
     fileListPage: number,
@@ -23,11 +34,13 @@ interface IProps{
     setFilterDisplay: (data: ISummaryItem[]) => void,
     setPic: (pic: IPicInfo) => void,
     setStatistics: (data: ISummaryStatisticsItem[]) => void,
+    setSummaryTotalPage: (page: number) => void,
     // summary: ISummary;
     summaryDisplay: ISummaryItem[],
-    summaryFilter: ISummaryItem[],
+    // summaryFilter: ISummaryItem[],
     summaryStatistics: ISummaryStatisticsItem[],
-    summaryTotal: ISummaryTotal,
+    summaryTotalPage: number,
+    // summaryTotal: ISummaryTotal,
     userName: string
 }
 interface IStates{
@@ -155,23 +168,60 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         })
     }
     public changeRoiPages(){
-        const { setRoiPage, selectedRoisPage, setFilterDisplay, summaryFilter } = this.props;
-        const newFilterDisplay:ISummaryItem[] = [];
-        let i: number;
-        // const length = summaryDisplay.length < 48 ? summaryDisplay.length : 48;
-        const length = ((selectedRoisPage+2)*48 > summaryFilter.length) ? (summaryFilter.length - (selectedRoisPage+1)*48) : 48;
-        // tslint:disable-next-line:no-console
-        // console.log(length);
-        for(i=0; i<length; i++){
-            newFilterDisplay[i] = summaryFilter[(selectedRoisPage+1)*48+i];
+        const { setRoiPage, selectedRoisPage, setFilter, summaryStatistics } = this.props;
+        const newFilter:ISummaryItem[] = [];
+        const newRoiPage: number = selectedRoisPage+1;
+        const roiReqs: IRoiReqs = {
+            selected: [],
+            selectedPage: newRoiPage
         }
+        for(let i=0; i<summaryStatistics.length; i++){
+            roiReqs.selected[i] = {
+                cancer_id: summaryStatistics[i].id,
+                cancer_type: summaryStatistics[i].subject,
+                false_req: summaryStatistics[i].selectFalse,
+                not_sure_req: summaryStatistics[i].selectNotSure,
+                true_req: summaryStatistics[i].selectTrue,
+                unlabeled_req: summaryStatistics[i].selectUnlabelled
+            }
+        }
+        getSummaryDetail(JSON.stringify(roiReqs))
+        .then( (res:any)=>{
+            const newFilter: ISummaryItem[] = [];
+            for(let i=0; i<res.data.response.data.length; i++){
+                const v = res.data.response.data[i];
+                newFilter[i] = {
+                    roiId: v.roi_id,
+                    roiUrl: v.roi_url,
+                    status: v.status,
+                    svsId: v.svs_id,
+                    svsUrl: v.svs_url,
+                    type: v.cancer_type,
+                    userName: v.user_name
+                }
+            }
+            const imgEles = document.getElementsByTagName('img');
+            for(let i=0; i<imgEles.length; i++){
+                imgEles[i].src = '';
+            }
+            setFilter(newFilter);
+        })
+        .catch( err => {
+            console.error(err.message);
+        })
+        // const length = summaryDisplay.length < 48 ? summaryDisplay.length : 48;
+        // const length = ((selectedRoisPage+2)*48 > summaryFilter.length) ? (summaryFilter.length - (selectedRoisPage+1)*48) : 48;
+        // // tslint:disable-next-line:no-console
+        // // console.log(length);
+        // for(i=0; i<length; i++){
+        //     newFilterDisplay[i] = summaryFilter[(selectedRoisPage+1)*48+i];
+        // }
         // roiPageNext();
-        setRoiPage(selectedRoisPage+1);
+        setRoiPage(newRoiPage);
         // tslint:disable-next-line:no-console
         // console.log(newFilterDisplay);
         // tslint:disable-next-line:no-console
         // console.log(summaryFilter)
-        setFilterDisplay(newFilterDisplay);
     }
     public filterRoi = (index: number, label: string) => (event: any) => {
         const newStatistics:ISummaryStatisticsItem[] = JSON.parse(JSON.stringify(this.props.summaryStatistics));
@@ -189,39 +239,76 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
                 newStatistics[index].selectNotSure = !newStatistics[index].selectNotSure;
                 break;
         }
-        this.props.setStatistics(newStatistics);
-        let newSummaryData: ISummaryItem[] = [];
-        const { setRoiPage, summaryTotal } = this.props;
-        setRoiPage(0);
-        let i: number;
-        for(i=0; i<newStatistics.length; i++){
-            // switch(nextProps.statistics[i].subject){
-            //     case cancerType.N:
-            //         if()
-            // }
-            if(newStatistics[i].selectFalse){
-                newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].false);
-            }
-            if(newStatistics[i].selectTrue){
-                newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].true);
-            }
-            if(newStatistics[i].selectUnlabelled){
-                newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].unlabelled);
-            }
-            if(newStatistics[i].selectNotSure){
-                newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].notSure);
+        // let newSummaryData: ISummaryItem[] = [];
+        const { setFilter, setStatistics, setSummaryTotalPage ,setRoiPage } = this.props;
+        setRoiPage(1);
+        setStatistics(newStatistics);
+        const roiReqs:IRoiReqs = {
+            selected: [],
+            selectedPage: 1
+        };
+        for(let i=0; i<newStatistics.length; i++){
+            roiReqs.selected[i] = {
+                cancer_id: newStatistics[i].id,
+                cancer_type: newStatistics[i].subject,
+                false_req: newStatistics[i].selectFalse,
+                not_sure_req: newStatistics[i].selectNotSure,
+                true_req: newStatistics[i].selectTrue,
+                unlabeled_req: newStatistics[i].selectUnlabelled
             }
         }
-        this.props.setFilter(newSummaryData);
-        const initEightFilters: ISummaryItem[] = [];
-        let j:number;
-        if(newSummaryData.length){
-           const length = newSummaryData.length > 48 ? 48 : newSummaryData.length;
-           for(j=0; j<length; j++){
-            initEightFilters[j] = newSummaryData[j];
-           } 
-        }
-        this.props.setFilterDisplay(initEightFilters);
+        getSummaryDetail(JSON.stringify(roiReqs))
+        .then( (res: any) => {
+            const newFilter: ISummaryItem[] = [];
+            for(let i=0; i<res.data.response.data.length; i++){
+                const v = res.data.response.data[i];
+                newFilter[i] = {
+                    roiId: v.roi_id,
+                    roiUrl: v.roi_url,
+                    status: v.status,
+                    svsId: v.svs_id,
+                    svsUrl: v.svs_url,
+                    type: v.cancer_type,
+                    userName: v.user_name
+                }
+            }
+            setFilter(newFilter);
+            const resTotalPage = res.data.response.totalPage;
+            setSummaryTotalPage(resTotalPage);
+        })
+        .catch( error => {
+            console.error(error.message);
+        })
+        // setRoiPage(0);
+        // let i: number;
+        // for(i=0; i<newStatistics.length; i++){
+        //     // switch(nextProps.statistics[i].subject){
+        //     //     case cancerType.N:
+        //     //         if()
+        //     // }
+        //     if(newStatistics[i].selectFalse){
+        //         newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].false);
+        //     }
+        //     if(newStatistics[i].selectTrue){
+        //         newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].true);
+        //     }
+        //     if(newStatistics[i].selectUnlabelled){
+        //         newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].unlabelled);
+        //     }
+        //     if(newStatistics[i].selectNotSure){
+        //         newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].notSure);
+        //     }
+        // }
+        // this.props.setFilter(newSummaryData);
+        // const initEightFilters: ISummaryItem[] = [];
+        // let j:number;
+        // if(newSummaryData.length){
+        //    const length = newSummaryData.length > 48 ? 48 : newSummaryData.length;
+        //    for(j=0; j<length; j++){
+        //     initEightFilters[j] = newSummaryData[j];
+        //    } 
+        // }
+        // this.props.setFilterDisplay(initEightFilters);
     }
     public showDetailFlagChange = (index: number) => (event: any) =>{
         // const newSummaryData = this.state.summaryData;
@@ -322,7 +409,7 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
     }
     public renderMainContent(){
         const { selectedRoiFlag, selectedRoi } = this.state;
-        const { summaryDisplay, selectedRoisPage, summaryFilter } = this.props;
+        const { summaryDisplay, selectedRoisPage, summaryTotalPage } = this.props;
         if(summaryDisplay.length === 0){
             return null
         }else{
@@ -347,7 +434,7 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
                             onClick={this.nextSingleRoi} />
                     </div>
                 )
-            }else if(summaryFilter.length <= (selectedRoisPage+1)*48){
+            }else if(selectedRoisPage >= summaryTotalPage){
                 return(
                     <div className='summary__content__rois'>
                         {summaryDisplay.map((value,index) => this.renderDisplayItem(index,value))}

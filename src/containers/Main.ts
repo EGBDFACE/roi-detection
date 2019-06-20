@@ -2,7 +2,7 @@ import { Dispatch } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import MainPage from '../pages/MainPage';
-import { IFileListItem, IPicInfo, IStoreState, ISummaryStatisticsItem, ISummaryTotal } from '../store';
+import { IFileListItem, IPicInfo, IStoreState, ISummaryStatisticsItem } from '../store';
 
 function mapStateToProps (state: IStoreState){
     return {
@@ -28,7 +28,7 @@ function mapDispatchToProps (dispatch: Dispatch<any>){
         setFileListShow: (list: IFileListItem[]) => dispatch(actions.selectFileList(list)),
         setPic: (pic: IPicInfo) => dispatch(actions.setPic(pic)),
         setStatistics: (data: ISummaryStatisticsItem[]) => dispatch(actions.setStatistics(data)),
-        setSummary: (data: ISummaryTotal) => dispatch(actions.setSummary(data)),
+        // setSummary: (data: ISummaryTotal) => dispatch(actions.setSummary(data)),
         userSignOut: () => dispatch(actions.userSignOut())
     }
 }

@@ -45,12 +45,12 @@ function setPic(state: IPicInfo, action: IPicAction){
 }
 function setSummary(state: ISummary, action: ISummaryAction){
     switch(action.type){
-        case 'SET_SUMMARY': 
-            // return action.summary
-            return {
-                ...state,
-                total: action.total
-            }
+        // case 'SET_SUMMARY': 
+        //     // return action.summary
+        //     return {
+        //         ...state,
+        //         total: action.total
+        //     }
         case 'SET_STATISTICS':
             return {
                 ...state,
@@ -65,6 +65,11 @@ function setSummary(state: ISummary, action: ISummaryAction){
             return{
                 ...state,
                 filterDisplay: action.filterDisplay
+            }
+        case 'SET_SUMMARY_TOTAL_PAGE':
+            return{
+                ...state,
+                totalPage: action.totalPage
             }
         // case 'SET_STATISTICS':
         //     return action.statistics

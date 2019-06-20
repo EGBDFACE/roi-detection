@@ -1,4 +1,4 @@
-import { IFileListItem, IPicInfo, ISummaryItem, ISummaryStatisticsItem, ISummaryTotal } from '../store';
+import { IFileListItem, IPicInfo, ISummaryItem, ISummaryStatisticsItem } from '../store';
 
 export interface IUserAction{
     name?: string
@@ -25,7 +25,8 @@ export interface ISummaryAction{
     filter?: ISummaryItem[],
     filterDisplay?: ISummaryItem[],
     statistics?: ISummaryStatisticsItem[],
-    total?: ISummaryTotal,
+    // total?: ISummaryTotal,
+    totalPage?: number,
     type: string
 }
 const USER_SIGN_IN = 'USER_SIGN_IN';
@@ -34,6 +35,7 @@ const SET_FILE_LIST = 'SET_FILE_LIST';
 const SET_PIC = 'SET_PIC';
 const SET_SUMMARY = 'SET_SUMMARY';
 const SET_STATISTICS = 'SET_STATISTICS';
+const SET_SUMMARY_TOTAL_PAGE = 'SET_SUMMARY_TOTAL_PAGE';
 const SET_FILTER = 'SET_FILTER';
 const SET_FILTER_DISPLAY = 'SET_FILTER_DISPLAY';
 // const SET_SUMMARY_SHOW_DETAIL = 'SET_SUMMARY_SHOW_DETAIL';
@@ -67,16 +69,22 @@ export function setPic(pic: IPicInfo): IPicAction{
         type: SET_PIC
     }
 }
-export function setSummary(total: ISummaryTotal): ISummaryAction{
-    return{
-        total,
-        type: SET_SUMMARY
-    }
-}
+// export function setSummary(total: ISummaryTotal): ISummaryAction{
+//     return{
+//         total,
+//         type: SET_SUMMARY
+//     }
+// }
 export function setStatistics(statistics: ISummaryStatisticsItem[]): ISummaryAction{
     return{
         statistics,
         type: SET_STATISTICS
+    }
+}
+export function setSummaryTotalPage(totalPage: number): ISummaryAction{
+    return{
+        totalPage,
+        type: SET_SUMMARY_TOTAL_PAGE
     }
 }
 export function setFilter(filter: ISummaryItem[]) : ISummaryAction{

@@ -1,13 +1,13 @@
 import * as React from 'react';
 // import * as actions from '../actions';
 import { getFileList, getPicHttp, signInHttp } from '../api';
+import LoadingMask from '../components/LoadingMask';
 import { FILE_LIST_DISPLAY_NUMBER as listShowNum } from '../constant';
 import '../css/global.scss';
 import '../css/homePage.scss';
 import history from '../router/history';
 import { IFileListItem, IPicInfo, IRoiInfo } from '../store';
 // import store  from '../store';
-
 // import axios  from 'axios';
 // import { BASE_URL } from '../constant';
 
@@ -24,7 +24,8 @@ interface IStates{
     errorFlag: boolean,
     id: string,
     password: string,
-    showSignInError: boolean
+    showSignInError: boolean,
+    signInFlag: boolean,
 }
 // interface IEvent{
 //     target: {
@@ -38,11 +39,13 @@ export default class SignIn extends React.Component<IProps,IStates>{
             errorFlag: false,
             id: '',
             password: '',
-            showSignInError: false
+            showSignInError: false,
+            signInFlag: false
         }
         this.passwordInput = this.passwordInput.bind(this);
         this.idInput = this.idInput.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleKeyEnter = this.handleKeyEnter.bind(this);
     }
     public passwordInput(event: any){
         const value = event.target.value;
@@ -58,7 +61,18 @@ export default class SignIn extends React.Component<IProps,IStates>{
             id: value
         })
     }
+    public handleKeyEnter(e: any){
+        // console.log(e.target.value);
+        // // if(e.keyCode)
+        // console.log(e.keyCode);
+        if(e.keyCode === 13){
+            this.handleSubmit();
+        }
+    }
     public handleSubmit(){
+        this.setState({
+            signInFlag: true
+        })
         if((this.state.id)&&(this.state.password)){
             const user = {
                 password: this.state.password,
@@ -125,7 +139,10 @@ export default class SignIn extends React.Component<IProps,IStates>{
                                 svsId: list[0].svsId
                             };
                             setPic(pic);
-                            selectSvs(list[0].svsId)
+                            selectSvs(list[0].svsId);
+                            this.setState({
+                                signInFlag: false
+                            });
                             history.push('/mainPage');
                             // history.push('/roi/mainPage');
                         })
@@ -133,14 +150,21 @@ export default class SignIn extends React.Component<IProps,IStates>{
                         // console.error(error);
                     })
                 }else{
+                    this.setState({
+                        signInFlag: false
+                    })
                     alert('incorrect name or password');
                 }
             }).catch( () => {
+                this.setState({
+                    signInFlag: false
+                })
                 // console.error(error);
             })
         }else{
             this.setState({
-                errorFlag: true
+                errorFlag: true,
+                signInFlag: false
             })
         }
     }
@@ -154,6 +178,11 @@ export default class SignIn extends React.Component<IProps,IStates>{
             password: '请输入密码'
         };
         const errorFlag = this.state.errorFlag;
+        if(this.state.signInFlag){
+            return(
+                <LoadingMask/>
+            )
+        }
         return(
             <div>
                 <div className='home__bg' />
@@ -187,6 +216,7 @@ export default class SignIn extends React.Component<IProps,IStates>{
                                 id='login_password'
                                 value={this.state.password}
                                 onChange={this.passwordInput}
+                                onKeyUp={this.handleKeyEnter}
                                 placeholder={errorFlag?placeHolderError.password:placeHolder.password}
                                 // style={errorFlag?{color: 'red'}:undefined}
                             />

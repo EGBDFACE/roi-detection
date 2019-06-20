@@ -6,9 +6,9 @@ import { CANCER_TYPE as cancerType, FILE_LIST_DISPLAY_NUMBER as listShowLength, 
 import '../css/global.scss';
 import '../css/mainPage.scss';
 import history from '../router/history';
-import { IFileListItem, IPicInfo, IRoiInfo, ISummaryStatisticsItem, ISummaryTotal } from '../store';
+import { IFileListItem, IPicInfo, IRoiInfo, ISummaryStatisticsItem, } from '../store';
 // import draw  from '../utils/drawPic';
-import resolveSummary from '../utils/resolveSummary';
+import { resolveSummary, resolveNewSummary } from '../utils/resolveSummary';
 // interface IListItem{
 //     id: string,
 //     magn: number,
@@ -31,7 +31,7 @@ interface IProps{
     setFileListShow: (list: IFileListItem[]) => void,
     setPic: (pic: IPicInfo) => void,
     setStatistics: (data: ISummaryStatisticsItem[]) => void,
-    setSummary: (data: ISummaryTotal) => void,
+    // setSummary: (data: ISummaryTotal) => void,
     showAllRoisFlag: boolean,
     statistics: ISummaryStatisticsItem[]
     userName: string,
@@ -52,6 +52,7 @@ interface IStates{
     // selectedRoiId: number,
     // showAllRoisFlag: boolean,
     selectedSvsIndex: number,
+    searchSvsIdInput: string,
     showLogOutFlag: boolean,
     showShortListFlag: boolean,
     showZoomInFlag: boolean,
@@ -71,12 +72,8 @@ export default class MainPage extends React.Component<IProps, IStates>{
             },
             imgZoomScale: 1,
             imgZoomStyle: undefined,
-            // roiMenuItemIndex: -1,
-            // selectedPicId: 1,
-            // selectedRoiId: -1,
-            // selectedRoiItem: -1,
-            // showAllRoisFlag: true,
             selectedSvsIndex: 0,
+            searchSvsIdInput: '',
             showLogOutFlag: false,
             showShortListFlag: false,
             showZoomInFlag: false,
@@ -106,8 +103,44 @@ export default class MainPage extends React.Component<IProps, IStates>{
         this.handleImgMouseDown = this.handleImgMouseDown.bind(this);
         // this.handleImgMouseUp = this.handleImgMouseUp.bind(this);
         this.getPic = this.getPic.bind(this);
+        this.handleSvsIdInputChange = this.handleSvsIdInputChange.bind(this);
+        this.handleSvsIdEnter = this.handleSvsIdEnter.bind(this);
         // this.hoverEnterRoi = this.hoverEnterRoi.bind(this);
         // this.hoverLeaveRoi = this.hoverLeaveRoi.bind(this);
+    }
+    public handleSvsIdEnter(e: any){
+        const { searchSvsIdInput } = this.state;
+        const { fileList, fileListPage, selectSvs, setFileListPage, setFileListShow, setPic} = this.props;
+        if(e.keyCode === 13){
+            const svsId = parseInt(searchSvsIdInput);
+            if((svsId !== NaN)&&(svsId <=fileList[fileList.length-1].svsId)&&(svsId > 0)){
+                if(((svsId)>=(fileListPage-1)*listShowLength+1)&&((svsId)<=fileListPage*listShowLength)){
+                    this.setState({
+                        selectedSvsIndex: (svsId%listShowLength===0) ? (listShowLength-1) : (svsId%listShowLength-1)
+                    })
+                    selectSvs(svsId);
+                    this.getPic(svsId);
+                }else{
+                    const totalPage = Math.ceil(fileList.length/listShowLength);
+                    const newFileListPage = Math.ceil(svsId/listShowLength);
+                    const newFileListShow:IFileListItem[] = [];
+                    const length = (newFileListPage === totalPage) ? (fileList.length -(totalPage-1)*listShowLength) : listShowLength;
+                    for(let i=0; i<length; i++){
+                        newFileListShow[i] = fileList[(newFileListPage-1)*listShowLength+i];
+                    }
+                    setFileListPage(newFileListPage);
+                    setFileListShow(newFileListShow);
+                    selectSvs(svsId);
+                    this.getPic(svsId);
+                }
+            }
+        }
+    }
+    public handleSvsIdInputChange(event:any){
+        const value = event.target.value;
+        this.setState({
+            searchSvsIdInput: value
+        })
     }
     public handleImgMouseDown(e:any){
         // console.log(e);
@@ -407,19 +440,31 @@ export default class MainPage extends React.Component<IProps, IStates>{
             getSummaryHttp().then( (resSum: any) => {
                 // tslint:disable-next-line:no-console
                 // console.log(res);
-                    const summaryData = resolveSummary(resSum.data.response);
-                    for(let i=0; i<summaryData.statistics.length; i++){
-                        for(let j=0; j<statistics.length; j++){
-                            if(summaryData.statistics[i].subject === statistics[j].subject){
-                                summaryData.statistics[i].selectFalse = statistics[j].selectFalse;
-                                summaryData.statistics[i].selectTrue = statistics[j].selectTrue;
-                                summaryData.statistics[i].selectNotSure = statistics[j].selectNotSure;
-                                summaryData.statistics[j].selectUnlabelled = statistics[j].selectUnlabelled;
-                            }
-                        }
-                    }
-                    this.props.setSummary(summaryData.total);
-                    this.props.setStatistics(summaryData.statistics);
+                    // const summaryData = resolveSummary(resSum.data.response);
+                    // for(let i=0; i<summaryData.statistics.length; i++){
+                    //     for(let j=0; j<statistics.length; j++){
+                    //         if(summaryData.statistics[i].subject === statistics[j].subject){
+                    //             summaryData.statistics[i].selectFalse = statistics[j].selectFalse;
+                    //             summaryData.statistics[i].selectTrue = statistics[j].selectTrue;
+                    //             summaryData.statistics[i].selectNotSure = statistics[j].selectNotSure;
+                    //             summaryData.statistics[j].selectUnlabelled = statistics[j].selectUnlabelled;
+                    //         }
+                    //     }
+                    // }
+                    const newStatistic = resolveNewSummary(resSum.data.response, statistics);
+                    // for(let i=0; i<newStatistic.length; i++){
+                    //     for(let j=0; j<statistics.length; j++){
+                    //         if(newStatistic[i].subject === statistics[j].subject){
+                    //             newStatistic[i].selectFalse = statistics[j].selectFalse;
+                    //             newStatistic[i].selectNotSure = statistics[j].selectNotSure;
+                    //             newStatistic[i].selectTrue = statistics[j].selectTrue;
+                    //             newStatistic[i].selectUnlabelled = statistics[j].selectUnlabelled;
+                    //         }
+                    //     }
+                    // }
+                    // this.props.setSummary(summaryData.total);
+                    // this.props.setStatistics(summaryData.statistics);
+                    this.props.setStatistics(newStatistic);
                 }).catch( error => {
                     // console.error(error);
                 });
@@ -522,7 +567,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
                     elementBrief.scrollTop = 10;
                 // }
                 this.setState({
-                    selectedSvsIndex: ((selectedSvsId+1)%listShowLength === 0) ? 89 : (selectedSvsId+1)%listShowLength
+                    selectedSvsIndex: ((selectedSvsId+1)%listShowLength === 0) ? (listShowLength-1) : ((selectedSvsId+1)%listShowLength-1)
                 })
             }
             this.getPic(selectedSvsId+1);
@@ -578,7 +623,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 setFileListPage(newFileListPage);
                 setFileListShow(newFileListShow);
                 this.setState({
-                    selectedSvsIndex: ((selectedSvsId+1)%listShowLength === 0) ? 89 : (selectedSvsId+1)%listShowLength
+                    selectedSvsIndex: ((selectedSvsId+1)%listShowLength === 0) ? (listShowLength-1) : ((selectedSvsId+1)%listShowLength-1)
                 })
             }
             this.getPic(selectedSvsId-1);
@@ -633,6 +678,9 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 roi: roiD,
                 svsId: svsIdNumber
             };
+            const eleImg:any = document.getElementById('svs-pic');
+            eleImg.src = '';
+            eleImg.src = pic.picUrl;        
             setPic(pic);
         }).catch( error =>{
             // console.error(error);
@@ -643,9 +691,10 @@ export default class MainPage extends React.Component<IProps, IStates>{
             getSummaryHttp().then( (res: any) => {
             // tslint:disable-next-line:no-console
             // console.log(res);
-                const summaryData = resolveSummary(res.data.response);
-                this.props.setSummary(summaryData.total);
-                this.props.setStatistics(summaryData.statistics);
+                const summaryStatistic = resolveSummary(res.data.response);
+                // this.props.setSummary(summaryData.total);
+                // this.props.setStatistics(summaryData.statistics);
+                this.props.setStatistics(summaryStatistic);
             }).catch( error => {
                 // console.error(error);
             });
@@ -1072,46 +1121,16 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 <div>please sign in</div>
             )
         }
-        const { fileList, fileListPage, fileListShow, pic, selectedRoiDisplayId, selectedSvsId, showAllRoisFlag, userName } = this.props;
+        const { fileList, fileListShow, pic, selectedSvsId, showAllRoisFlag, userName } = this.props;
         // const { selectedPicItem } = this.state;
-        const totalPage = Math.ceil(fileList.length/listShowLength);
-        const { imgDragPrePos, imgZoomStyle, imgZoomScale, showLogOutFlag, showZoomInFlag } = this.state;
+        // const totalPage = Math.ceil(fileList.length/listShowLength);
+        const { searchSvsIdInput } = this.state;
+        const { imgDragPrePos, imgZoomScale, showLogOutFlag, showZoomInFlag } = this.state;
         const hidden = { display: 'none'};
         const shortListContentStyle = {
             left: '8%',
             width: '92%'
         };
-        // let zoomInImgStyle = undefined;
-        // if((selectedRoiDisplayId !== -1)&&showZoomInFlag){
-        //     let i;
-        //     for(i=0; i<pic.roi.length; i++){
-        //         if(pic.roi[i].roiId === selectedRoiDisplayId){
-        //             const roiPosX = pic.roi[i].x1/pic.picWidth * picSize;
-        //             const roiPosY = pic.roi[i].y1/pic.picHeight * picSize;
-        //             const roiWidth = (pic.roi[i].x2-pic.roi[i].x1)/pic.picWidth * picSize;
-        //             const roiHeight = (pic.roi[i].y2-pic.roi[i].y1)/pic.picHeight * picSize;
-        //             let proportion;
-        //             if(roiWidth >= roiHeight){
-        //                 proportion = picSize / roiWidth;
-        //                 zoomInImgStyle = {
-        //                     top: -(roiPosY*proportion-roiHeight/2) + 'px',
-        //                     left: -(roiPosX*proportion) + 'px',
-        //                     width: proportion*picSize + 'px',
-        //                     height: proportion*picSize + 'px'
-        //                 };
-        //             }else{
-        //                 proportion = picSize / roiHeight;
-        //                 zoomInImgStyle = {
-        //                     top: -(roiPosY*proportion) + 'px',
-        //                     left: -(roiPosY*proportion-roiWidth/2) + 'px',
-        //                     width: proportion*picSize + 'px',
-        //                     height: proportion*picSize + 'px'
-        //                 };
-        //             }
-        //             break;
-        //         }
-        //     }
-        // }
         return(
             <div className='page'>
                 <div className='main__header'>
@@ -1159,6 +1178,15 @@ export default class MainPage extends React.Component<IProps, IStates>{
                         <i className='sideBar__header__icon' 
                             onClick={this.showShortList}/>
                     </div>
+                    <div className='sideBar__search'>
+                        <i className='search-icon'/>
+                        <input type='text' 
+                            value={searchSvsIdInput}
+                            className='search-input'
+                            placeholder='Search by ID'
+                            onKeyUp={this.handleSvsIdEnter}
+                            onChange={this.handleSvsIdInputChange}/>
+                    </div>
                     <div className='sideBar__table__header'>
                         <div className='table__header__id'>ID</div>
                         <div className='table__header__magn'>MAGN</div>
@@ -1197,7 +1225,8 @@ export default class MainPage extends React.Component<IProps, IStates>{
                             onMouseDown={this.handleImgMouseDown}
                             // onMouseUp={this.handleImgMouseUp}
                             >
-                            <img src={pic.picUrl} 
+                            <img id='svs-pic' 
+                                src={pic.picUrl} 
                                 className='main__content__pic'
                                 // style={zoomInImgStyle} 
                                 />

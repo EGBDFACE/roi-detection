@@ -50,9 +50,10 @@ export interface IStoreState{
 }
 export interface ISummary{
     filter: ISummaryItem[],
-    filterDisplay: ISummaryItem[],
+    // filterDisplay: ISummaryItem[],
     statistics: ISummaryStatisticsItem[],
-    total: ISummaryTotal,
+    totalPage: number,
+    // total: ISummaryTotal,
 }
 export interface ISummaryItem{
     roiId: number,
@@ -69,17 +70,18 @@ export interface ISummaryItem{
     // subject: string;
     // totalNumber: number;
 }
-export interface ISummaryTotal{
-    [N:string]: ISummaryStatus,
-    R: ISummaryStatus,
-    S: ISummaryStatus,
-    // statistics: ISummaryStatisticsItem[]
-    T: ISummaryStatus,
-    X: ISummaryStatus
-}
+// export interface ISummaryTotal{
+//     [N:string]: ISummaryStatus,
+//     R: ISummaryStatus,
+//     S: ISummaryStatus,
+//     // statistics: ISummaryStatisticsItem[]
+//     T: ISummaryStatus,
+//     X: ISummaryStatus
+// }
 export interface ISummaryStatisticsItem{
     labelFalseNumber: number;
     labelTrueNumber: number;
+    id: number,
     nonLabelNumber: number;
     notSureNumber: number;
     selectFalse: boolean;
@@ -117,20 +119,21 @@ const initialState: IStoreState = {
         selectedFileList: [],
         selectedFileListPage: 1,
         selectedRoiId: -1,
-        selectedRoisPage: 0,
+        selectedRoisPage: 1,
         selectedSvsId: -1,
     },
     summary: {
         filter: [],
-        filterDisplay: [],
+        // filterDisplay: [],
         statistics: [],
-        total: {
-            N: initSummaryStatus,
-            R: initSummaryStatus,
-            S: initSummaryStatus,
-            T: initSummaryStatus,
-            X: initSummaryStatus,
-        }
+        totalPage: 1
+        // total: {
+        //     N: initSummaryStatus,
+        //     R: initSummaryStatus,
+        //     S: initSummaryStatus,
+        //     T: initSummaryStatus,
+        //     X: initSummaryStatus,
+        // }
     },
     // summary: {
     //     N: initSummaryStatus,

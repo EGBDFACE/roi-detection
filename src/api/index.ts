@@ -1,5 +1,6 @@
 import axios from 'axios';
 axios.defaults.withCredentials = true;
+axios.defaults.headers['Content-Type']='application/json';
 import { BASE_URL } from '../constant';
  
 interface IUser{
@@ -38,7 +39,16 @@ export function getSummaryHttp(){
     return axios({
         baseURL: BASE_URL,
         method: 'get',
-        url: '/getSummaryData/'
+        // url: '/getSummaryData/'
+        url: '/getSummaryStatistic/'
+    })
+}
+export function getSummaryDetail(reqs: any){
+    return axios({
+        baseURL: BASE_URL,
+        data: reqs,
+        method: 'post',
+        url: '/getSummaryDetail/'
     })
 }
 export function setRoiStatus(status: IStatus){

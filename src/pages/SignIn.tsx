@@ -139,18 +139,12 @@ export default class SignIn extends React.Component<IProps,IStates>{
                                 svsId: list[0].svsId
                             };
                             setPic(pic);
-<<<<<<< HEAD
-                            selectSvs(list[0].svsId)
-                            // history.push('/mainPage');
-                            history.push('/roi/mainPage');
-=======
                             selectSvs(list[0].svsId);
                             this.setState({
                                 signInFlag: false
                             });
-                            history.push('/mainPage');
-                            // history.push('/roi/mainPage');
->>>>>>> summary
+                            // history.push('/mainPage');
+                            history.push('/roi/mainPage');
                         })
                     }).catch( error => {
                         // console.error(error);

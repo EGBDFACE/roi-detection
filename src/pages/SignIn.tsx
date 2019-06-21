@@ -7,6 +7,7 @@ import '../css/global.scss';
 import '../css/homePage.scss';
 import history from '../router/history';
 import { IFileListItem, IPicInfo, IRoiInfo } from '../store';
+import { getPicData } from '../utils/resolvePic';
 // import store  from '../store';
 // import axios  from 'axios';
 // import { BASE_URL } from '../constant';
@@ -16,7 +17,8 @@ interface IProps{
     selectFileList: (list: IFileListItem[]) => void,
     selectSvs: (id: number) => void,
     setFileList: (list: IFileListItem[]) => void,
-    setPic: (pic: IPicInfo) => void,
+    setPicA: (pic: IPicInfo) => void,
+    setPicB: (pic: IPicInfo) => void,
     userName: string,
     userSign: (name: string) => void,
 }
@@ -81,7 +83,7 @@ export default class SignIn extends React.Component<IProps,IStates>{
             // const userSign = this.props.userSign;
             // const setFileList = this.props.setFileList;
             // const setPic = this.props.setPic;
-            const { selectFileList, selectSvs, setFileList, setPic, userSign } = this.props;
+            const { selectFileList, selectSvs, setFileList, setPicA, setPicB, userSign } = this.props;
             signInHttp(user).then( (res: any) => {
                 // tslint:disable-next-line:no-console
                 // console.log(res);
@@ -114,37 +116,49 @@ export default class SignIn extends React.Component<IProps,IStates>{
                         getPicHttp(list[0].svsId).then( (resPic: any) => {
                             // tslint:disable-next-line:no-console
                             // console.log(resPic);
-                            const roiD: IRoiInfo[] = [];
-                            let j:number;
-                            for(j=0; j<resPic.data.response.rois_data.length; j++){
-                                const v = resPic.data.response.rois_data[j];
-                                roiD[j] = {
-                                    roiId: v.roi_id,
-                                    roiUrl: v.roi_url,
-                                    score: v.score,
-                                    status: v.status,
-                                    type: v.cancer_type,
-                                    userName: v.user_name,
-                                    x1: v.x1,
-                                    x2: v.x2,
-                                    y1: v.y1,
-                                    y2: v.y2
-                                }
-                            }
-                            const pic: IPicInfo = {
-                                picHeight: resPic.data.response.height,
-                                picUrl: resPic.data.response.svs_url,
-                                picWidth: resPic.data.response.width,
-                                roi: roiD,
-                                svsId: list[0].svsId
-                            };
-                            setPic(pic);
+                            // const roiD: IRoiInfo[] = [];
+                            // let j:number;
+                            // for(j=0; j<resPic.data.response.rois_data.length; j++){
+                            //     const v = resPic.data.response.rois_data[j];
+                            //     roiD[j] = {
+                            //         roiId: v.roi_id,
+                            //         roiUrl: v.roi_url,
+                            //         score: v.score,
+                            //         status: v.status,
+                            //         type: v.cancer_type,
+                            //         userName: v.user_name,
+                            //         x1: v.x1,
+                            //         x2: v.x2,
+                            //         y1: v.y1,
+                            //         y2: v.y2
+                            //     }
+                            // }
+                            // const pic: IPicInfo = {
+                            //     picHeight: resPic.data.response.height,
+                            //     picUrl: resPic.data.response.svs_url,
+                            //     picWidth: resPic.data.response.width,
+                            //     roi: roiD,
+                            //     svsId: list[0].svsId
+                            // };
+                            const pic: IPicInfo = getPicData(resPic.data.response, list[0].svsId);
+                            setPicA(pic);
                             selectSvs(list[0].svsId);
                             this.setState({
                                 signInFlag: false
                             });
-                            // history.push('/mainPage');
-                            history.push('/roi/mainPage');
+                            history.push('/mainPage');
+                            // history.push('/roi/mainPage');
+                        })
+                        .catch(err => {
+                            console.error(err.message)
+                        })
+                        getPicHttp(list[1].svsId)
+                        .then( resPicB => {
+                            const picB: IPicInfo = getPicData(resPicB.data.response, list[1].svsId);
+                            setPicB(picB);
+                        })
+                        .catch(err => {
+                            console.error(err.message);
                         })
                     }).catch( error => {
                         // console.error(error);

@@ -1,11 +1,12 @@
 import { IFileListAction, IPicAction, ISelectAction, ISummaryAction, IUserAction  } from '../actions';
-import { IFileListItem, IPicInfo,  ISelect, IStoreState, ISummary, IUserInfo } from "../store";
+import { IFileListItem, IPicInfo, IPics, ISelect, IStoreState, ISummary, IUserInfo } from "../store";
 
 
 const Reducer = (state: IStoreState, action: any) => {
     return {
         fileList: setFileList(state.fileList, action),
-        pic: setPic(state.pic, action),
+        // pic: setPic(state.pic, action),
+        pics: setPic(state.pics, action),
         select: setSelect(state.select, action),
         summary: setSummary(state.summary, action),
         // summaryFilter: setSummaryFilter(state.summaryFilter, action),
@@ -36,10 +37,18 @@ function setFileList(state: IFileListItem[], action: IFileListAction){
         default: return state
     }
 }   
-function setPic(state: IPicInfo, action: IPicAction){
+function setPic(state: IPics, action: IPicAction){
     switch(action.type){
-        case 'SET_PIC':
-            return action.pic
+        case 'SET_PIC_A':
+            return {
+                ...state,
+                picA: action.pic
+            }
+        case 'SET_PIC_B':
+            return{
+                ...state,
+                picB: action.pic
+            }
         default: return state
     }
 }

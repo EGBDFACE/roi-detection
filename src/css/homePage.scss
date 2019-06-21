@@ -68,7 +68,9 @@ $myColor: #1E2D52;
 .login__id__label,.login__password__label{
     color: gray;
     border-right: 1px solid rgba(128,128,128,.2);
-    padding: 1.5rem;
+    // padding: 1.5rem;
+    height: 50px;
+    line-height: 50px;
     color: $myColor;
     width: 38%;
     letter-spacing: 1px;
@@ -76,7 +78,8 @@ $myColor: #1E2D52;
     display: inline-block;
 }
 .login__id__input, .login__password__input{
-    padding: 1.5rem;
+    // padding: 1.5rem;
+    margin-left: 20px;
     outline: none;
     border: none;
     font-weight: bold;

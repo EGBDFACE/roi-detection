@@ -30,7 +30,8 @@ function mapDispatchToProps (dispatch: Dispatch<any>){
         setFileListShow: (list: IFileListItem[]) => dispatch(actions.selectFileList(list)),
         setFilter: (data: ISummaryItem[]) => dispatch(actions.setFilter(data)),
         setFilterDisplay: (data: ISummaryItem[]) => dispatch(actions.setFilterDisplay(data)),
-        setPic: (pic: IPicInfo) => dispatch(actions.setPic(pic)),
+        setPicA: (pic: IPicInfo) => dispatch(actions.setPicA(pic)),
+        setPicB: (pic: IPicInfo) => dispatch(actions.setPicB(pic)),
         setStatistics: (data: ISummaryStatisticsItem[]) => dispatch(actions.setStatistics(data)),
         setSummaryTotalPage: (page: number) => dispatch(actions.setSummaryTotalPage(page))
     }

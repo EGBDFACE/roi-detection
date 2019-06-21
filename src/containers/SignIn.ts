@@ -15,7 +15,8 @@ function mapDispatchToProps (dispatch: Dispatch<any>){
         selectFileList: (list: IFileListItem[]) => dispatch(actions.selectFileList(list)),
         selectSvs: (id: number) => dispatch(actions.selectSvs(id)),
         setFileList: (list: IFileListItem[]) => dispatch(actions.setFileList(list)),
-        setPic: (pic: IPicInfo) => dispatch(actions.setPic(pic)),
+        setPicA: (pic: IPicInfo) => dispatch(actions.setPicA(pic)),
+        setPicB: (pic: IPicInfo) => dispatch(actions.setPicB(pic)),
         userSign: (name: string) => dispatch(actions.userSignIn(name))
     }
 }

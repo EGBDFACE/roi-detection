@@ -6,6 +6,7 @@ import '../css/mainPage.scss';
 import '../css/summaryPage.scss';
 import history from '../router/history';
 import { IFileListItem, IPicInfo, IRoiInfo, ISummaryItem, ISummaryStatisticsItem } from '../store';
+import { getPicData } from '../utils/resolvePic';
 
 interface IRoiReqsItem{
     cancer_id: number,
@@ -32,7 +33,8 @@ interface IProps{
     setFileListShow: (list: IFileListItem[]) => void,
     setFilter: (data: ISummaryItem[]) => void,
     setFilterDisplay: (data: ISummaryItem[]) => void,
-    setPic: (pic: IPicInfo) => void,
+    setPicA: (pic: IPicInfo) => void,
+    setPicB: (pic: IPicInfo) => void,
     setStatistics: (data: ISummaryStatisticsItem[]) => void,
     setSummaryTotalPage: (page: number) => void,
     // summary: ISummary;
@@ -79,38 +81,15 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         this.editSingleRoi = this.editSingleRoi.bind(this);
     }
     public editSingleRoi(){
-        const { fileList, selectAllRoi, selectRoi, selectSvs, setPic, setFileListPage, setFileListShow } = this.props;
+        const { fileList, selectAllRoi, selectRoi, selectSvs, setPicA, setPicB, setFileListPage, setFileListShow } = this.props;
         // this.props.selectSvs(this.state.selectedRoi.svsId);
         const { selectedRoi } = this.state;
         selectAllRoi(false);
         selectRoi(selectedRoi.roiId);
         selectSvs(selectedRoi.svsId);
         getPicHttp(selectedRoi.svsId).then( (res: any) => {
-            const roiD: IRoiInfo[] = [];
-            let j:number;
-            for(j=0; j<res.data.response.rois_data.length; j++){
-                const v = res.data.response.rois_data[j];
-                roiD[j] = {
-                    roiId: v.roi_id,
-                    roiUrl: v.roi_url,
-                    score: v.score,
-                    status: v.status,
-                    type: v.cancer_type,
-                    userName: v.user_name,
-                    x1: v.x1,
-                    x2: v.x2,
-                    y1: v.y1,
-                    y2: v.y2
-                }
-            }
-            const pic: IPicInfo = {
-                picHeight: res.data.response.height,
-                picUrl: res.data.response.svs_url,
-                picWidth: res.data.response.width,
-                roi: roiD,
-                svsId: selectedRoi.svsId
-            };
-            setPic(pic);
+            const pic: IPicInfo = getPicData(res.data.response, selectedRoi.svsId);
+            setPicA(pic);
             const newFileListPage = Math.ceil(pic.svsId/listShowLength);
             const newFileListShow: IFileListItem[] = [];
             const totalPage = Math.ceil(fileList.length/listShowLength);
@@ -120,11 +99,19 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
             } 
             setFileListPage(newFileListPage);
             setFileListShow(newFileListShow);
-            // history.push('/mainPage');
-            history.push('/roi/mainPage');
+            history.push('/mainPage');
+            // history.push('/roi/mainPage');
         }).catch( error =>{
             // console.error(error);
         });
+        getPicHttp(selectedRoi.svsId+1)
+        .then( res => {
+            const pic: IPicInfo = getPicData(res.data.response, selectedRoi.svsId+1);
+            setPicB(pic);
+        })
+        .catch(err => {
+            console.error(err.message);
+        })
     }
     public showSingleRoi = (index: number) => (event: any) => {
         const { summaryDisplay } = this.props;
@@ -324,8 +311,8 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         this.props.setStatistics(newStatistics);
     }
     public mainPage(){
-        // history.push('/mainPage');
-        history.push('/roi/mainPage');
+        history.push('/mainPage');
+        // history.push('/roi/mainPage');
     }
     public renderSummaryLabelItemDetail(value: ISummaryStatisticsItem, index: number){
         if(value.showDetialFlag){

@@ -38,9 +38,14 @@ export interface ISelect{
 export interface IUserInfo{
     name: string;
 }
+export interface IPics{
+    picA: IPicInfo,
+    picB: IPicInfo,
+}
 export interface IStoreState{
     fileList: IFileListItem[],
-    pic: IPicInfo,
+    // pic: IPicInfo,
+    pics: IPics
     select: ISelect,
     // summary: ISummary,
     // summaryFilter: ISummaryItem[],
@@ -99,6 +104,13 @@ export interface ISummaryStatus{
     true: ISummaryItem[],
     unlabelled: ISummaryItem[]
 }
+const pic: IPicInfo = {
+    picHeight: 0,
+    picUrl: '',
+    picWidth: 0,
+    roi: [],
+    svsId: -1
+}
 export const initSummaryStatus: ISummaryStatus = {
     false: [],
     notSure: [],
@@ -107,12 +119,9 @@ export const initSummaryStatus: ISummaryStatus = {
 }
 const initialState: IStoreState = {
     fileList: [],
-    pic: {
-        picHeight: 0,
-        picUrl: '',
-        picWidth: 0,
-        roi: [],
-        svsId: -1
+    pics:{
+        picA: pic,
+        picB: pic
     },
     select: {
         selectedAllRoiFlag: true,

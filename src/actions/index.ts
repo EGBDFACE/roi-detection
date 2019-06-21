@@ -33,6 +33,8 @@ const USER_SIGN_IN = 'USER_SIGN_IN';
 const USER_SIGN_OUT = 'USER_SIGN_OUT';
 const SET_FILE_LIST = 'SET_FILE_LIST';
 const SET_PIC = 'SET_PIC';
+const SET_PIC_A = 'SET_PIC_A';
+const SET_PIC_B = 'SET_PIC_B';
 const SET_SUMMARY = 'SET_SUMMARY';
 const SET_STATISTICS = 'SET_STATISTICS';
 const SET_SUMMARY_TOTAL_PAGE = 'SET_SUMMARY_TOTAL_PAGE';
@@ -63,10 +65,16 @@ export function setFileList(list: IFileListItem[]): IFileListAction{
         type: SET_FILE_LIST
     }
 }
-export function setPic(pic: IPicInfo): IPicAction{
+export function setPicB(pic: IPicInfo): IPicAction{
     return{
         pic,
-        type: SET_PIC
+        type: SET_PIC_B
+    }
+}
+export function setPicA(pic: IPicInfo): IPicAction{
+    return{
+        pic,
+        type: SET_PIC_A
     }
 }
 // export function setSummary(total: ISummaryTotal): ISummaryAction{

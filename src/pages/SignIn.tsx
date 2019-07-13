@@ -83,86 +83,17 @@ export default class SignIn extends React.Component<IProps,IStates>{
             // const userSign = this.props.userSign;
             // const setFileList = this.props.setFileList;
             // const setPic = this.props.setPic;
-            const { selectFileList, selectSvs, setFileList, setPicA, setPicB, userSign } = this.props;
+            const { userSign } = this.props;
             signInHttp(user).then( (res: any) => {
                 // tslint:disable-next-line:no-console
                 // console.log(res);
                 if(res.data.status === 1){
                     userSign(user.username);
-                    getFileList().then( (resList: any) => {
-                        // tslint:disable-next-line:no-console
-                        // console.log(resList)
-                        const list: IFileListItem[] = [];
-                        let i:number;
-                        for(i=0; i<resList.data.response.length; i++){
-                            const v = resList.data.response[i];
-                            list[i] = {
-                                labeledCount: v.labeled_count,
-                                magnification: v.magnification,
-                                // selectedFlag: false,
-                                svsId: v.svs_id,
-                                totalCount: v.total_count
-                            };
-                        }
-                        // list[0].selectedFlag = true;
-                        setFileList(list);
-                        const listShow: IFileListItem[] = [];
-                        for(i=0; i<listShowNum; i++){
-                            if(list[i]){
-                                listShow[i] = list[i];
-                            }   
-                        }
-                        selectFileList(listShow);
-                        getPicHttp(list[0].svsId).then( (resPic: any) => {
-                            // tslint:disable-next-line:no-console
-                            // console.log(resPic);
-                            // const roiD: IRoiInfo[] = [];
-                            // let j:number;
-                            // for(j=0; j<resPic.data.response.rois_data.length; j++){
-                            //     const v = resPic.data.response.rois_data[j];
-                            //     roiD[j] = {
-                            //         roiId: v.roi_id,
-                            //         roiUrl: v.roi_url,
-                            //         score: v.score,
-                            //         status: v.status,
-                            //         type: v.cancer_type,
-                            //         userName: v.user_name,
-                            //         x1: v.x1,
-                            //         x2: v.x2,
-                            //         y1: v.y1,
-                            //         y2: v.y2
-                            //     }
-                            // }
-                            // const pic: IPicInfo = {
-                            //     picHeight: resPic.data.response.height,
-                            //     picUrl: resPic.data.response.svs_url,
-                            //     picWidth: resPic.data.response.width,
-                            //     roi: roiD,
-                            //     svsId: list[0].svsId
-                            // };
-                            const pic: IPicInfo = getPicData(resPic.data.response, list[0].svsId);
-                            setPicA(pic);
-                            selectSvs(list[0].svsId);
-                            this.setState({
-                                signInFlag: false
-                            });
-                            // history.push('/mainPage');
-                            history.push('/roi/mainPage');
-                        })
-                        .catch(err => {
-                            console.error(err.message)
-                        })
-                        getPicHttp(list[1].svsId)
-                        .then( resPicB => {
-                            const picB: IPicInfo = getPicData(resPicB.data.response, list[1].svsId);
-                            setPicB(picB);
-                        })
-                        .catch(err => {
-                            console.error(err.message);
-                        })
-                    }).catch( error => {
-                        // console.error(error);
-                    })
+                    if(!localStorage.hasOwnProperty('userName')){
+                        localStorage.setItem('userName',user.username);
+                    }
+                    // history.push('/mainPage');
+                    history.push('/roi/mainPage')
                 }else{
                     this.setState({
                         signInFlag: false

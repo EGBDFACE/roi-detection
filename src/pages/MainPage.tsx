@@ -1,24 +1,15 @@
 import * as React from 'react';
-import * as ReactDom from 'react-dom';
-import { getPicHttp, getSummaryHttp, setRoiStatus } from '../api';
-// import { CANCER_TYPE as cancerType, PIC_SIZE as picSize, ROI_SCORE_THRESHOLD as threshold } from '../constant';
+import { getPicHttp, setRoiStatus,  getFileList } from '../api';
+import Header from '../components/Header';
 import PicContent from '../components/PicContent';
 import { CANCER_TYPE as cancerType, FILE_LIST_DISPLAY_NUMBER as listShowLength, PIC_SIZE as picSize, ROI_MENU_MAX_LENGTH as menuMaxLength } from '../constant';
 import '../css/global.scss';
 import '../css/mainPage.scss';
-import history from '../router/history';
 import { IFileListItem, IPicInfo, IRoiInfo, ISummaryStatisticsItem, } from '../store';
-// import draw  from '../utils/drawPic';
+import { formatListData } from '../utils/resolveList';
 import { getPicData } from '../utils/resolvePic';
-import { resolveSummary, resolveNewSummary } from '../utils/resolveSummary';
-// interface IListItem{
-//     id: string,
-//     magn: number,
-//     roiDone: number,
-//     roiTotal: number
-//     // ROIDone: number,
-//     // ROITotal: number
-// }
+
+
 interface IProps{
     fileList: IFileListItem[],
     fileListPage: number,
@@ -38,6 +29,7 @@ interface IProps{
     showAllRoisFlag: boolean,
     statistics: ISummaryStatisticsItem[]
     userName: string,
+    userSignIn: (name: string) => void,
     userSignOut: () => void,
     picA: IPicInfo,
     picB: IPicInfo
@@ -51,13 +43,8 @@ interface IStates{
     }
     imgZoomScale: number,
     imgZoomStyle: any,
-    // roiMenuItemIndex: number,
-    // selectedPicId: number,
-    // selectedRoiId: number,
-    // showAllRoisFlag: boolean,
     selectedSvsIndex: number,
     searchSvsIdInput: string,
-    showLogOutFlag: boolean,
     showShortListFlag: boolean,
     showZoomInFlag: boolean,
     preScrollTop: number,
@@ -78,7 +65,6 @@ export default class MainPage extends React.Component<IProps, IStates>{
             imgZoomStyle: undefined,
             selectedSvsIndex: 0,
             searchSvsIdInput: '',
-            showLogOutFlag: false,
             showShortListFlag: false,
             showZoomInFlag: false,
             preScrollTop: 0,
@@ -89,17 +75,62 @@ export default class MainPage extends React.Component<IProps, IStates>{
         this.next = this.next.bind(this);
         this.previous = this.previous.bind(this);
         // this.selectRoiFn = this.selectRoiFn.bind(this);
-        this.dataSumary = this.dataSumary.bind(this);
         this.roiStatusChange = this.roiStatusChange.bind(this);
-        this.showLogOutEnable = this.showLogOutEnable.bind(this);
-        this.showLogOutDisable = this.showLogOutDisable.bind(this);
-        this.logout = this.logout.bind(this);
         this.handleTableScroll = this.handleTableScroll.bind(this);
         this.getPic = this.getPic.bind(this);
         this.handleSvsIdInputChange = this.handleSvsIdInputChange.bind(this);
         this.handleSvsIdEnter = this.handleSvsIdEnter.bind(this);
         // this.hoverEnterRoi = this.hoverEnterRoi.bind(this);
         // this.hoverLeaveRoi = this.hoverLeaveRoi.bind(this);
+    }
+    public componentDidMount(){
+        const { setFileListShow, selectSvs, setFileList,
+                setPicA, setPicB, userName, userSignIn } = this.props;
+        getFileList()
+        .then( res =>{ 
+            if(res.data.status !== -1){
+                if(userName.length === 0){
+                    userSignIn(localStorage.getItem('userName'));
+                }
+                const list: IFileListItem[] = formatListData(res.data.response);
+                setFileList(list);
+                const listShow: IFileListItem[] = [];
+                for(let i=0; i<listShowLength; i++){
+                    listShow[i] = list[i];
+                }
+                setFileListShow(listShow);
+            }else{
+                location.pathname = '/roi';
+            }
+        })
+        .catch( err => {
+            console.error(err.message);
+        })
+        getPicHttp(1)
+        .then( res =>{
+            if(res.data.status !== -1){
+                const pic: IPicInfo = getPicData(res.data.response, 1);
+                setPicA(pic);
+                selectSvs(1);
+            }else{
+                location.pathname = '/roi';
+            }
+        })
+        .catch( err => {
+            console.error(err.message);
+        })
+        getPicHttp(2)
+        .then( res => {
+            if(res.data.status !== -1){
+                const pic: IPicInfo = getPicData(res.data.response,2);
+                setPicB(pic);
+            }else{
+                location.pathname = '/roi';
+            }
+        })
+        .catch( err => {
+            console.error(err.message);
+        })
     }
     public handleSvsIdEnter(e: any){
         const { searchSvsIdInput } = this.state;
@@ -186,22 +217,6 @@ export default class MainPage extends React.Component<IProps, IStates>{
             }
         }
     })
-    public logout(){
-        const { userSignOut } = this.props;
-        userSignOut();
-        // history.push('/');
-        history.push('/roi');
-    }
-    public showLogOutEnable(){
-        this.setState({
-            showLogOutFlag: true
-        });
-    }
-    public showLogOutDisable(){
-        this.setState({
-            showLogOutFlag: false
-        })
-    }
     public roiStatusChange(id: number, newStatus: string, index: number) {
         const { fileList, fileListPage, fileListShow,  
                 picA, picB, selectedSvsId, setFileList, setFileListShow, 
@@ -228,16 +243,9 @@ export default class MainPage extends React.Component<IProps, IStates>{
         }
         setFileListShow(newFileListShow);
         setRoiStatus(newRoiStatus).then( res =>{
-            // tslint:disable-next-line:no-console
-            // console.log(res);
-            getSummaryHttp().then( (resSum: any) => {
-                    const newStatistic = resolveNewSummary(resSum.data.response, statistics);
-                    this.props.setStatistics(newStatistic);
-                }).catch( error => {
-                    // console.error(error);
-                });
+
         }).catch(error => {
-            // console.error(error);
+            console.error(error);
         })
         const newPic:IPicInfo = JSON.parse(JSON.stringify(pic));
         newPic.roi[index].status = newStatus;
@@ -247,6 +255,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
             setPicB(newPic);
         }
     }
+
     public next(){
         // const { selectedPicId } = this.state;
         const { fileList, fileListPage, setFileListPage, setFileListShow, selectedSvsId } = this.props;
@@ -427,23 +436,6 @@ export default class MainPage extends React.Component<IProps, IStates>{
             })
         }
     }
-    public dataSumary(){
-        if(this.props.statistics.length === 0){
-            getSummaryHttp().then( (res: any) => {
-            // tslint:disable-next-line:no-console
-            // console.log(res);
-                const summaryStatistic = resolveSummary(res.data.response);
-                // this.props.setSummary(summaryData.total);
-                // this.props.setStatistics(summaryData.statistics);
-                this.props.setStatistics(summaryStatistic);
-            }).catch( error => {
-                // console.error(error);
-            });
-        }
-        
-        // history.push('/dataSummary');
-        history.push('/roi/dataSummary');
-    }
     public showShortList(){
         this.setState({
             showShortListFlag: !this.state.showShortListFlag
@@ -505,64 +497,27 @@ export default class MainPage extends React.Component<IProps, IStates>{
         )
     }
     public render(){
-        if(!this.props.userName){
-            // return null;
-            return(
-                <div>please sign in</div>
-            )
-        }
-        const { fileList, fileListShow, 
+        const { fileList, fileListShow, fileListPage,
                 picA, picB, selectedRoiDisplayId, 
-                selectAllRoi, selectedSvsId,
-                selectRoi, showAllRoisFlag, 
-                userName } = this.props;
+                selectAllRoi, selectedSvsId,selectRoi,
+                setFileList, setFileListShow, setPicA, setPicB,
+                showAllRoisFlag, userName, userSignOut } = this.props;
         // const { selectedPicItem } = this.state;
         // const totalPage = Math.ceil(fileList.length/listShowLength);
         const { searchSvsIdInput } = this.state;
-        const { imgDragPrePos, imgZoomScale, 
-            showLogOutFlag, showZoomInFlag,
-            showShortListFlag } = this.state;
+        const { showShortListFlag } = this.state;
         const hidden = { display: 'none'};
-        const shortListContentStyle = {
-            left: '8%',
-            width: '92%'
-        };
         return(
             <div className='page'>
-                <div className='main__header'>
-                    <div>
-                        <div className='header__icon'>Pathology.ai</div>
-                        <div className='header__userInfo'>
-                            <span className='userInfo__label'>Pathologist: </span>
-                            <span className='userInfo__name'>{userName}</span>
-                            <div className='userInfo__menu'
-                                onMouseEnter={this.showLogOutEnable}
-                                onMouseLeave={this.showLogOutDisable}
-                                >
-                                <i className='userInfo__menu_icon' />
-                                <p className='userInfo__menu_logout'
-                                    onMouseEnter={this.showLogOutEnable}
-                                    onMouseLeave={this.showLogOutDisable}
-                                    onClick={this.logout}
-                                    style={showLogOutFlag ? undefined : hidden} >Log out</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='header__menu__switch'>
-                        <span className='switch__pre'
-                            onClick={this.previous}>pre</span>
-                        <div className='switch__label'>
-                            {/* <span>imageID: {selectedPicItem + 1}/{fileList.length}</span> */}
-                            <span>imageID: {selectedSvsId}/{fileList.length}</span>
-                        </div>
-                        <span className='switch__next'
-                            onClick={this.next}>next</span>
-                    </div>
-                    <div>
-                        <span className='header__menu__dataSummary'
-                            onClick={this.dataSumary} >Data Summary</span>
-                    </div>
-                </div>
+                <Header 
+                    next={this.next}
+                    pathName='main'
+                    previous={this.previous}
+                    selectedSvsId={selectedSvsId}
+                    totalLength={fileList.length}
+                    userName={userName}
+                    userSignOut={userSignOut}
+                    />
                 <div className='main__sideBar' style={this.state.showShortListFlag ? hidden : undefined}>
                     <div className='sideBar__header'>
                         <span className='sideBar__header__title'>Image List</span>
@@ -603,21 +558,31 @@ export default class MainPage extends React.Component<IProps, IStates>{
                     </div>
                 </div>
                 <PicContent 
-                    roiStatusChange={this.roiStatusChange}
+                    fileList= {fileList}
+                    fileListPage = {fileListPage}
+                    roiStatusChange = {this.roiStatusChange}
                     selectedSvsId={selectedSvsId}
                     selectedRoiDisplayId={selectedRoiDisplayId}
                     selectAllRoi={selectAllRoi}
                     selectRoi={selectRoi}
+                    setFileList={setFileList}
+                    setFileListShow={setFileListShow}
+                    setPic = {setPicA}
                     showAllRoisFlag={showAllRoisFlag}
                     showShortListFlag={showShortListFlag}
                     pic={picA}
                 /> 
                 <PicContent
+                    fileList= {fileList}
+                    fileListPage = {fileListPage}
                     roiStatusChange={this.roiStatusChange}
                     selectedSvsId={selectedSvsId}
                     selectedRoiDisplayId={selectedRoiDisplayId}
                     selectAllRoi={selectAllRoi}
                     selectRoi={selectRoi}
+                    setFileList={setFileList}
+                    setFileListShow={setFileListShow}
+                    setPic = {setPicB}
                     showAllRoisFlag={showAllRoisFlag}
                     showShortListFlag={showShortListFlag}
                     pic={picB}

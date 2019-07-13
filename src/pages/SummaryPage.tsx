@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { getPicHttp, getSummaryDetail } from '../api';
+import { getPicHttp, getSummaryDetail, getSummaryHttp } from '../api';
+import Header from '../components/Header';
 import { CANCER_TYPE as cancerType, FILE_LIST_DISPLAY_NUMBER as listShowLength } from '../constant';
 import '../css/global.scss';
 import '../css/mainPage.scss';
@@ -7,6 +8,7 @@ import '../css/summaryPage.scss';
 import history from '../router/history';
 import { IFileListItem, IPicInfo, IRoiInfo, ISummaryItem, ISummaryStatisticsItem } from '../store';
 import { getPicData } from '../utils/resolvePic';
+import { resolveSummary } from '../utils/resolveSummary';
 
 interface IRoiReqsItem{
     cancer_id: number,
@@ -28,7 +30,6 @@ interface IProps{
     selectAllRoi: (flag: boolean) => void,
     selectRoi: (id: number) => void,
     selectSvs: (id: number) => void,
-    // setSummary: (data: ISummary) => void,
     setFileListPage: (page: number) => void,
     setFileListShow: (list: IFileListItem[]) => void,
     setFilter: (data: ISummaryItem[]) => void,
@@ -37,16 +38,14 @@ interface IProps{
     setPicB: (pic: IPicInfo) => void,
     setStatistics: (data: ISummaryStatisticsItem[]) => void,
     setSummaryTotalPage: (page: number) => void,
-    // summary: ISummary;
     summaryDisplay: ISummaryItem[],
-    // summaryFilter: ISummaryItem[],
     summaryStatistics: ISummaryStatisticsItem[],
     summaryTotalPage: number,
-    // summaryTotal: ISummaryTotal,
-    userName: string
+    userName: string,
+    userSignIn: (name: string) => void,
+    userSignOut: () => void
 }
 interface IStates{
-    // summaryFilter: ISummaryItem[];
     filterRoiPicUrl: string[],
     selectedRoi: ISummaryItem,
     selectedRoiIndex: number,
@@ -57,7 +56,6 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
     constructor(props: IProps){
         super(props);
         this.state = {
-            // summaryFilter: []
             filterRoiPicUrl: [],
             selectedRoi: {
                 roiId: -1,
@@ -80,6 +78,27 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         this.nextSingleRoi = this.nextSingleRoi.bind(this);
         this.editSingleRoi = this.editSingleRoi.bind(this);
     }
+    public componentDidMount(){
+        const { setStatistics, userName, userSignIn } = this.props;
+
+        getSummaryHttp()
+        .then( res => {
+            if(res.data.status !== -1){
+                if(userName.length === 0){
+                    userSignIn(localStorage.getItem('userName'));
+                }
+                const statisticData = resolveSummary(res.data.response);
+                setStatistics(statisticData);
+            }else{
+                location.pathname = '/roi';
+            }
+        })
+        .catch( err => {
+            console.error(err.message);
+        })
+    
+    }
+
     public editSingleRoi(){
         const { fileList, selectAllRoi, selectRoi, selectSvs, setPicA, setPicB, setFileListPage, setFileListShow } = this.props;
         // this.props.selectSvs(this.state.selectedRoi.svsId);
@@ -266,46 +285,8 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         .catch( error => {
             console.error(error.message);
         })
-        // setRoiPage(0);
-        // let i: number;
-        // for(i=0; i<newStatistics.length; i++){
-        //     // switch(nextProps.statistics[i].subject){
-        //     //     case cancerType.N:
-        //     //         if()
-        //     // }
-        //     if(newStatistics[i].selectFalse){
-        //         newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].false);
-        //     }
-        //     if(newStatistics[i].selectTrue){
-        //         newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].true);
-        //     }
-        //     if(newStatistics[i].selectUnlabelled){
-        //         newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].unlabelled);
-        //     }
-        //     if(newStatistics[i].selectNotSure){
-        //         newSummaryData = newSummaryData.concat(summaryTotal[newStatistics[i].subject].notSure);
-        //     }
-        // }
-        // this.props.setFilter(newSummaryData);
-        // const initEightFilters: ISummaryItem[] = [];
-        // let j:number;
-        // if(newSummaryData.length){
-        //    const length = newSummaryData.length > 48 ? 48 : newSummaryData.length;
-        //    for(j=0; j<length; j++){
-        //     initEightFilters[j] = newSummaryData[j];
-        //    } 
-        // }
-        // this.props.setFilterDisplay(initEightFilters);
     }
     public showDetailFlagChange = (index: number) => (event: any) =>{
-        // const newSummaryData = this.state.summaryData;
-        // newSummaryData[index].showDetialFlag = !this.state.summaryData[index].showDetialFlag;
-        // this.setState({
-        //     summaryData: newSummaryData
-        // });
-        // const newSummary = JSON.parse(JSON.stringify(this.props.summary));
-        // newSummary.statistics[index].showDetialFlag = !newSummary.statistics[index].showDetialFlag;
-        // this.props.setSummary(newSummary);
         const newStatistics: ISummaryStatisticsItem[] = JSON.parse(JSON.stringify(this.props.summaryStatistics));
         newStatistics[index].showDetialFlag = !newStatistics[index].showDetialFlag;
         this.props.setStatistics(newStatistics);
@@ -446,31 +427,14 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         }
     }
     public render(){
-        if(!this.props.userName){
-            // return null
-            return(
-                <div>please sign in</div>
-            )
-        }
-        const { summaryStatistics } = this.props;
+        const { summaryStatistics, userName, userSignOut } = this.props;
         const hidden = { display: 'none'};
         return (
             <div className='page'>
-                <div className='main__header'>
-                    <div>
-                        <div className='header__icon'>Pathology.ai</div>
-                        <div className='header__userInfo'>
-                            <span className='userInfo__label'>Pathologist: </span>
-                            <span className='userInfo__name'>tongjiA</span>
-                            <i className='userInfo__menu__icon' />
-                        </div>
-                    </div>
-                    <div className='summary__title'>Data Summary</div>
-                    <div>
-                        <span className='header__menu__dataSummary'
-                            onClick={this.mainPage} >Back to Image List</span>
-                    </div>
-                </div>
+                <Header pathName='summary'
+                    userName={userName}
+                    userSignOut={userSignOut}
+                />
                 <div className='main__sideBar'>
                     <div className='sideBar__header'>
                         <span className='sideBar__header__title'>ROI分类</span>

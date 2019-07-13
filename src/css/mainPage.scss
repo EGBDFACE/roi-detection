@@ -412,6 +412,7 @@ $myColor: #1E2D52;
     // position: absolute;
     // right: 20%;
     margin-left: 40px;
+    position: relative;
 }
 .roi__switch_all_enable{
     background-image: url('./img/allOpen.svg');
@@ -450,3 +451,14 @@ $myColor: #1E2D52;
 // .roi__rect{
 //     border: 3px solid;
 // }
+.bt_set-all-true{
+    @extend .roi__menu_true_hl;
+    cursor: pointer;
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    background-image: url('./img/trueBl.svg');
+    &:hover{
+        background-image: url('./img/trueWh.svg');
+    }
+}

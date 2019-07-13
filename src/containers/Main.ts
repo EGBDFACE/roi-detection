@@ -31,6 +31,7 @@ function mapDispatchToProps (dispatch: Dispatch<any>){
         setPicB: (pic: IPicInfo) => dispatch(actions.setPicB(pic)),
         setStatistics: (data: ISummaryStatisticsItem[]) => dispatch(actions.setStatistics(data)),
         // setSummary: (data: ISummaryTotal) => dispatch(actions.setSummary(data)),
+        userSignIn: (name:string) => dispatch(actions.userSignIn(name)),
         userSignOut: () => dispatch(actions.userSignOut())
     }
 }

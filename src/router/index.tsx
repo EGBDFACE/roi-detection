@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Loadable from 'react-loadable';
-import { Route, Router } from 'react-router-dom';
+// import { Route, Router } from 'react-router-dom';
+import { Route, HashRouter as Router} from 'react-router-dom';
 // import store from '../store';
 import '../css/global.scss';
 import history from './history';
@@ -21,7 +22,7 @@ const Summary = Loadable({
 
 // const userName = store.getState().user.name;
 export default(
-    <Router history={history}>
+    <Router>
         <div className='page'>
             <Route exact={true} path='/' component={ SignIn }/>
             <Route path='/mainPage' component={Main} />

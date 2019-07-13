@@ -143,7 +143,8 @@ export default class SignIn extends React.Component<IProps,IStates>{
                             this.setState({
                                 signInFlag: false
                             });
-                            history.push('/mainPage');
+                            // history.push('/mainPage');
+                            document.location.hash = '#/mainPage';
                             // history.push('/roi/mainPage');
                         })
                     }).catch( error => {

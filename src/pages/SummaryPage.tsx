@@ -120,7 +120,8 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
             } 
             setFileListPage(newFileListPage);
             setFileListShow(newFileListShow);
-            history.push('/mainPage');
+            // history.push('/mainPage');
+            document.location.hash="#/mainPage";
             // history.push('/roi/mainPage');
         }).catch( error =>{
             // console.error(error);
@@ -324,7 +325,8 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
         this.props.setStatistics(newStatistics);
     }
     public mainPage(){
-        history.push('/mainPage');
+        // history.push('/mainPage');
+        document.location.hash = "#/mainPage";
         // history.push('/roi/mainPage');
     }
     public renderSummaryLabelItemDetail(value: ISummaryStatisticsItem, index: number){
@@ -409,6 +411,7 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
     }
     public renderMainContent(){
         const { selectedRoiFlag, selectedRoi } = this.state;
+        const picData = (selectedRoi.svsId === -1) ? undefined : require(`../assets/pic/${selectedRoi.svsId}.jpg`);
         const { summaryDisplay, selectedRoisPage, summaryTotalPage } = this.props;
         if(summaryDisplay.length === 0){
             return null
@@ -422,7 +425,10 @@ export default class SummaryPage extends React.Component<IProps, IStates>{
                             <span>Editor: {selectedRoi.userName || 'None'}</span>
                         </div>
                         <div className='single_pic__img'>
-                            <img src={selectedRoi.svsUrl} />
+                            <img 
+                            // src={selectedRoi.svsUrl} 
+                                src = {picData}
+                            />
                         </div>
                         <i className='single_pic__close' 
                             onClick={this.closeSingleRoi} />

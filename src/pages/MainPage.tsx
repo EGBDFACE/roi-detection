@@ -389,7 +389,8 @@ export default class MainPage extends React.Component<IProps, IStates>{
     public logout(){
         const { userSignOut } = this.props;
         userSignOut();
-        history.push('/');
+        // history.push('/');
+        document.location.hash = "#/";
         // history.push('/roi');
     }
     public showLogOutEnable(){
@@ -678,9 +679,10 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 roi: roiD,
                 svsId: svsIdNumber
             };
-            const eleImg:any = document.getElementById('svs-pic');
-            eleImg.src = '';
-            eleImg.src = pic.picUrl;        
+            // const eleImg:any = document.getElementById('svs-pic');
+            // const picData = require(`../assets/pic/${pic.svsId}.jpg`);
+            // eleImg.src = '';
+            // eleImg.src = picData;        
             setPic(pic);
         }).catch( error =>{
             // console.error(error);
@@ -700,7 +702,8 @@ export default class MainPage extends React.Component<IProps, IStates>{
             });
         }
         
-        history.push('/dataSummary');
+        // history.push('/dataSummary');
+        document.location.hash = "#/dataSummary";
         // history.push('/roi/dataSummary');
     }
     public showShortList(){
@@ -1131,6 +1134,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
             left: '8%',
             width: '92%'
         };
+        const picData = require(`../assets/pic/${pic.svsId}.jpg`);
         return(
             <div className='page'>
                 <div className='main__header'>
@@ -1225,8 +1229,8 @@ export default class MainPage extends React.Component<IProps, IStates>{
                             onMouseDown={this.handleImgMouseDown}
                             // onMouseUp={this.handleImgMouseUp}
                             >
-                            <img id='svs-pic' 
-                                src={pic.picUrl} 
+                            <img id='svs-pic'
+                                src={picData} 
                                 className='main__content__pic'
                                 // style={zoomInImgStyle} 
                                 />

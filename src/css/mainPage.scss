@@ -4,7 +4,7 @@ $myColor: #1E2D52;
     width: 100%;
     // height: 80px;
     // line-height: 80px;
-    height: 8%;
+    height: 10%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -104,7 +104,7 @@ $myColor: #1E2D52;
 .main__sideBar{
     width: 20%;
     display: inline-block;
-    height: 92%;
+    height: 90%;
     position: relative;
     // position: absolute;
     // overflow-x: hidden;
@@ -148,7 +148,7 @@ $myColor: #1E2D52;
 }
 .sideBar__search{
     width: 82%;
-    height: 3%;
+    height: 5%;
     text-align: center;
     position: relative;
     margin: 0 auto;
@@ -195,7 +195,7 @@ $myColor: #1E2D52;
     width: 100%;
     // height: 100%; // 设置为100%反而未完全显示
     // height: 86%;
-    height: 89%;
+    height: 84%;
     // top: 115px;
 }
 // .sideBar__table__content::-webkit-scrollbar{
@@ -225,6 +225,7 @@ $myColor: #1E2D52;
 }
 .sideBar__brief__table__content{
     @extend .sideBar__table__content;
+    height: 88.8%;
 }
 .table__header__id{
     margin-left: 52px;
@@ -297,7 +298,7 @@ $myColor: #1E2D52;
     position: absolute;
     left: 20%;
     // height: 100%;
-    height: 92%;
+    height: 90%;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -445,6 +446,7 @@ $myColor: #1E2D52;
     display: inline-block;
     width: 20px;
     height: 20px;
+    line-height: 20px;
     text-align: center;
     margin: 10px 10px 0 0;
 }

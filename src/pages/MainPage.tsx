@@ -136,8 +136,18 @@ export default class MainPage extends React.Component<IProps, IStates>{
         const { searchSvsIdInput } = this.state;
         const { fileList, fileListPage, selectSvs, setFileListPage, setFileListShow} = this.props;
         if(e.keyCode === 13){
+            const tableContentEle = document.getElementsByClassName('sideBar__table__content')[0];
+            const totalItemNumber = Math.ceil(tableContentEle.clientHeight/38);
             const svsId = parseInt(searchSvsIdInput);
             if((svsId !== NaN)&&(svsId <=fileList[fileList.length-1].svsId)&&(svsId > 0)){
+                const targetIndex =(svsId % listShowLength !== 0) ? svsId%listShowLength : listShowLength;
+                const currentTopIndex = tableContentEle.scrollTop/38;
+                const currentBottomIndex = currentTopIndex + totalItemNumber-1;
+                if((targetIndex < currentTopIndex)||((targetIndex > currentBottomIndex)&&(targetIndex < listShowLength - totalItemNumber))){
+                    tableContentEle.scrollTop = ((targetIndex-1)*38>0) ? ((targetIndex-1)*38) : 0;
+                }else if(targetIndex > currentBottomIndex){
+                    tableContentEle.scrollTop = (listShowLength - totalItemNumber)*38-5;
+                }
                 if(((svsId)>=(fileListPage-1)*listShowLength+1)&&((svsId)<=fileListPage*listShowLength)){
                     this.setState({
                         selectedSvsIndex: (svsId%listShowLength===0) ? (listShowLength-1) : (svsId%listShowLength-1)

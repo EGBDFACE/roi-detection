@@ -59,3 +59,14 @@ export function setRoiStatus(status: IStatus){
         url: '/setLabelInfo/'
     })
 }
+export function setAllRoiStatus(status: IStatus[]){
+    const sbServer = {
+        datas: status
+    };
+    return axios({
+        baseURL: BASE_URL,
+        data: sbServer,
+        method: 'post',
+        url: '/setAllLabelInfo/'
+    })
+}

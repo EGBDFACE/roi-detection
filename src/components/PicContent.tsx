@@ -1,16 +1,24 @@
 import * as React from 'react';
+import { setAllRoiStatus } from '../api';
 import { CANCER_TYPE as cancerType, 
-    PIC_SIZE as picSize ,
-    ROI_MENU_MAX_LENGTH as menuMaxLength } from '../constant';
-import { IPicInfo, IRoiInfo } from '../store';
+        FILE_LIST_DISPLAY_NUMBER as listShowLength,
+        PIC_SIZE as picSize ,
+        ROI_MENU_MAX_LENGTH as menuMaxLength } from '../constant';
+import { IFileListItem, IPicInfo, IRoiInfo, } from '../store';
+
 
 interface IProps{
+    fileList: IFileListItem[],
+    fileListPage: number,
     roiStatusChange: (id: number, newStatus: string, index: number) => void,
     selectedRoiDisplayId: number,
     selectedSvsId: number,
     showAllRoisFlag: boolean,
     selectAllRoi: (flag: boolean) => void,
     selectRoi: (value: number) => void,
+    setFileList: (list: IFileListItem[]) => void,
+    setFileListShow: (list: IFileListItem[]) => void,
+    setPic: (pic:IPicInfo) => void,
     showShortListFlag: boolean,
     pic: IPicInfo
 }
@@ -48,6 +56,39 @@ export default class PicContent extends React.Component<IProps, IStates>{
         this.showAllRoisFlagChange = this.showAllRoisFlagChange.bind(this);
         this.setRoiMenuItemIndex = this.setRoiMenuItemIndex.bind(this);
         this.renderRoiSwitchBarItem = this.renderRoiSwitchBarItem.bind(this);
+    }
+    public handleAllRoiStatusChange = (status: string) => (e:any) => {
+        const { fileList, fileListPage,pic, setFileList, 
+                setFileListShow, setPic } = this.props;
+        const newRoiStatus = [];
+        const newPic:IPicInfo = JSON.parse(JSON.stringify(pic));
+        for(let i=0; i<pic.roi.length; i++){
+            newRoiStatus[i] = {
+                roi_id: pic.roi[i].roiId,
+                status: status
+            }
+            newPic.roi[i].status = status;
+        }
+        setAllRoiStatus(newRoiStatus)
+        .then( res => {})
+        .catch( err => { console.error(err.message )})
+
+
+        const newFileList: IFileListItem[] = JSON.parse(JSON.stringify(fileList));
+        for(let i=0; i<newFileList.length; i++){
+            if(newFileList[i].svsId == pic.svsId){
+                newFileList[i].labeledCount = newFileList[i].totalCount;
+                break;
+            }
+        }
+        setFileList(newFileList);
+        const newFileListShow: IFileListItem[] = [];
+        for(let i=0; i<listShowLength; i++){
+            newFileListShow[i] = newFileList[(fileListPage-1)*listShowLength + i];
+        }
+        setFileListShow(newFileListShow);
+
+        setPic(newPic);
     }
     public showAllRoisFlagChange = (flag: boolean) => (event: any) => {
         this.props.selectAllRoi(flag);
@@ -432,6 +473,12 @@ export default class PicContent extends React.Component<IProps, IStates>{
                 display: 'none'
             }
         }
+        let showSetAllTrueFlag = false;
+        for(let i=0; i<pic.roi.length; i++){
+            if(pic.roi[i].status !== 'true'){
+                showSetAllTrueFlag = true;
+            }
+        }
         return(
             <div className='main__content'
                 style={picStyle}
@@ -462,7 +509,11 @@ export default class PicContent extends React.Component<IProps, IStates>{
                             onClick={this.showAllRoisFlagChange(false)} /> }
                     { !showAllRoisFlag && <i className='roi__switch_all_disable'
                         onClick={this.showAllRoisFlagChange(true)} /> }
+                    { showSetAllTrueFlag && <i className='bt_set-all-true' 
+                        onClick = {this.handleAllRoiStatusChange('true')} 
+                    />}
                 </div>
+                
             </div>
         )
     }

@@ -57,6 +57,17 @@ export default class PicContent extends React.Component<IProps, IStates>{
         this.setRoiMenuItemIndex = this.setRoiMenuItemIndex.bind(this);
         this.renderRoiSwitchBarItem = this.renderRoiSwitchBarItem.bind(this);
     }
+    public componentWillReceiveProps(nextProps:IProps){
+        if(this.props.pic.svsId !== nextProps.pic.svsId){
+            this.setState({
+                imgDragPrePos:{
+                    x: 0,
+                    y: 0
+                },
+                imgZoomScale: 1
+            });
+        }
+    }
     public handleAllRoiStatusChange = (status: string) => (e:any) => {
         const { fileList, fileListPage,pic, setFileList, 
                 setFileListShow, setPic } = this.props;

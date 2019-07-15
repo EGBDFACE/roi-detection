@@ -454,13 +454,17 @@ $myColor: #1E2D52;
 //     border: 3px solid;
 // }
 .bt_set-all-true{
-    @extend .roi__menu_true_hl;
+    // @extend .roi__menu_true_hl;
     cursor: pointer;
     position: absolute;
     bottom: -40px;
     left: 0;
-    background-image: url('./img/trueBl.svg');
-    &:hover{
-        background-image: url('./img/trueWh.svg');
-    }
+    width: 60px;
+    background-color: rgb(187,187,187);
+    text-align: center;
+    overflow: hidden;
+    // background-image: url('./img/trueBl.svg');
+    // &:hover{
+    //     background-image: url('./img/trueWh.svg');
+    // }
 }

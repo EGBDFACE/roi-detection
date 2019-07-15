@@ -509,9 +509,9 @@ export default class PicContent extends React.Component<IProps, IStates>{
                             onClick={this.showAllRoisFlagChange(false)} /> }
                     { !showAllRoisFlag && <i className='roi__switch_all_disable'
                         onClick={this.showAllRoisFlagChange(true)} /> }
-                    { showSetAllTrueFlag && <i className='bt_set-all-true' 
+                    { showSetAllTrueFlag && <p className='bt_set-all-true' 
                         onClick = {this.handleAllRoiStatusChange('true')} 
-                    />}
+                        >全部正确</p>}
                 </div>
                 
             </div>

@@ -454,17 +454,25 @@ $myColor: #1E2D52;
 //     border: 3px solid;
 // }
 .bt_set-all-true{
-    // @extend .roi__menu_true_hl;
-    cursor: pointer;
     position: absolute;
-    bottom: -40px;
+    bottom: -80px;
     left: 0;
+    text-align: center;
+}
+.bt_set-all-true_icon{
+    @extend .roi__menu_true_hl;
+    margin: 0;
+    cursor: pointer;
+    background-image: url('./img/trueBl.svg');
+    &:hover{
+        background-image: url('./img/trueWh.svg');
+    }
+}
+.bt_set-all-true_label{
+    display: inline-block;
     width: 60px;
     background-color: rgb(187,187,187);
     text-align: center;
     overflow: hidden;
-    // background-image: url('./img/trueBl.svg');
-    // &:hover{
-    //     background-image: url('./img/trueWh.svg');
-    // }
+    margin: 0;
 }

@@ -18,6 +18,9 @@ const Reducer = (state: IStoreState, action: any) => {
 function  user(state: IUserInfo, action: IUserAction){
     switch(action.type){
         case 'USER_SIGN_IN':
+            if(!localStorage.hasOwnProperty('userName')||(localStorage.getItem('userName')!==action.name)){
+                localStorage.setItem('userName',action.name);
+            }
             return{
                 ...state,
                 name: action.name

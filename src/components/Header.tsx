@@ -22,6 +22,7 @@ export default class Header extends React.Component<IProps, IStates>{
             showLogOutFlag: false
         }
         this.showLogOutFlagChange = this.showLogOutFlagChange.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     public showLogOutFlagChange = (value: boolean) => (e: any) => {

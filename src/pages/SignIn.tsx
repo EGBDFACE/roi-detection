@@ -89,11 +89,7 @@ export default class SignIn extends React.Component<IProps,IStates>{
                 // console.log(res);
                 if(res.data.status === 1){
                     userSign(user.username);
-                    if(!localStorage.hasOwnProperty('userName')){
-                        localStorage.setItem('userName',user.username);
-                    }
-                    // history.push('/mainPage');
-                    history.push('/roi/mainPage')
+                    history.push('/roi/mainPage');
                 }else{
                     this.setState({
                         signInFlag: false

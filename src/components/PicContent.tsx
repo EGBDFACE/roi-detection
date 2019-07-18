@@ -29,6 +29,8 @@ interface IStates{
         y: number
     },
     imgZoomScale: number,
+    imgZoomScaleOriginX: string,
+    imgZoomScaleOriginY: string,
     wantToChangeIndex: number
 }
 
@@ -42,6 +44,8 @@ export default class PicContent extends React.Component<IProps, IStates>{
                 y: 0
             },
             imgZoomScale: 1,
+            imgZoomScaleOriginX: '50%',
+            imgZoomScaleOriginY: '50%',
             wantToChangeIndex: -1
         }
         this.handleImgWheel = this.handleImgWheel.bind(this);
@@ -125,12 +129,25 @@ export default class PicContent extends React.Component<IProps, IStates>{
     }
     public handleImgWheel(e:any){
         const eve = e||window.event;
+        let picEle = document.getElementById('svs-pic');
+        let originX = (eve.pageX-picEle.getBoundingClientRect().left)/picEle.getBoundingClientRect().width;
+        let originY = (eve.pageY-picEle.getBoundingClientRect().top)/picEle.getBoundingClientRect().height;
         const { imgZoomScale } = this.state; 
         let scale = imgZoomScale + eve.deltaY * -0.01;
         // Restrict scale
         scale = Math.min(Math.max(.125, scale), 4);
+        if(originX>=1||originX<=0){
+            originX = 0.5;
+            scale = 1;
+        }
+        if(originY>=1||originY<=0){
+            originY = 0.5;
+            scale = 1;
+        }
         this.setState({
             imgZoomScale: scale,
+            imgZoomScaleOriginX: originX*100+'%',
+            imgZoomScaleOriginY: originY*100+'%'
         })
     }
     public handleImgMouseDown(e:any){
@@ -456,7 +473,7 @@ export default class PicContent extends React.Component<IProps, IStates>{
     }
     public render(){
         const { selectedSvsId, showAllRoisFlag, showShortListFlag, pic } = this.props;
-        const { imgDragPrePos, imgZoomScale } = this.state;
+        const { imgDragPrePos, imgZoomScale, imgZoomScaleOriginX, imgZoomScaleOriginY } = this.state;
         // let shortListContentStyle:any = {
         //     left: '8%',
         //     width: '92%'
@@ -472,6 +489,7 @@ export default class PicContent extends React.Component<IProps, IStates>{
         //     }
         // }
         let picStyle = undefined;
+        let picId = 'svs-pic';
         if(showShortListFlag){
             picStyle = {
                 left: '8%',
@@ -483,6 +501,7 @@ export default class PicContent extends React.Component<IProps, IStates>{
                 ...picStyle,
                 display: 'none'
             }
+            picId =undefined;
         }
         let showSetAllTrueFlag = false;
         for(let i=0; i<pic.roi.length; i++){
@@ -495,17 +514,18 @@ export default class PicContent extends React.Component<IProps, IStates>{
                 style={picStyle}
             >
                 <div className='main__content__pic__area'>
-                    <div id='svs_img'
+                    <div id={picId}
                         style={{
                             left: imgDragPrePos.x,
                             top: imgDragPrePos.y,
                             transform: `scale(${imgZoomScale})`,
+                            transformOrigin: `${imgZoomScaleOriginX} ${imgZoomScaleOriginY}`,
                             position: 'relative'
                         }}
                         onWheel={this.handleImgWheel}
                         onMouseDown={this.handleImgMouseDown}
                     >
-                        <img id='svs-pic'
+                        <img
                             src={pic.picUrl}
                             className='main__content__pic'
                         />

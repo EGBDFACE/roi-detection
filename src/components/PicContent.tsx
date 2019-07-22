@@ -135,7 +135,8 @@ export default class PicContent extends React.Component<IProps, IStates>{
         const { imgZoomScale } = this.state; 
         let scale = imgZoomScale + eve.deltaY * -0.01;
         // Restrict scale
-        scale = Math.min(Math.max(.125, scale), 4);
+        // scale = Math.min(Math.max(.125, scale), 4);
+        scale = Math.min(Math.max(.5,scale),4);
         if(originX>=1||originX<=0){
             originX = 0.5;
             scale = 1;
@@ -144,6 +145,14 @@ export default class PicContent extends React.Component<IProps, IStates>{
             originY = 0.5;
             scale = 1;
         }
+        // if(scale == 0.125||originX>=1||originX<=0){
+        //     originX = 0.5;
+        //     scale = 1;
+        // }
+        // if(scale == 0.125||originY>=1||originY<=0){
+        //     originY = 0.5;
+        //     scale = 1;
+        // }
         this.setState({
             imgZoomScale: scale,
             imgZoomScaleOriginX: originX*100+'%',

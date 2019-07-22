@@ -100,7 +100,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 }
                 setFileListShow(listShow);
             }else{
-                location.pathname = '/roi';
+                location.pathname = '/';
             }
         })
         .catch( err => {

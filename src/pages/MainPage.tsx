@@ -103,6 +103,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 setFileListShow(listShow);
             }else{
                 location.pathname = '/';
+                // history.push('/');
             }
         })
         .catch( err => {
@@ -116,6 +117,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 selectSvs(1);
             }else{
                 location.pathname = '/';
+                // history.push('/');
             }
         })
         .catch( err => {
@@ -128,6 +130,7 @@ export default class MainPage extends React.Component<IProps, IStates>{
                 setPicB(pic);
             }else{
                 location.pathname = '/';
+                // history.push('/');
             }
         })
         .catch( err => {
